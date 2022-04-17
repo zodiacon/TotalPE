@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PEImageView.h"
 #include "PEStrings.h"
+#include "SortHelper.h"
 
 CString CPEImageView::GetColumnText(HWND, int row, int col) const {
 	auto& item = m_Items[row];
@@ -12,6 +13,21 @@ CString CPEImageView::GetColumnText(HWND, int row, int col) const {
 	return CString();
 }
 
+void CPEImageView::DoSort(SortInfo const* si) {
+	if (si == nullptr)
+		return;
+
+	auto compare = [&](auto& item1, auto& item2) {
+		return SortHelper::Sort(item1.Name, item2.Name, si->SortAscending);
+	};
+
+	m_Items.Sort(compare);
+}
+
+bool CPEImageView::IsSortable(HWND, int col) const {
+	return col == 0;		// sort on Name column only
+}
+
 LRESULT CPEImageView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
 		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
@@ -19,7 +35,7 @@ LRESULT CPEImageView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	cm->AddColumn(L"Name", LVCFMT_LEFT, 150);
 	cm->AddColumn(L"Value", LVCFMT_LEFT, 200);
-	cm->AddColumn(L"Details", LVCFMT_LEFT, 400);
+	cm->AddColumn(L"Details", LVCFMT_LEFT, 450);
 
 	cm->UpdateColumns();
 
@@ -42,28 +58,22 @@ void CPEImageView::BuildItems() {
 		{ L"Subsystem", std::to_wstring((uint32_t)oh.subsystem()), std::to_wstring(oh.subsystem()) },
 		{ L"Sections", std::to_wstring(header.numberof_sections()) },
 		{ L"Characteristics", std::format(L"0x{:08X}", (uint32_t)header.characteristics()), std::to_wstring(header.characteristics()) },
+		{ L"Magic", std::format(L"{} (0x{:X})", (uint32_t)oh.magic(), (uint32_t)oh.magic()), std::to_wstring(oh.magic()) },
+		{ L"DLL Characteristics", std::format(L"0x{:04X}", (uint32_t)oh.dll_characteristics()), PEStrings::DllCharacteristicsToString(oh.dll_characteristics()) },
+		{ L"Image Base", std::format(L"0x{:X}", oh.imagebase()) },
+		{ L"Image Size", PEStrings::ToMemorySize(oh.sizeof_image()) },
+		{ L"Stack Reserve", PEStrings::ToMemorySize(oh.sizeof_stack_reserve()) },
+		{ L"Stack Commit", PEStrings::ToMemorySize(oh.sizeof_stack_commit()) },
+		{ L"Heap Reserve", PEStrings::ToMemorySize(oh.sizeof_heap_reserve()) },
+		{ L"Heap Commit", PEStrings::ToMemorySize(oh.sizeof_heap_commit()) },
+		{ L"Is Managed?", PE().data_directory(LIEF::PE::DATA_DIRECTORY::CLR_RUNTIME_HEADER).has_section() ? L"Yes" : L"No" },
+		{ L"Code Size", PEStrings::ToMemorySize(oh.sizeof_code()) },
+		{ L"Entry Point", std::format(L"0x{:X}", oh.addressof_entrypoint()) },
+		{ L"OS Version", std::format(L"{}.{}", oh.major_operating_system_version(), oh.minor_operating_system_version()) },
+		{ L"Image Version", std::format(L"{}.{}", oh.major_image_version(), oh.minor_image_version()) },
+		{ L"Linker Version", std::format(L"{}.{}", oh.major_linker_version(), oh.minor_linker_version()) },
+		{ L"Loader Flags", std::format(L"0x{:X}", oh.loader_flags()) },
 	};
-
-	//m_Items.push_back(Item(L"Magic", PEStrings::ToDecAndHex(magic), PEStrings::MagicToString((OptionalHeaderMagic)magic)));
-	//m_Items.push_back(Item(L"Machine", PEStrings::ToDecAndHex(fh.Machine), PEStrings::MachineTypeToString((MachineType)fh.Machine)));
-	//m_Items.push_back(Item(L"Image Characteristics", PEStrings::ToDecAndHex(fh.Characteristics), PEStrings::CharacteristicsToString((ImageCharacteristics)fh.Characteristics)));
-	//m_Items.push_back(Item(L"DLL Characteristics", PEStrings::ToDecAndHex(dllChar), PEStrings::DllCharacteristicsToString((DllCharacteristics)dllChar)));
-	//m_Items.push_back(Item(L"Is Managed", _parser->IsManaged() ? L"Yes" : L"No"));
-	//m_Items.push_back(Item(L"Image Base", PEStrings::ToHex(pe64 ? oh64.ImageBase : oh32.ImageBase)));
-	//m_Items.push_back(Item(L"Heap Commit", PEStrings::ToMemorySize(pe64 ? oh64.SizeOfHeapCommit : oh32.SizeOfHeapCommit)));
-	//m_Items.push_back(Item(L"Heap Reserve", PEStrings::ToMemorySize(pe64 ? oh64.SizeOfHeapReserve : oh32.SizeOfHeapReserve)));
-	//m_Items.push_back(Item(L"Stack Commit", PEStrings::ToMemorySize(pe64 ? oh64.SizeOfStackCommit : oh32.SizeOfStackCommit)));
-	//m_Items.push_back(Item(L"Stack Reserve", PEStrings::ToMemorySize(pe64 ? oh64.SizeOfStackReserve : oh32.SizeOfStackReserve)));
-	//m_Items.push_back(Item(L"Code Size", PEStrings::ToMemorySize(pe64 ? oh64.SizeOfCode : oh32.SizeOfCode)));
-	//m_Items.push_back(Item(L"Entry Point", PEStrings::ToHex(pe64 ? oh64.AddressOfEntryPoint : oh32.AddressOfEntryPoint)));
-	//m_Items.push_back(Item(L"Image Size", PEStrings::ToMemorySize(pe64 ? oh64.SizeOfImage : oh32.SizeOfImage)));
-	//m_Items.push_back(Item(L"OS Version", (std::to_wstring(pe64 ? oh64.MajorOperatingSystemVersion : oh32.MajorOperatingSystemVersion) + L"." +
-	//	std::to_wstring(pe64 ? oh64.MinorOperatingSystemVersion : oh32.MinorOperatingSystemVersion)).c_str()));
-	//_items.push_back(Item(L"Image Version", (std::to_wstring(pe64 ? oh64.MajorImageVersion : oh32.MajorImageVersion) + L"." +
-	//	std::to_wstring(pe64 ? oh64.MinorImageVersion : oh32.MinorImageVersion)).c_str()));
-	//_items.push_back(Item(L"Linker Version", (std::to_wstring(pe64 ? oh64.MajorLinkerVersion : oh32.MajorLinkerVersion) + L"." +
-	//	std::to_wstring(pe64 ? oh64.MinorLinkerVersion : oh32.MinorLinkerVersion)).c_str()));
-	//_items.push_back(Item(L"Loader Flags", PEStrings::ToDecAndHex(pe64 ? oh64.LoaderFlags : oh32.LoaderFlags)));
 
 	m_List.SetItemCount((int)m_Items.size());
 }

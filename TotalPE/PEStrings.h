@@ -6,18 +6,32 @@ namespace std {
 	wstring to_wstring(LIEF::PE::SUBSYSTEM type);
 	wstring to_wstring(LIEF::PE::MACHINE_TYPES machine);
 	wstring to_wstring(LIEF::PE::HEADER_CHARACTERISTICS cs);
+	wstring to_wstring(LIEF::PE::PE_TYPE magic);
 };
+
+enum class DllCharacteristics : unsigned short {
+	None = 0,
+	HighEntropyVA = 0x20,
+	DynamicBase = 0x40,
+	ForceIntegrity = 0x80,
+	NxCompat = 0x100,
+	NoIsolation = 0x200,
+	NoSEH = 0x400,
+	NoBind = 0x800,
+	AppContainer = 0x1000,
+	WDMDriver = 0x2000,
+	ControlFlowGuard = 0x4000,
+	TerminalServerAware = 0x8000
+};
+DEFINE_ENUM_FLAG_OPERATORS(DllCharacteristics);
 
 struct PEStrings abstract final {
 	static std::wstring ToDecAndHex(DWORD value, bool hexFirst = false);
-	//static char const* MagicToString(OptionalHeaderMagic magic);
-	//static char const* MachineTypeToString(MachineType type);
 	static std::wstring Sec1970ToString(DWORD secs);
-	//static std::string CharacteristicsToString(ImageCharacteristics ch);
-	//static std::string DllCharacteristicsToString(DllCharacteristics ch);
+	static std::wstring DllCharacteristicsToString(uint32_t ch);
 	static std::wstring ToHex(DWORD value, bool leadingZero = false);
 	static std::wstring ToHex(ULONGLONG value);
-	static std::string ToMemorySize(ULONGLONG size);
+	static std::wstring ToMemorySize(ULONGLONG size);
 	static wchar_t const* ResourceTypeToString(WORD id);
 	//static std::wstring FormatInstruction(const cs_insn& inst);
 	static std::wstring ManagedTypeAttributesToString(CorTypeAttr attr);
@@ -27,6 +41,6 @@ struct PEStrings abstract final {
 	static std::wstring PropertyAttributesToString(CorPropertyAttr attr);
 	static std::wstring EventAttributesToString(CorEventAttr attr);
 	static PCWSTR GetDataDirectoryName(int index);
-	static std::string SectionCharacteristicsToString(DWORD c);
+	static std::wstring SectionCharacteristicsToString(DWORD c);
 };
 

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ViewManager.h"
 #include "PEImageView.h"
+#include "SectionsView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -14,9 +15,17 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, LIEF::PE::Bin
 
     switch (type) {
         case TreeItemType::Image:
+        {
             auto view = new CPEImageView(m_pFrame, pe);
             hView = view->DoCreate(hParent);
             break;
+        }
+        case TreeItemType::Sections:
+        {
+            auto view = new CSectionsView(m_pFrame, pe);
+            hView = view->DoCreate(hParent);
+            break;
+        }
     }
     if (hView)
         m_views.insert({ type, hView });

@@ -7,6 +7,30 @@ static PCWSTR memberVisiblity[] = {
 	L"Protected or Internal", L"Public"
 };
 
+enum class SectionFlags : unsigned {
+	None = 0,
+	NoPad = 8,
+	Code = 0x20,
+	InitializedData = 0x40,
+	UninitializedData = 0x80,
+	Other = 0x100,
+	Info = 0x200,
+	Remove = 0x800,
+	Comdat = 0x1000,
+	GPRel = 0x80000,
+	Align1Byte = 0x100000,
+	Align2Bytes = 0x200000,
+	ExtendedReloc = 0x1000000,
+	Discardable = 0x2000000,
+	NotCached = 0x4000000,
+	NotPaged = 0x8000000,
+	Shared = 0x10000000,
+	Execute = 0x20000000,
+	Read = 0x40000000,
+	Write = 0x80000000,
+};
+DEFINE_ENUM_FLAG_OPERATORS(SectionFlags);
+
 std::wstring std::to_wstring(LIEF::PE::SUBSYSTEM type) {
 	switch (static_cast<DWORD>(type)) {
 		case IMAGE_SUBSYSTEM_NATIVE: return L"Native";
@@ -35,15 +59,14 @@ std::wstring PEStrings::ToDecAndHex(DWORD value, bool hexFirst) {
 	return text;
 }
 
-//char const* PEStrings::MagicToString(OptionalHeaderMagic magic) {
-//	switch (magic) {
-//		case OptionalHeaderMagic::PE32: return "PE32";
-//		case OptionalHeaderMagic::PE32Plus: return "PE32+";
-//		case OptionalHeaderMagic::Rom: return "ROM";
-//	}
-//	return "";
-//}
-//
+std::wstring std::to_wstring(LIEF::PE::PE_TYPE magic) {
+	switch (magic) {
+		case LIEF::PE::PE_TYPE::PE32: return L"PE32";
+		case LIEF::PE::PE_TYPE::PE32_PLUS: return L"PE32+";
+	}
+	return L"";
+}
+
 std::wstring std::to_wstring(LIEF::PE::MACHINE_TYPES type) {
 	switch ((DWORD)type) {
 		case IMAGE_FILE_MACHINE_UNKNOWN: return L"Unknown";
@@ -55,6 +78,37 @@ std::wstring std::to_wstring(LIEF::PE::MACHINE_TYPES type) {
 		case IMAGE_FILE_MACHINE_ARM64: return L"ARM 64";
 	}
 	return L"";
+}
+
+std::wstring PEStrings::DllCharacteristicsToString(uint32_t dc) {
+	std::wstring result;
+
+	static const struct {
+		DllCharacteristics cs;
+		PCWSTR text;
+	} chars[] = {
+		{ DllCharacteristics::AppContainer,			L"App Container" },
+		{ DllCharacteristics::HighEntropyVA,		L"High Entropy VA" },
+		{ DllCharacteristics::DynamicBase,			L"Dynamic Base" },
+		{ DllCharacteristics::ForceIntegrity,		L"Force Integrity" },
+		{ DllCharacteristics::NxCompat,				L"NX Compat" },
+		{ DllCharacteristics::ControlFlowGuard,		L"Control Flow Guard" },
+		{ DllCharacteristics::NoBind,				L"No Bind" },
+		{ DllCharacteristics::WDMDriver,			L"WDM Driver" },
+		{ DllCharacteristics::NoIsolation,			L"No Isolation" },
+		{ DllCharacteristics::TerminalServerAware,	L"Terminal Server Aware" },
+		{ DllCharacteristics::NoSEH,				L"No SEH" },
+	};
+
+	for (auto& ch : chars) {
+		if ((ch.cs & (DllCharacteristics)dc) == ch.cs)
+			result += std::wstring(ch.text) + L", ";
+	}
+
+	if (!result.empty())
+		result = result.substr(0, result.size() - 2);
+	return result;
+
 }
 
 std::wstring PEStrings::Sec1970ToString(DWORD secs) {
@@ -95,37 +149,6 @@ std::wstring std::to_wstring(LIEF::PE::HEADER_CHARACTERISTICS cs) {
 	return result;
 }
 
-//std::string PEStrings::DllCharacteristicsToString(DllCharacteristics dc) {
-//	std::string result;
-//
-//	static const struct {
-//		DllCharacteristics cs;
-//		PCSTR text;
-//	} chars[] = {
-//		{ DllCharacteristics::AppContainer, "App Container" },
-//		{ DllCharacteristics::HighEntropyVA, "High Entropy VA" },
-//		{ DllCharacteristics::DynamicBase, "Dynamic Base" },
-//		{ DllCharacteristics::ForceIntegrity, "Force Integrity" },
-//		{ DllCharacteristics::NxCompat, "NX Compat" },
-//		{ DllCharacteristics::ControlFlowGuard, "Control Flow Guard" },
-//		{ DllCharacteristics::NoBind, "No Bind" },
-//		{ DllCharacteristics::WDMDriver, "WDM Driver" },
-//		{ DllCharacteristics::NoIsolation, "No Isolation" },
-//		{ DllCharacteristics::TerminalServerAware, "Terminal Server Aware" },
-//		{ DllCharacteristics::NoSEH, "No SEH" },
-//	};
-//
-//	for (auto& ch : chars) {
-//		if ((ch.cs & dc) == ch.cs)
-//			result += std::string(ch.text) + ", ";
-//	}
-//
-//	if (!result.empty())
-//		result = result.substr(0, result.size() - 2);
-//	return result;
-//
-//}
-
 std::wstring PEStrings::ToHex(DWORD value, bool leadingZero) {
 	if (leadingZero)
 		return std::format(L"0x{:08X}", value);
@@ -137,16 +160,16 @@ std::wstring PEStrings::ToHex(ULONGLONG value) {
 	return result;
 }
 
-std::string PEStrings::ToMemorySize(ULONGLONG size) {
-	auto result = std::format("0x{:X}", size);
+std::wstring PEStrings::ToMemorySize(ULONGLONG size) {
+	auto result = std::format(L"0x{:X}", size);
 	if (size < 1 << 14)
-		result = std::format("{} ({} B)", result, size);
+		result = std::format(L"{} ({} B)", result, size);
 	else if (size < 1 << 23)
-		result = std::format("{} ({} KB)", result, size >> 10);
+		result = std::format(L"{} ({} KB)", result, size >> 10);
 	else if (size < 1LL << 33)
-		result = std::format("{} ({} MB)", result, size >> 20);
+		result = std::format(L"{} ({} MB)", result, size >> 20);
 	else
-		result = std::format("{} ({} GB)", result, size >> 30);
+		result = std::format(L"{} ({} GB)", result, size >> 30);
 	return result;
 }
 
@@ -322,38 +345,38 @@ PCWSTR PEStrings::GetDataDirectoryName(int index) {
 	return index < 0 || index >= _countof(names) ? L"" : names[index];
 }
 
-//std::string PEStrings::SectionCharacteristicsToString(DWORD c) {
-//	std::string result;
-//	auto ch = static_cast<SectionFlags>(c);
-//
-//	struct {
-//		SectionFlags Flags;
-//		PCSTR Text;
-//	} items[] = {
-//		{ SectionFlags::NoPad, "No Pad" },
-//		{ SectionFlags::Code, "Code" },
-//		{ SectionFlags::Read, "Read" },
-//		{ SectionFlags::Write, "Write" },
-//		{ SectionFlags::Execute, "Execute" },
-//		{ SectionFlags::Shared, "Shared" },
-//		{ SectionFlags::InitializedData, "Initialized Data" },
-//		{ SectionFlags::UninitializedData, "Uninitialized Data" },
-//		{ SectionFlags::Remove, "Remove" },
-//		{ SectionFlags::Discardable, "Discardable" },
-//		{ SectionFlags::Info, "Info" },
-//		{ SectionFlags::Comdat, "Comdat" },
-//		{ SectionFlags::GPRel, "GP Relative" },
-//		{ SectionFlags::ExtendedReloc, "Extended Reloc" },
-//		{ SectionFlags::NotPaged, "Not Paged" },
-//		{ SectionFlags::NotCached, "Not Cached" },
-//	};
-//
-//	for (auto& item : items)
-//		if ((ch & item.Flags) != SectionFlags::None)
-//			result += item.Text + std::string(", ");
-//
-//	if (!result.empty())
-//		result = result.substr(0, result.length() - 2);
-//
-//	return result;
-//}
+std::wstring PEStrings::SectionCharacteristicsToString(DWORD c) {
+	std::wstring result;
+	auto ch = static_cast<SectionFlags>(c);
+
+	struct {
+		SectionFlags Flags;
+		PCWSTR Text;
+	} items[] = {
+		{ SectionFlags::NoPad,				L"No Pad" },
+		{ SectionFlags::Code,				L"Code" },
+		{ SectionFlags::Read,				L"Read" },
+		{ SectionFlags::Write,				L"Write" },
+		{ SectionFlags::Execute,			L"Execute" },
+		{ SectionFlags::Shared,				L"Shared" },
+		{ SectionFlags::InitializedData,	L"Initialized Data" },
+		{ SectionFlags::UninitializedData,	L"Uninitialized Data" },
+		{ SectionFlags::Remove,				L"Remove" },
+		{ SectionFlags::Discardable,		L"Discardable" },
+		{ SectionFlags::Info,				L"Info" },
+		{ SectionFlags::Comdat,				L"Comdat" },
+		{ SectionFlags::GPRel,				L"GP Relative" },
+		{ SectionFlags::ExtendedReloc,		L"Extended Reloc" },
+		{ SectionFlags::NotPaged,			L"Not Paged" },
+		{ SectionFlags::NotCached,			L"Not Cached" },
+	};
+
+	for (auto& item : items)
+		if ((ch & item.Flags) != SectionFlags::None)
+			result += item.Text + std::wstring(L", ");
+
+	if (!result.empty())
+		result = result.substr(0, result.length() - 2);
+
+	return result;
+}

@@ -45,6 +45,9 @@
     <ClCompile Include="PEImageView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="SectionsView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -74,6 +77,9 @@
     <ClInclude Include="PEImageView.h">
       <Filter>Views</Filter>
     </ClInclude>
+    <ClInclude Include="SectionsView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TotalPE.rc">
@@ -100,6 +106,42 @@
       <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\sections.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\copy.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\manifest.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\open.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\paste.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\cursor.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\form.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\icon.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\version.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\bitmap.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\font.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\globe.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\html.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>

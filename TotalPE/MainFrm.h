@@ -23,6 +23,8 @@ public:
 
 	CMainFrame();
 
+	bool OpenPE(PCWSTR path);
+
 	void OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew);
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -32,6 +34,7 @@ public:
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
+		COMMAND_ID_HANDLER(ID_FILE_OPENINANEWWINDOW, OnFileOpenNewWindow)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
@@ -50,8 +53,13 @@ private:
 	CString const& GetPEPath() const override;
 
 	static TreeItemType TreeItemWithIndex(TreeItemType type, int index);
+	CString DoFileOpen() const;
 
 	void InitPETree();
+	void InitMenu();
+	void ParseResources(HTREEITEM hRoot);
+	void ParseResources(HTREEITEM hRoot, LIEF::PE::ResourceNode* node);
+	static int ResourceTypeIconIndex(WORD type);
 
 	// Handler prototypes (uncomment arguments if needed):
 	//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -61,16 +69,17 @@ private:
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled);
 	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnFileNew(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnViewStatusBar(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnFileOpenNewWindow(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;
 	CString m_Path;
-	int m_TreeIconSize{ 24 };
+	int m_TreeIconSize{ 16 };
 	std::unique_ptr<LIEF::PE::Binary> m_pe;
 	ViewManager m_ViewMgr;
 	HWND m_CurrentView;
+	inline static int s_Frames{ 0 };
 };

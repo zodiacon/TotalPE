@@ -101,6 +101,30 @@ IDI_SECTION             ICON                    "res\\section.ico"
 
 IDI_SECTIONS            ICON                    "res\\sections.ico"
 
+IDI_COPY                ICON                    "res\\copy.ico"
+
+IDI_FILE_OPEN           ICON                    "res\\open.ico"
+
+IDI_PASTE               ICON                    "res\\paste.ico"
+
+IDI_MANIFEST            ICON                    "res\\manifest.ico"
+
+IDI_CURSORS             ICON                    "res\\cursor.ico"
+
+IDI_DIALOGS             ICON                    "res\\form.ico"
+
+IDI_ICONS               ICON                    "res\\icon.ico"
+
+IDI_VERSION             ICON                    "res\\version.ico"
+
+IDI_GLOBE               ICON                    "res\\globe.ico"
+
+IDI_BITMAP              ICON                    "res\\bitmap.ico"
+
+IDI_FONT                ICON                    "res\\font.ico"
+
+IDI_HTML                ICON                    "res\\html.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -109,12 +133,12 @@ IDI_SECTIONS            ICON                    "res\\sections.ico"
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 187, 82
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About"
+CAPTION "About Total PE"
 FONT 9, "Segoe UI", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,61,50,14
     CTEXT           "Total PE v1.0\n\n(C)2022 Pavel Yosifovich",IDC_STATIC,49,7,78,32
-    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,18,17
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
 END
 
 

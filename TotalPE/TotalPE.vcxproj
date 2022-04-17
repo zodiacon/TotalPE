@@ -219,6 +219,7 @@
     </ClCompile>
     <ClCompile Include="PEImageView.cpp" />
     <ClCompile Include="PEStrings.cpp" />
+    <ClCompile Include="SectionsView.cpp" />
     <ClCompile Include="TotalPE.cpp" />
     <ClCompile Include="View.cpp" />
     <ClCompile Include="ViewManager.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="PEStrings.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SectionsView.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="ViewManager.h" />
   </ItemGroup>
@@ -238,13 +240,25 @@
     <ResourceCompile Include="TotalPE.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\bitmap.ico" />
+    <Image Include="res\copy.ico" />
+    <Image Include="res\cursor.ico" />
     <Image Include="res\folder.ico" />
     <Image Include="res\folder_closed.ico" />
+    <Image Include="res\font.ico" />
+    <Image Include="res\form.ico" />
+    <Image Include="res\globe.ico" />
     <Image Include="res\headers.ico" />
+    <Image Include="res\html.ico" />
+    <Image Include="res\icon.ico" />
+    <Image Include="res\manifest.ico" />
+    <Image Include="res\open.ico" />
+    <Image Include="res\paste.ico" />
     <Image Include="res\resources.ico" />
     <Image Include="res\section.ico" />
     <Image Include="res\sections.ico" />
     <Image Include="res\TotalPE.ico" />
+    <Image Include="res\version.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

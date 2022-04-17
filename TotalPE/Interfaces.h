@@ -6,7 +6,16 @@ enum class TreeItemType : uint32_t {
 	Sections = 1 << 17,
 	Headers = 1 << 18,
 	Resources = 1 << 19,
-	CLR = 1 << 20,
+	Manifest,
+	Version,
+	Icons = Resources + 10,
+	Cursors = Icons + 1000,
+	StringTables = Cursors + 1000,
+	Dialogs = StringTables + 1000,
+	Menus = Dialogs + 1000,
+	Bitmaps = Menus + 1000,
+	CustomResource = 1 << 20,
+	CLR = 1 << 21,
 };
 
 struct IMainFrame abstract {
