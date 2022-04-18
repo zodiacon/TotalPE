@@ -5,7 +5,7 @@
 class ViewManager {
 public:
 	ViewManager(IMainFrame* frame);
-	HWND CreateOrGetView(TreeItemType type, HWND hParent, LIEF::PE::Binary const& pe);
+	HWND CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full const& pe);
 	void Clear();
 
 private:

@@ -22,19 +22,24 @@
 #define IDI_GLOBE                       216
 #define IDI_BITMAP                      217
 #define IDI_FONT                        218
-#define IDI_ICON2                       219
 #define IDI_HTML                        219
 #define ID_OPTIONS_ALWAYSONTOP          32775
 #define ID_OPTIONS_FONT                 32776
 #define ID_OPTIONS_DARKMODE             32777
 #define ID_FILE_OPENINANEWWINDOW        32778
+#define ID_OPTIONS_TREEICONSIZE         32779
+#define ID_TREEICONSIZE_SMALL           32780
+#define ID_TREEICONSIZE_MEDIUM          32781
+#define ID_TREEICONSIZE_LARGE           32782
+#define ID_TREEICONSIZE_HUGE            32783
+#define ID_FILE_CLOSE32784              32784
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        220
-#define _APS_NEXT_COMMAND_VALUE         32779
+#define _APS_NEXT_COMMAND_VALUE         32785
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

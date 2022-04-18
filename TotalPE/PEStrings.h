@@ -2,13 +2,6 @@
 
 #pragma once
 
-namespace std {
-	wstring to_wstring(LIEF::PE::SUBSYSTEM type);
-	wstring to_wstring(LIEF::PE::MACHINE_TYPES machine);
-	wstring to_wstring(LIEF::PE::HEADER_CHARACTERISTICS cs);
-	wstring to_wstring(LIEF::PE::PE_TYPE magic);
-};
-
 enum class DllCharacteristics : unsigned short {
 	None = 0,
 	HighEntropyVA = 0x20,
@@ -26,6 +19,10 @@ enum class DllCharacteristics : unsigned short {
 DEFINE_ENUM_FLAG_OPERATORS(DllCharacteristics);
 
 struct PEStrings abstract final {
+	static std::wstring MagicToString(uint16_t magic);
+	static std::wstring SubsystemToString(uint32_t type);
+	static std::wstring MachineTypeToString(uint16_t);
+	static std::wstring CharacteristicsToString(uint32_t cs);
 	static std::wstring ToDecAndHex(DWORD value, bool hexFirst = false);
 	static std::wstring Sec1970ToString(DWORD secs);
 	static std::wstring DllCharacteristicsToString(uint32_t ch);

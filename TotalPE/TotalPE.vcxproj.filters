@@ -48,6 +48,9 @@
     <ClCompile Include="SectionsView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="XMLView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -78,6 +81,9 @@
       <Filter>Views</Filter>
     </ClInclude>
     <ClInclude Include="SectionsView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,8 +31,8 @@ enum class SectionFlags : unsigned {
 };
 DEFINE_ENUM_FLAG_OPERATORS(SectionFlags);
 
-std::wstring std::to_wstring(LIEF::PE::SUBSYSTEM type) {
-	switch (static_cast<DWORD>(type)) {
+std::wstring PEStrings::SubsystemToString(uint32_t type) {
+	switch (type) {
 		case IMAGE_SUBSYSTEM_NATIVE: return L"Native";
 		case IMAGE_SUBSYSTEM_WINDOWS_GUI: return L"Window GUI";
 		case IMAGE_SUBSYSTEM_WINDOWS_CUI: return L"Windows CUI";
@@ -59,16 +59,17 @@ std::wstring PEStrings::ToDecAndHex(DWORD value, bool hexFirst) {
 	return text;
 }
 
-std::wstring std::to_wstring(LIEF::PE::PE_TYPE magic) {
+std::wstring PEStrings::MagicToString(uint16_t magic) {
 	switch (magic) {
-		case LIEF::PE::PE_TYPE::PE32: return L"PE32";
-		case LIEF::PE::PE_TYPE::PE32_PLUS: return L"PE32+";
+		case IMAGE_NT_OPTIONAL_HDR32_MAGIC: return L"PE32";
+		case IMAGE_NT_OPTIONAL_HDR64_MAGIC: return L"PE32+";
+		case IMAGE_ROM_OPTIONAL_HDR_MAGIC: return L"ROM";
 	}
 	return L"";
 }
 
-std::wstring std::to_wstring(LIEF::PE::MACHINE_TYPES type) {
-	switch ((DWORD)type) {
+std::wstring PEStrings::MachineTypeToString(uint16_t type) {
+	switch (type) {
 		case IMAGE_FILE_MACHINE_UNKNOWN: return L"Unknown";
 		case IMAGE_FILE_MACHINE_I386: return L"x86";
 		case IMAGE_FILE_MACHINE_ARM: return L"ARM";
@@ -115,7 +116,7 @@ std::wstring PEStrings::Sec1970ToString(DWORD secs) {
 	return (PCWSTR)CTime(secs).Format(L"%X");
 }
 
-std::wstring std::to_wstring(LIEF::PE::HEADER_CHARACTERISTICS cs) {
+std::wstring PEStrings::CharacteristicsToString(uint32_t cs) {
 	std::wstring result;
 
 	static const struct {

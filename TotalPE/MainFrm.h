@@ -36,6 +36,7 @@ public:
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
 		COMMAND_ID_HANDLER(ID_FILE_OPENINANEWWINDOW, OnFileOpenNewWindow)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
+		COMMAND_ID_HANDLER(ID_FILE_CLOSE, OnFileClose)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		CHAIN_MSG_MAP(CAutoUpdateUI<CMainFrame>)
@@ -51,6 +52,8 @@ private:
 	bool AddToolBar(HWND tb) override;
 	void SetStatusText(int index, PCWSTR text) override;
 	CString const& GetPEPath() const override;
+	CString GetSelectedTreeItemPath() const override;
+	CString GetTreeItemText(int parents) const override;
 
 	static TreeItemType TreeItemWithIndex(TreeItemType type, int index);
 	CString DoFileOpen() const;
@@ -58,7 +61,7 @@ private:
 	void InitPETree();
 	void InitMenu();
 	void ParseResources(HTREEITEM hRoot);
-	void ParseResources(HTREEITEM hRoot, LIEF::PE::ResourceNode* node);
+	void ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth = 0);
 	static int ResourceTypeIconIndex(WORD type);
 
 	// Handler prototypes (uncomment arguments if needed):
@@ -73,12 +76,13 @@ private:
 	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnFileOpenNewWindow(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnFileClose(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;
 	CString m_Path;
 	int m_TreeIconSize{ 16 };
-	std::unique_ptr<LIEF::PE::Binary> m_pe;
+	std::unique_ptr<pe_image_full> m_pe;
 	ViewManager m_ViewMgr;
 	HWND m_CurrentView;
 	inline static int s_Frames{ 0 };

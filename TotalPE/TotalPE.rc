@@ -56,6 +56,8 @@ BEGIN
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "Open in a &New Window...",    ID_FILE_OPENINANEWWINDOW
         MENUITEM SEPARATOR
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
     POPUP "&Edit"
@@ -72,6 +74,13 @@ BEGIN
         MENUITEM "&Always On Top",              ID_OPTIONS_ALWAYSONTOP
         MENUITEM "&Font...",                    ID_OPTIONS_FONT
         MENUITEM "&Dark Mode",                  ID_OPTIONS_DARKMODE
+        POPUP "&Tree Icon Size"
+        BEGIN
+            MENUITEM "&Small",                      ID_TREEICONSIZE_SMALL
+            MENUITEM "&Medium",                     ID_TREEICONSIZE_MEDIUM
+            MENUITEM "&Large",                      ID_TREEICONSIZE_LARGE
+            MENUITEM "&Huge",                       ID_TREEICONSIZE_HUGE
+        END
     END
     POPUP "&Help"
     BEGIN
@@ -137,7 +146,7 @@ CAPTION "About Total PE"
 FONT 9, "Segoe UI", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,61,50,14
-    CTEXT           "Total PE v1.0\n\n(C)2022 Pavel Yosifovich",IDC_STATIC,49,7,78,32
+    CTEXT           "Total PE v0.1\n\n©2022 Pavel Yosifovich",IDC_STATIC,49,7,78,32
     ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
 END
 
@@ -191,8 +200,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 0,1,0,0
+ PRODUCTVERSION 0,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -205,15 +214,15 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904B0"
+        BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "TotalPE Module"
-            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "FileVersion", "0.1.0.0"
             VALUE "InternalName", "TotalPE"
-            VALUE "LegalCopyright", "Copyright 2022"
+            VALUE "LegalCopyright", "©2022 Pavel Yosifovich"
             VALUE "OriginalFilename", "TotalPE.exe"
-            VALUE "ProductName", "TotalPE Module"
-            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "ProductName", "Total PE"
+            VALUE "ProductVersion", "0.1.0.0"
         END
     END
     BLOCK "VarFileInfo"

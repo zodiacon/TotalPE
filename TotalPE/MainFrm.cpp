@@ -11,10 +11,8 @@
 #include <ToolbarHelper.h>
 
 #ifdef _DEBUG
-#pragma comment(lib, "../Lib/Liefd.lib")
 #pragma comment(lib, "../WTLHelper/x64/Debug/WTLHelper.lib")
 #else
-#pragma comment(lib, "../Lib/Lief.lib")
 #pragma comment(lib, "../WTLHelper/x64/Release/WTLHelper.lib")
 #endif
 
@@ -64,13 +62,27 @@ CString const& CMainFrame::GetPEPath() const {
 	return m_Path;
 }
 
+CString CMainFrame::GetSelectedTreeItemPath() const {
+	return GetFullItemPath(m_Tree, m_Tree.GetSelectedItem());
+}
+
+CString CMainFrame::GetTreeItemText(int parents) const {
+	auto hItem = m_Tree.GetSelectedItem();
+	while (parents-- > 0)
+		hItem = m_Tree.GetParentItem(hItem);
+
+	CString text;
+	m_Tree.GetItemText(hItem, text);
+	return text;
+}
+
 TreeItemType CMainFrame::TreeItemWithIndex(TreeItemType type, int index) {
 	return static_cast<TreeItemType>((int)type + index);
 }
 
 CString CMainFrame::DoFileOpen() const {
 	CSimpleFileDialog dlg(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_ENABLESIZING,
-		L"PE Files\0*.exe;*.dll;*.efi;*.ocx;*.cpl;*.sys\0All Files\0*.*\0");
+		L"PE Files\0*.exe;*.dll;*.efi;*.ocx;*.cpl;*.sys;*.mui;*.mun\0All Files\0*.*\0");
 	return IDOK == dlg.DoModal() ? dlg.m_szFileName : L"";
 }
 
@@ -102,54 +114,24 @@ void CMainFrame::InitPETree() {
 
 	auto sections = InsertTreeItem(m_Tree, L"Sections", 1, TreeItemType::Sections, root);
 	int index = 1;
-	for (auto& section : m_pe->sections()) {
-		InsertTreeItem(m_Tree, CString(section.name().c_str()), 6, TreeItemWithIndex(TreeItemType::Sections, index++), sections);
+	auto& image = m_pe->get_image();
+	for (auto& section : image.get_sections()) {
+		InsertTreeItem(m_Tree, CString(section->get_section_name().c_str()), 6, TreeItemWithIndex(TreeItemType::Sections, index++), sections);
 	}
 	m_Tree.Expand(sections, TVE_EXPAND);
 
 	auto dirs = InsertTreeItem(m_Tree, L"Directories", 5, 2, TreeItemType::Directories, root);
 	index = 1;
-	for (auto& dir : m_pe->data_directories()) {
-		if (!dir.has_section())
+	for (int i = 0; i < 16; i++) {
+		if (!image.has_directory(i))
 			continue;
-		InsertTreeItem(m_Tree, PEStrings::GetDataDirectoryName((int)dir.type()), 5, 2, TreeItemWithIndex(TreeItemType::Directories, index++), dirs);
+		InsertTreeItem(m_Tree, PEStrings::GetDataDirectoryName(i), 5, 2, TreeItemWithIndex(TreeItemType::Directories, index++), dirs);
 	}
 	m_Tree.Expand(dirs, TVE_EXPAND);
-	if (m_pe->has_resources()) {
+	if (image.has_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE)) {
 		auto resources = InsertTreeItem(m_Tree, L"Resources", 3, TreeItemType::Resources, root);
 		ParseResources(resources);
 		m_Tree.Expand(resources, TVE_EXPAND);
-		//auto const rm = m_pe->resources_manager();
-		//if (rm.has_manifest())
-		//	InsertTreeItem(m_Tree, L"Manifest", 7, TreeItemType::Manifest, resources, TVI_SORT);
-		//if (rm.has_version())
-		//	InsertTreeItem(m_Tree, L"Version", 8, TreeItemType::Version, resources, TVI_SORT);
-
-		//if (rm.has_icons()) {
-		//	auto icons = InsertTreeItem(m_Tree, L"Icons", 9, TreeItemType::Icons, resources, TVI_SORT);
-		//	index = 1;
-		//	for (auto& icon : rm.icons()) {
-		//		auto name = L"#" + std::to_wstring(icon.id());
-		//		InsertTreeItem(m_Tree, name.c_str(), 9, TreeItemWithIndex(TreeItemType::Icons, index++), icons, TVI_SORT);
-		//	}
-		//}
-		//if(rm.has_dialogs()) {
-		//	auto dialogs = InsertTreeItem(m_Tree, L"Dialogs", 11, TreeItemType::Dialogs, resources, TVI_SORT);
-		//	index = 1;
-		//	for (auto& dlg : rm.dialogs()) {
-		//		auto name = dlg.title().c_str();
-		//		InsertTreeItem(m_Tree, (PCWSTR)name, 11, TreeItemWithIndex(TreeItemType::Icons, index++), dialogs, TVI_SORT);
-		//	}
-		//}
-
-		//if (rm.has_string_table()) {
-		//	auto tables = InsertTreeItem(m_Tree, L"String Table", 12, TreeItemType::StringTables, resources, TVI_SORT);
-		//	index = 1;
-		//	for (auto& st : rm.string_table()) {
-		//		auto name = st.name().c_str();
-		//		InsertTreeItem(m_Tree, (PCWSTR)name, 11, TreeItemWithIndex(TreeItemType::StringTables, index++), tables, TVI_SORT);
-		//	}
-		//}
 	}
 	m_Tree.Expand(root, TVE_EXPAND);
 	m_Tree.SelectItem(root);
@@ -178,8 +160,10 @@ void CMainFrame::InitMenu() {
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot) {
-	auto node = m_pe->resources();
-	ParseResources(hRoot, node);
+	auto& node = m_pe->get_resources();
+	for (auto& entry : node.get_entry_list()) {
+		ParseResources(hRoot, entry);
+	}
 }
 
 int CMainFrame::ResourceTypeIconIndex(WORD type) {
@@ -192,41 +176,50 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 	return type >= _countof(indices) ? -1 : indices[type];
 }
 
-void CMainFrame::ParseResources(HTREEITEM hRoot, LIEF::PE::ResourceNode* node) {
+void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth) {
 	CString name;
-	if (node->has_name())
-		name = (PCWSTR)node->name().c_str();
+	if (node.is_named())
+		name = (PCWSTR)node.get_name().c_str();
 	else
-		name.Format(L"#%d", node->id());
+		name.Format(L"#%d", node.get_id());
 
-	if (node->depth() > 0) {
-		int icon = 3;
-		if (node->depth() == 3)
-			icon = 7;	// language
-		if (node->depth() == 1 && !node->has_name()) {
-			auto friendlyName = PEStrings::ResourceTypeToString(node->id());
-			if (friendlyName) {
-				name = friendlyName;
-			}
+	TreeItemType type;
+	int icon = 3;
+	if (depth == 2)
+		icon = 7;	// language
+	if (depth == 0 && !node.is_named()) {
+		auto friendlyName = PEStrings::ResourceTypeToString(node.get_id());
+		if (friendlyName) {
+			name = friendlyName;
 		}
-		if (node->depth() == 1) {
-			icon = ResourceTypeIconIndex(node->id());
-			icon = icon < 0 ? 3 : icon + 8;	// first icon index for resources
-		}
-		else if (node->depth() == 2) {
-			int dummy;
-			m_Tree.GetItemImage(hRoot, icon, dummy);
-		}
-		hRoot = InsertTreeItem(m_Tree, name, icon, TreeItemType::Resources, hRoot, TVI_SORT);
 	}
-	for (auto& child : node->childs())
-		ParseResources(hRoot, &child);
+	if (depth == 0) {
+		type = node.is_named() ? TreeItemType::ResourceTypeName : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
+		icon = ResourceTypeIconIndex(node.get_id());
+		icon = icon < 0 ? 3 : icon + 8;	// first icon index for resources
+
+	}
+	else if (depth == 1) {
+		type = TreeItemType::ResourceName;
+		int dummy;
+		m_Tree.GetItemImage(hRoot, icon, dummy);
+	}
+	else if (depth == 2) {
+		ATLASSERT(node.is_includes_data());
+		type = static_cast<TreeItemType>((DWORD_PTR)&node) | TreeItemType::Resource;
+	}
+	hRoot = InsertTreeItem(m_Tree, name, icon, type, hRoot, TVI_SORT);
+
+	if (!node.is_includes_data()) {
+		for (auto& child : node.get_resource_directory().get_entry_list())
+			ParseResources(hRoot, child, depth + 1);
+	}
 }
 
 bool CMainFrame::OpenPE(PCWSTR path) {
 	CWaitCursor wait;
-	auto pe = LIEF::PE::Parser::parse((PCSTR)CStringA(path));
-	if (!pe) {
+	auto pe = std::make_unique<pe_image_full>(std::string(CStringA(path)));
+	if (pe->get_image().get_image_status() != pe_image_status::pe_image_status_ok) {
 		AtlMessageBox(m_hWnd, L"Error parsing file", IDS_TITLE, MB_ICONERROR);
 		return false;
 	}
@@ -235,6 +228,8 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 	m_Path = path;
 	m_ViewMgr.Clear();
 	InitPETree();
+	UIEnable(ID_FILE_CLOSE, true);
+
 	return true;
 }
 
@@ -262,6 +257,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 	InitMenu();
 	UISetCheck(ID_VIEW_STATUS_BAR, 1);
+	UIEnable(ID_FILE_CLOSE, false);
 
 	// register object for message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -305,12 +301,18 @@ LRESULT CMainFrame::OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
 
 LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL&) {
 	auto path = DoFileOpen();
+	if (path.IsEmpty())
+		return 0;
+
 	OpenPE(path);
 	return 0;
 }
 
 LRESULT CMainFrame::OnFileOpenNewWindow(WORD, WORD, HWND, BOOL&) {
 	auto path = DoFileOpen();
+	if (path.IsEmpty())
+		return 0;
+
 	auto frame = new CMainFrame;
 	frame->CreateEx();
 	if (!frame->OpenPE(path)) {
@@ -318,5 +320,15 @@ LRESULT CMainFrame::OnFileOpenNewWindow(WORD, WORD, HWND, BOOL&) {
 		return 0;
 	}
 	frame->ShowWindow(SW_SHOWDEFAULT);
+	return 0;
+}
+
+LRESULT CMainFrame::OnFileClose(WORD, WORD, HWND, BOOL&) {
+	if (m_pe) {
+		m_pe.reset();
+		m_ViewMgr.Clear();
+		m_Tree.DeleteAllItems();
+		m_Splitter.SetSplitterPane(1, nullptr);
+	}
 	return 0;
 }

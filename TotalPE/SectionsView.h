@@ -25,6 +25,6 @@ private:
 	void BuildItems();
 
 	CListViewCtrl m_List;
-	SortedFilteredVector<LIEF::PE::Section> m_Sections;
+	SortedFilteredVector<pe_section*> m_Sections;
 };
 

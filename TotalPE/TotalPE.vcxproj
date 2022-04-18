@@ -223,6 +223,7 @@
     <ClCompile Include="TotalPE.cpp" />
     <ClCompile Include="View.cpp" />
     <ClCompile Include="ViewManager.cpp" />
+    <ClCompile Include="XMLView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="SectionsView.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="ViewManager.h" />
+    <ClInclude Include="XMLView.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TotalPE.rc" />
@@ -262,6 +264,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\enma_pe\enma_pe.vcxproj">
+      <Project>{5b0e07a2-6928-44e0-af0a-445b067c71cc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -47,32 +47,31 @@ LRESULT CPEImageView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 }
 
 void CPEImageView::BuildItems() {
-	auto& header = PE().header();
-	auto& oh = PE().optional_header();
+	auto& header = PE().get_image();
 	auto& path = Frame()->GetPEPath();
 
 	m_Items = std::vector<DataItem>{
 		{ L"File Name", (PCWSTR)path.Mid(path.ReverseFind(L'\\') + 1), (PCWSTR)path },
-		{ L"Time/Date Stamp", std::format(L"0x{:08X}", header.time_date_stamp()) },
-		{ L"Machine", std::format(L"{} (0x{:X})", (uint32_t)header.machine(), (uint32_t)header.machine()), std::to_wstring(header.machine()) },
-		{ L"Subsystem", std::to_wstring((uint32_t)oh.subsystem()), std::to_wstring(oh.subsystem()) },
-		{ L"Sections", std::to_wstring(header.numberof_sections()) },
-		{ L"Characteristics", std::format(L"0x{:08X}", (uint32_t)header.characteristics()), std::to_wstring(header.characteristics()) },
-		{ L"Magic", std::format(L"{} (0x{:X})", (uint32_t)oh.magic(), (uint32_t)oh.magic()), std::to_wstring(oh.magic()) },
-		{ L"DLL Characteristics", std::format(L"0x{:04X}", (uint32_t)oh.dll_characteristics()), PEStrings::DllCharacteristicsToString(oh.dll_characteristics()) },
-		{ L"Image Base", std::format(L"0x{:X}", oh.imagebase()) },
-		{ L"Image Size", PEStrings::ToMemorySize(oh.sizeof_image()) },
-		{ L"Stack Reserve", PEStrings::ToMemorySize(oh.sizeof_stack_reserve()) },
-		{ L"Stack Commit", PEStrings::ToMemorySize(oh.sizeof_stack_commit()) },
-		{ L"Heap Reserve", PEStrings::ToMemorySize(oh.sizeof_heap_reserve()) },
-		{ L"Heap Commit", PEStrings::ToMemorySize(oh.sizeof_heap_commit()) },
-		{ L"Is Managed?", PE().data_directory(LIEF::PE::DATA_DIRECTORY::CLR_RUNTIME_HEADER).has_section() ? L"Yes" : L"No" },
-		{ L"Code Size", PEStrings::ToMemorySize(oh.sizeof_code()) },
-		{ L"Entry Point", std::format(L"0x{:X}", oh.addressof_entrypoint()) },
-		{ L"OS Version", std::format(L"{}.{}", oh.major_operating_system_version(), oh.minor_operating_system_version()) },
-		{ L"Image Version", std::format(L"{}.{}", oh.major_image_version(), oh.minor_image_version()) },
-		{ L"Linker Version", std::format(L"{}.{}", oh.major_linker_version(), oh.minor_linker_version()) },
-		{ L"Loader Flags", std::format(L"0x{:X}", oh.loader_flags()) },
+		{ L"Time/Date Stamp", std::format(L"0x{:08X}", header.get_timestamp()) },
+		{ L"Machine", std::format(L"{} (0x{:X})", header.get_machine(), header.get_machine()), PEStrings::MachineTypeToString(header.get_machine()) },
+		{ L"Subsystem", std::to_wstring(header.get_sub_system()), PEStrings::SubsystemToString(header.get_sub_system()) },
+		{ L"Sections", std::to_wstring(header.get_sections_number()) },
+		{ L"Characteristics", std::format(L"0x{:08X}", header.get_characteristics()), PEStrings::CharacteristicsToString(header.get_characteristics()) },
+		{ L"Magic", std::format(L"{} (0x{:X})", header.get_magic(), header.get_magic()), PEStrings::MagicToString(header.get_magic()) },
+		{ L"DLL Characteristics", std::format(L"0x{:04X}", header.get_characteristics_dll()), PEStrings::DllCharacteristicsToString(header.get_characteristics_dll()) },
+		{ L"Image Base", std::format(L"0x{:X}", header.get_image_base()) },
+		{ L"Image Size", PEStrings::ToMemorySize(header.get_image_size()) },
+		{ L"Stack Reserve", PEStrings::ToMemorySize(header.get_stack_reserve_size()) },
+		{ L"Stack Commit", PEStrings::ToMemorySize(header.get_stack_commit_size()) },
+		{ L"Heap Reserve", PEStrings::ToMemorySize(header.get_heap_reserve_size()) },
+		{ L"Heap Commit", PEStrings::ToMemorySize(header.get_heap_commit_size()) },
+		{ L"Is Managed?", header.has_directory(IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR) ? L"Yes" : L"No" },
+		{ L"Code Size", PEStrings::ToMemorySize(header.get_size_of_code()) },
+		{ L"Entry Point", std::format(L"0x{:X}", header.get_entry_point()) },
+		{ L"OS Version", std::format(L"{}.{}", header.get_os_ver_major(), header.get_os_ver_minor()) },
+		{ L"Image Version", std::format(L"{}.{}", header.get_image_ver_major(), header.get_image_ver_minor()) },
+		{ L"Linker Version", std::format(L"{}.{}", header.get_major_linker(), header.get_minor_linker()) },
+		{ L"Loader Flags", std::format(L"0x{:X}", header.get_loader_flags()) },
 	};
 
 	m_List.SetItemCount((int)m_Items.size());
