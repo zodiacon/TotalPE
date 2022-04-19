@@ -30,7 +30,10 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnIdle();
 
+	const UINT WM_CREATE_VIEW = WM_APP + 55;
+
 	BEGIN_MSG_MAP(CMainFrame)
+		MESSAGE_HANDLER(WM_CREATE_VIEW, OnCreateView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
@@ -70,6 +73,7 @@ private:
 	//	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnCreateView(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled);
 	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnViewStatusBar(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
@@ -84,6 +88,6 @@ private:
 	int m_TreeIconSize{ 16 };
 	std::unique_ptr<pe_image_full> m_pe;
 	ViewManager m_ViewMgr;
-	HWND m_CurrentView;
+	HWND m_CurrentView{ nullptr };
 	inline static int s_Frames{ 0 };
 };

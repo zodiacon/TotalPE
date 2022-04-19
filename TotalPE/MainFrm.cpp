@@ -19,9 +19,9 @@
 CMainFrame::CMainFrame() : m_ViewMgr(this) {
 }
 
-void CMainFrame::OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew) {
-	auto type = GetItemData<TreeItemType>(m_Tree, hNew);
-	auto hView = m_ViewMgr.CreateOrGetView(type, m_Splitter, *m_pe);
+LRESULT CMainFrame::OnCreateView(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	CWaitCursor wait;
+	auto hView = m_ViewMgr.CreateOrGetView((TreeItemType)wParam, m_Splitter, *m_pe);
 	if (hView) {
 		if (m_CurrentView)
 			::ShowWindow(m_CurrentView, SW_HIDE);
@@ -29,6 +29,12 @@ void CMainFrame::OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew) {
 		m_Splitter.SetSplitterPane(1, hView);
 		m_CurrentView = hView;
 	}
+	return 0;
+}
+
+void CMainFrame::OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew) {
+	auto type = GetItemData<TreeItemType>(m_Tree, hNew);
+	PostMessage(WM_CREATE_VIEW, (WPARAM)type);
 }
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg) {

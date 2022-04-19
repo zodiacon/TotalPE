@@ -8,7 +8,7 @@ CString CSectionsView::GetColumnText(HWND, int row, int col) const {
 	switch (col) {
 		case 0: return section->get_section_name().c_str();
 		case 1: return PEStrings::ToMemorySize(section->get_virtual_size()).c_str();
-		case 2: return std::format(L"0x{:X}", section->get_virtual_size()).c_str();
+		case 2: return std::format(L"0x{:X}", section->get_virtual_address()).c_str();
 		case 3: return std::format(L"0x{:X}", section->get_pointer_to_raw()).c_str();
 		case 4: return PEStrings::ToMemorySize(section->get_size_of_raw_data()).c_str();
 		case 5: return std::format(L"0x{:08X} ({})", section->get_characteristics(), 

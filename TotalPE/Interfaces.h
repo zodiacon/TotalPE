@@ -14,6 +14,13 @@ enum class TreeItemType : size_t {
 };
 DEFINE_ENUM_FLAG_OPERATORS(TreeItemType);
 
+enum class TextFormat {
+	Xml,
+	Json,
+	JScript,
+	Plain,
+};
+
 struct IMainFrame abstract {
 	virtual HWND GetHwnd() const = 0;
 	virtual BOOL TrackPopupMenu(HMENU hMenu, DWORD flags, int x, int y) = 0;

@@ -150,7 +150,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ExceptionHandling />
+      <ExceptionHandling>Sync</ExceptionHandling>
       <DebugInformationFormat />
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -182,7 +182,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ExceptionHandling />
+      <ExceptionHandling>Sync</ExceptionHandling>
       <DebugInformationFormat />
       <PreprocessorDefinitions>_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -219,11 +219,12 @@
     </ClCompile>
     <ClCompile Include="PEImageView.cpp" />
     <ClCompile Include="PEStrings.cpp" />
+    <ClCompile Include="ReadOnlyHexView.cpp" />
     <ClCompile Include="SectionsView.cpp" />
     <ClCompile Include="TotalPE.cpp" />
     <ClCompile Include="View.cpp" />
     <ClCompile Include="ViewManager.cpp" />
-    <ClCompile Include="XMLView.cpp" />
+    <ClCompile Include="TextView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
@@ -231,12 +232,13 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="PEImageView.h" />
     <ClInclude Include="PEStrings.h" />
+    <ClInclude Include="ReadOnlyHexView.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SectionsView.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="ViewManager.h" />
-    <ClInclude Include="XMLView.h" />
+    <ClInclude Include="TextView.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TotalPE.rc" />
