@@ -20,6 +20,7 @@ CMainFrame::CMainFrame() : m_ViewMgr(this) {
 }
 
 LRESULT CMainFrame::OnCreateView(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	auto ln = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
 	CWaitCursor wait;
 	auto hView = m_ViewMgr.CreateOrGetView((TreeItemType)wParam, m_Splitter, *m_pe);
 	if (hView) {
@@ -183,16 +184,20 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth) {
-	CString name;
+	std::wstring name;
 	if (node.is_named())
-		name = (PCWSTR)node.get_name().c_str();
+		name = node.get_name();
 	else
-		name.Format(L"#%d", node.get_id());
+		name = std::format(L"#{}", node.get_id());
 
 	TreeItemType type;
 	int icon = 3;
-	if (depth == 2)
+	if (depth == 2) {
 		icon = 7;	// language
+		auto langname = PEStrings::LanguageToString(node.get_id());
+		if (!langname.empty())
+			name = std::move(langname);
+	}
 	if (depth == 0 && !node.is_named()) {
 		auto friendlyName = PEStrings::ResourceTypeToString(node.get_id());
 		if (friendlyName) {
@@ -214,7 +219,7 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 		ATLASSERT(node.is_includes_data());
 		type = static_cast<TreeItemType>((DWORD_PTR)&node) | TreeItemType::Resource;
 	}
-	hRoot = InsertTreeItem(m_Tree, name, icon, type, hRoot, TVI_SORT);
+	hRoot = InsertTreeItem(m_Tree, name.c_str(), icon, type, hRoot, TVI_SORT);
 
 	if (!node.is_includes_data()) {
 		for (auto& child : node.get_resource_directory().get_entry_list())

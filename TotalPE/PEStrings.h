@@ -39,5 +39,7 @@ struct PEStrings abstract final {
 	static std::wstring EventAttributesToString(CorEventAttr attr);
 	static PCWSTR GetDataDirectoryName(int index);
 	static std::wstring SectionCharacteristicsToString(DWORD c);
+	static std::wstring PrimaryLanguageToString(WORD l);
+	static std::wstring LanguageToString(DWORD lang);
 };
 

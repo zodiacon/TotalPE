@@ -381,3 +381,186 @@ std::wstring PEStrings::SectionCharacteristicsToString(DWORD c) {
 
 	return result;
 }
+
+std::wstring PEStrings::PrimaryLanguageToString(WORD l) {
+	static const std::unordered_map<WORD, std::wstring> languages = {
+		{ LANG_NEUTRAL,				L"Neutral" },
+		{ LANG_INVARIANT,			L"Invariant" },
+		{ LANG_AFRIKAANS,			L"Afrikaans" },
+		{ LANG_ALBANIAN,			L"Albanian" },
+		{ LANG_ALSATIAN,			L"Alsatian" },
+		{ LANG_AMHARIC,				L"Amharic" },
+		{ LANG_ARABIC,				L"Arabic" },
+		{ LANG_ARMENIAN,			L"Armenian" },
+		{ LANG_ASSAMESE,			L"Assmese" },
+		{ LANG_AZERI,				L"Azeri" },
+		{ LANG_AZERBAIJANI,			L"Azerbaujani" },
+		{ LANG_BANGLA,				L"Bangla" },
+		{ LANG_BASHKIR,				L"Bashkir" },
+		{ LANG_BASQUE,				L"Basque" },
+		{ LANG_BELARUSIAN,			L"Belarusian" },
+		{ LANG_BENGALI,				L"Bengali" },
+		{ LANG_BRETON,				L"Breton" },
+		{ LANG_BOSNIAN,				L"Bosnian" },
+		{ LANG_BOSNIAN_NEUTRAL,		L"Bosnian Neutral" },
+		{ LANG_BULGARIAN,			L"Bulgarian" },
+		{ LANG_CATALAN,				L"Catalan" },
+		{ LANG_CENTRAL_KURDISH,		L"Central Kurdish" },
+		{ LANG_CHEROKEE,			L"Cherokee" },
+		{ LANG_CHINESE,				L"Chinese" },
+		{ LANG_CHINESE_SIMPLIFIED,	L"Simplified Chinese" },
+		{ LANG_CHINESE_TRADITIONAL, L"Traditional Chinese" },
+		{ LANG_CORSICAN,			L"Corsican" },
+		{ LANG_CROATIAN,			L"Croatian" },
+		{ LANG_CZECH,				L"Czech" },
+		{ LANG_DANISH,				L"Danish" },
+		{ LANG_DARI,				L"Dari" },
+		{ LANG_DIVEHI,				L"Divehi" },
+		{ LANG_DUTCH,				L"Dutch" },
+		{ LANG_ENGLISH,				L"English" },
+		{ LANG_ESTONIAN,			L"Estonian" },
+		{ LANG_FAEROESE,			L"Faerose" },
+		{ LANG_FARSI,				L"Farsi" },
+		{ LANG_FILIPINO,			L"Filipino" },
+		{ LANG_FINNISH,				L"Finnish" },
+		{ LANG_FRENCH,				L"French" },
+		{ LANG_FRISIAN,				L"Frisian" },
+		{ LANG_FULAH,				L"Fulah" },
+		{ LANG_GALICIAN,			L"Galician" },
+		{ LANG_GEORGIAN,			L"Georgian" },
+		{ LANG_GERMAN,				L"German" },
+		{ LANG_GREEK,				L"Greek" },
+		{ LANG_GREENLANDIC,			L"Greenlandic" },
+		{ LANG_GUJARATI,			L"Gujarati" },
+		{ LANG_HAUSA,				L"Hausa" },
+		{ LANG_HAWAIIAN,			L"Hawaiian" },
+		{ LANG_HEBREW,				L"Hebrew" },
+		{ LANG_HINDI,				L"Hindi" },
+		{ LANG_HUNGARIAN,			L"Hungarian" },
+		{ LANG_ICELANDIC,			L"Icelandic" },
+		{ LANG_IGBO,				L"Igbo" },
+		{ LANG_INDONESIAN,			L"Indonesian" },
+		{ LANG_INUKTITUT,			L"Inuktitut" },
+		{ LANG_IRISH,				L"Irish" },
+		{ LANG_ITALIAN,				L"Italian" },
+		{ LANG_JAPANESE,			L"Japanese" },
+		//{ LANG_KANNADA
+		//{ LANG_KASHMIRI
+		//{ LANG_KAZAK
+		//{ LANG_KHMER
+		//{ LANG_KICHE
+		//{ LANG_KINYARWANDA
+		//{ LANG_KONKANI
+		//{ LANG_KOREAN
+		//{ LANG_KYRGYZ
+		//{ LANG_LAO
+		{ LANG_LATVIAN,				L"Latvian" },
+		{ LANG_LITHUANIAN,			L"Lithuanian" },
+		//{ LANG_LOWER_SORBIAN
+		//{ LANG_LUXEMBOURGISH
+		//{ LANG_MACEDONIAN
+		//{ LANG_MALAY
+		//{ LANG_MALAYALAM
+		//{ LANG_MALTESE
+		//{ LANG_MANIPURI
+		//{ LANG_MAORI
+		//{ LANG_MAPUDUNGUN
+		//{ LANG_MARATHI
+		//{ LANG_MOHAWK
+		//{ LANG_MONGOLIAN
+		//{ LANG_NEPALI
+		{ LANG_NORWEGIAN,			L"Norwegian" },
+		//{ LANG_OCCITAN
+		//{ LANG_ODIA
+		//{ LANG_ORIYA
+		//{ LANG_PASHTO
+		{ LANG_PERSIAN,				L"Persian" },
+		{ LANG_POLISH,				L"Polish" },
+		//{ LANG_PORTUGUESE
+		//{ LANG_PULAR
+		//{ LANG_PUNJABI
+		//{ LANG_QUECHUA
+		{ LANG_ROMANIAN,			L"Romanian" },
+		//{ LANG_ROMANSH
+		{ LANG_RUSSIAN,				L"Russian" },
+		//{ LANG_SAKHA
+		//{ LANG_SAMI
+		//{ LANG_SANSKRIT
+		//{ LANG_SCOTTISH_GAELIC
+		//{ LANG_SERBIAN
+		//{ LANG_SERBIAN_NEUTRAL
+		//{ LANG_SINDHI
+		//{ LANG_SINHALESE
+		//{ LANG_SLOVAK
+		//{ LANG_SLOVENIAN
+		//{ LANG_SOTHO
+		//{ LANG_SPANISH
+		//{ LANG_SWAHILI
+		//{ LANG_SWEDISH
+		//{ LANG_SYRIAC
+		//{ LANG_TAJIK
+		//{ LANG_TAMAZIGHT
+		//{ LANG_TAMIL
+		//{ LANG_TATAR
+		//{ LANG_TELUGU
+		{ LANG_THAI,				L"Thai" },
+		//{ LANG_TIBETAN
+		//{ LANG_TIGRIGNA
+		//{ LANG_TIGRINYA
+		//{ LANG_TSWANA
+		{ LANG_TURKISH,				L"Turkish" },
+		//{ LANG_TURKMEN
+		//{ LANG_UIGHUR
+		//{ LANG_UKRAINIAN
+		//{ LANG_UPPER_SORBIAN
+		//{ LANG_URDU
+		//{ LANG_UZBEK
+		//{ LANG_VALENCIAN
+		{ LANG_VIETNAMESE,			L"Vietnamese" },
+		{ LANG_WELSH,				L"Welsh" },
+		//{ LANG_WOLOF
+		//{ LANG_XHOSA
+		//{ LANG_YAKUT
+		//{ LANG_YI
+		//{ LANG_YORUBA
+		{ LANG_ZULU,				L"Zulu" },
+	};
+
+	if (auto it = languages.find(l); it != languages.end())
+		return it->second;
+	return L"";
+}
+
+std::wstring PEStrings::LanguageToString(DWORD l) {
+	static const std::unordered_map<DWORD, std::wstring> languages = {
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),				L"en-US" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_UK),				L"en-UK" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_AUS),			L"en-Australia" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_CAN),			L"en-Canada" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_NZ),				L"en-New Zealand" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_EIRE),			L"en-Eire" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_SOUTH_AFRICA),	L"en-South Africa" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_JAMAICA),		L"en-Jamaica" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_CARIBBEAN),		L"en-Caribbean" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_BELIZE),			L"en-Belize" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_TRINIDAD),		L"en-Trinidad" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_ZIMBABWE),		L"en-Zimbabwe" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_PHILIPPINES),	L"en-Philippines" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_INDIA),			L"en-India" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_MALAYSIA),		L"en-Malaysia" },
+		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_SINGAPORE),		L"en-Singapore" },
+		{ MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),				L"Language Neutral" },
+		{ MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),				L"User Default Language" },
+		{ MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),			L"System Default Language" },
+		{ MAKELANGID(LANG_NEUTRAL, SUBLANG_CUSTOM_DEFAULT),			L"Default Custom Locale" },
+		{ MAKELANGID(LANG_NEUTRAL, SUBLANG_CUSTOM_UNSPECIFIED),		L"Unspecified Custom Locale" },
+		{ MAKELANGID(LANG_NEUTRAL, SUBLANG_UI_CUSTOM_DEFAULT),		L"Default custom MUI Locale" },
+		{ MAKELANGID(LANG_HEBREW, SUBLANG_HEBREW_ISRAEL),			L"he-IL" },
+	};
+
+	if (auto it = languages.find(l); it != languages.end()) {
+		return it->second;
+	}
+	return PrimaryLanguageToString(PRIMARYLANGID(l));
+}
+
