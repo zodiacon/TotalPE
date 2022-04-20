@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "VersionView.h"
 #include "PEStrings.h"
+#include "SortHelper.h"
 
 void CVersionView::SetData(std::vector<uint8_t> const& data) {
 	m_data = data.data();
@@ -19,6 +20,17 @@ CString CVersionView::GetColumnText(HWND, int row, int col) const {
 }
 
 void CVersionView::DoSort(SortInfo const* si) {
+	if (si == nullptr)
+		return;
+
+	auto compare = [&](auto& item1, auto& item2) {
+		return SortHelper::Sort(item1.Name, item2.Name, si->SortAscending);
+	};
+	std::sort(m_Items.begin(), m_Items.end(), compare);
+}
+
+bool CVersionView::IsSortable(HWND, int col) const {
+	return col == 0;
 }
 
 LRESULT CVersionView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
@@ -26,8 +38,8 @@ LRESULT CVersionView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
 	auto cm = GetColumnManager(m_List);
 
-	cm->AddColumn(L"Name", LVCFMT_LEFT, 130);
-	cm->AddColumn(L"Value", LVCFMT_LEFT, 230);
+	cm->AddColumn(L"Name", LVCFMT_LEFT, 140);
+	cm->AddColumn(L"Value", LVCFMT_LEFT, 330);
 	cm->UpdateColumns();
 
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);

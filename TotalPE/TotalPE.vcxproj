@@ -211,6 +211,7 @@
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="DirectoriesView.cpp" />
     <ClCompile Include="ExportsView.cpp" />
     <ClCompile Include="ImportsView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
@@ -236,6 +237,7 @@
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="BufferManager.h" />
+    <ClInclude Include="DirectoriesView.h" />
     <ClInclude Include="ExportsView.h" />
     <ClInclude Include="ImportsView.h" />
     <ClInclude Include="Interfaces.h" />

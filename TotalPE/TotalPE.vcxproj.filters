@@ -75,8 +75,11 @@
     <ClCompile Include="ImportsView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="DirectoriesView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
     <ClCompile Include="VersionView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,8 +137,11 @@
     <ClInclude Include="ImportsView.h">
       <Filter>Views</Filter>
     </ClInclude>
+    <ClInclude Include="DirectoriesView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
     <ClInclude Include="VersionView.h">
-      <Filter>Header Files</Filter>
+      <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

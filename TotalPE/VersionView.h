@@ -13,6 +13,7 @@ public:
 
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);
+	bool IsSortable(HWND, int col) const;
 
 	BEGIN_MSG_MAP(CVersionView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
