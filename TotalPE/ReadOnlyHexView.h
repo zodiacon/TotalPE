@@ -1,12 +1,14 @@
 #pragma once
 
 #include "View.h"
+#include "SimpleHexControl.h"
+#include "MemoryBuffer.h"
 
 class CReadOnlyHexView : public CView<CReadOnlyHexView> {
 public:
 	using CView::CView;
 
-	void SetData(std::vector<uint8_t> data);
+	void SetData(std::vector<uint8_t> const& data);
 
 	BEGIN_MSG_MAP(CreadOnlyHexView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -15,11 +17,9 @@ public:
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
-	void DisplayData();
-
 private:
-	CRichEditCtrl m_Edit;
-	std::vector<uint8_t> m_data;
+	CHexControl m_Hex;
+	MemoryBuffer m_data;
 	int m_DataSize{ 1 };
 	int m_BytesPerLine{ 32 };
 };

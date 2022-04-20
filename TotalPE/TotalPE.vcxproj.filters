@@ -19,6 +19,9 @@
     <Filter Include="Views">
       <UniqueIdentifier>{416f42c3-528e-40bc-bee7-f6f88bd0f4c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HexControl">
+      <UniqueIdentifier>{f173c94d-4c44-4586-a906-a9a47c6f1fc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -53,6 +56,18 @@
     </ClCompile>
     <ClCompile Include="ReadOnlyHexView.cpp">
       <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleHexControl.cpp">
+      <Filter>HexControl</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>HexControl</Filter>
+    </ClCompile>
+    <ClCompile Include="Selection.cpp">
+      <Filter>HexControl</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryBuffer.cpp">
+      <Filter>HexControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +106,18 @@
     </ClInclude>
     <ClInclude Include="ReadOnlyHexView.h">
       <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleHexControl.h">
+      <Filter>HexControl</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferManager.h">
+      <Filter>HexControl</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryBuffer.h">
+      <Filter>HexControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Selection.h">
+      <Filter>HexControl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
