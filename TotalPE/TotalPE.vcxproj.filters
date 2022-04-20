@@ -183,6 +183,36 @@
     <Image Include="res\html.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
+    <Image Include="res\number-1.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\number-2.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\number-4.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\number-8-2.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\save.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\database-export.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\database-import.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\keyboard.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\check.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\circle.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

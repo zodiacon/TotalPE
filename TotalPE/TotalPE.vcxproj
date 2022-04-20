@@ -253,8 +253,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\bitmap.ico" />
+    <Image Include="res\check.ico" />
+    <Image Include="res\circle.ico" />
     <Image Include="res\copy.ico" />
     <Image Include="res\cursor.ico" />
+    <Image Include="res\database-export.ico" />
+    <Image Include="res\database-import.ico" />
     <Image Include="res\folder.ico" />
     <Image Include="res\folder_closed.ico" />
     <Image Include="res\font.ico" />
@@ -263,10 +267,16 @@
     <Image Include="res\headers.ico" />
     <Image Include="res\html.ico" />
     <Image Include="res\icon.ico" />
+    <Image Include="res\keyboard.ico" />
     <Image Include="res\manifest.ico" />
+    <Image Include="res\number-1.ico" />
+    <Image Include="res\number-2.ico" />
+    <Image Include="res\number-4.ico" />
+    <Image Include="res\number-8-2.ico" />
     <Image Include="res\open.ico" />
     <Image Include="res\paste.ico" />
     <Image Include="res\resources.ico" />
+    <Image Include="res\save.ico" />
     <Image Include="res\section.ico" />
     <Image Include="res\sections.ico" />
     <Image Include="res\TotalPE.ico" />

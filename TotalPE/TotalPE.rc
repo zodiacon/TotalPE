@@ -79,12 +79,36 @@ BEGIN
             MENUITEM "&Small",                      ID_TREEICONSIZE_SMALL
             MENUITEM "&Medium",                     ID_TREEICONSIZE_MEDIUM
             MENUITEM "&Large",                      ID_TREEICONSIZE_LARGE
-            MENUITEM "&Huge",                       ID_TREEICONSIZE_HUGE
         END
     END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About TotalPE...",           ID_APP_ABOUT
+    END
+END
+
+IDR_CONTEXT MENU
+BEGIN
+    POPUP "hex"
+    BEGIN
+        POPUP "&Data Size"
+        BEGIN
+            MENUITEM "1 Byte",                      ID_DATASIZE_1BYTE
+            MENUITEM "2 Bytes (Word)",              ID_DATASIZE_2BYTES
+            MENUITEM "4 Bytes (DWord)",             ID_DATASIZE_4BYTES
+            MENUITEM "8 Bytes (QWord)",             ID_DATASIZE_8BYTES
+        END
+        POPUP "&Bytes Per Line"
+        BEGIN
+            MENUITEM "8",                           ID_BYTESPERLINE_8
+            MENUITEM "16",                          ID_BYTESPERLINE_16
+            MENUITEM "24",                          ID_BYTESPERLINE_24
+            MENUITEM "32",                          ID_BYTESPERLINE_32
+            MENUITEM "48",                          ID_BYTESPERLINE_48
+            MENUITEM "64",                          ID_BYTESPERLINE_64
+            MENUITEM "96",                          ID_BYTESPERLINE_96
+            MENUITEM "128",                         ID_BYTESPERLINE_128
+        END
     END
 END
 
@@ -133,6 +157,26 @@ IDI_BITMAP              ICON                    "res\\bitmap.ico"
 IDI_FONT                ICON                    "res\\font.ico"
 
 IDI_HTML                ICON                    "res\\html.ico"
+
+IDI_NUM1                ICON                    "res\\number-1.ico"
+
+IDI_NUM2                ICON                    "res\\number-2.ico"
+
+IDI_NUM4                ICON                    "res\\number-4.ico"
+
+IDI_NUM8                ICON                    "res\\number-8-2.ico"
+
+IDI_SAVE                ICON                    "res\\save.ico"
+
+IDI_EXPORT_DIR          ICON                    "res\\database-export.ico"
+
+IDI_IMPORT_DIR          ICON                    "res\\database-import.ico"
+
+IDI_KEYBOARD            ICON                    "res\\keyboard.ico"
+
+IDI_CHECK               ICON                    "res\\check.ico"
+
+IDI_RADIO               ICON                    "res\\circle.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

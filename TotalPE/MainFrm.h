@@ -34,18 +34,20 @@ public:
 
 	BEGIN_MSG_MAP(CMainFrame)
 		MESSAGE_HANDLER(WM_CREATE_VIEW, OnCreateView)
-		MESSAGE_HANDLER(WM_CREATE, OnCreate)
-		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
 		COMMAND_ID_HANDLER(ID_FILE_OPENINANEWWINDOW, OnFileOpenNewWindow)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
 		COMMAND_ID_HANDLER(ID_FILE_CLOSE, OnFileClose)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
+		COMMAND_RANGE_HANDLER(ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE, OnChangeTreeIconSize)
+		MESSAGE_HANDLER(WM_CREATE, OnCreate)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		CHAIN_MSG_MAP(CAutoUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
 		CHAIN_MSG_MAP(COwnerDrawnMenu<CMainFrame>)
 		CHAIN_MSG_MAP(CTreeViewHelper<CMainFrame>)
+		REFLECT_NOTIFICATIONS_EX()
 	END_MSG_MAP()
 
 private:
@@ -63,9 +65,11 @@ private:
 
 	void InitPETree();
 	void InitMenu();
+	void BuildTreeImageList();
 	void ParseResources(HTREEITEM hRoot);
 	void ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth = 0);
 	static int ResourceTypeIconIndex(WORD type);
+	static int DirectoryToIconIndex(int dir);
 
 	// Handler prototypes (uncomment arguments if needed):
 	//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -81,9 +85,11 @@ private:
 	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnFileOpenNewWindow(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnFileClose(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnChangeTreeIconSize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;
+	CMultiPaneStatusBarCtrl m_StatusBar;
 	CString m_Path;
 	int m_TreeIconSize{ 16 };
 	std::unique_ptr<pe_image_full> m_pe;

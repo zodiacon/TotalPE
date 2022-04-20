@@ -7,10 +7,12 @@
 #include "Interfaces.h"
 
 template<typename T>
-class CView abstract : public CFrameWindowImpl<T, CWindow, CControlWinTraits> {
+class CView abstract : 
+	public CFrameWindowImpl<T, CWindow, CControlWinTraits> {
 	using BaseFrame = CFrameWindowImpl<T, CWindow, CControlWinTraits>;
 public:
 	CView(IMainFrame* frame, TreeItemType type, pe_image_full const& pe) : m_pFrame(frame), m_nodeType(type), m_pe(pe) {}
+
 	IMainFrame* Frame() const {
 		return m_pFrame;
 	}

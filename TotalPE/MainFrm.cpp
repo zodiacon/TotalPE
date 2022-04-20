@@ -63,6 +63,7 @@ bool CMainFrame::AddToolBar(HWND tb) {
 }
 
 void CMainFrame::SetStatusText(int index, PCWSTR text) {
+	m_StatusBar.SetText(index, text);
 }
 
 CString const& CMainFrame::GetPEPath() const {
@@ -93,9 +94,7 @@ CString CMainFrame::DoFileOpen() const {
 	return IDOK == dlg.DoModal() ? dlg.m_szFileName : L"";
 }
 
-void CMainFrame::InitPETree() {
-	m_Tree.SetRedraw(FALSE);
-	m_Tree.DeleteAllItems();
+void CMainFrame::BuildTreeImageList() {
 	CImageList images;
 	images.Create(m_TreeIconSize, m_TreeIconSize, ILC_COLOR32, 10, 6);
 	m_Tree.SetImageList(images, TVSIL_NORMAL);
@@ -108,13 +107,20 @@ void CMainFrame::InitPETree() {
 
 	UINT icons[] = {
 		IDI_SECTIONS, IDI_DIR_OPEN, IDI_RESOURCE, IDI_HEADER, IDI_DIR_CLOSED,
-		IDI_SECTION, IDI_GLOBE,
+		IDI_SECTION, IDI_GLOBE, IDI_EXPORT_DIR, IDI_IMPORT_DIR,
+
 		IDI_MANIFEST, IDI_VERSION, IDI_ICONS, IDI_CURSORS, IDI_DIALOGS,
 		IDI_BITMAP, IDI_FONT, IDI_HTML,
 	};
 
 	for (auto icon : icons)
 		images.AddIcon(AtlLoadIconImage(icon, 0, m_TreeIconSize, m_TreeIconSize));
+}
+
+void CMainFrame::InitPETree() {
+	m_Tree.SetRedraw(FALSE);
+	m_Tree.DeleteAllItems();
+	BuildTreeImageList();
 
 	auto root = InsertTreeItem(m_Tree, m_Path.Mid(m_Path.ReverseFind(L'\\') + 1), 0, TreeItemType::Image);
 	auto headers = InsertTreeItem(m_Tree, L"Headers", 4, TreeItemType::Headers, root);
@@ -132,7 +138,13 @@ void CMainFrame::InitPETree() {
 	for (int i = 0; i < 16; i++) {
 		if (!image.has_directory(i))
 			continue;
-		InsertTreeItem(m_Tree, PEStrings::GetDataDirectoryName(i), 5, 2, TreeItemWithIndex(TreeItemType::Directories, index++), dirs);
+		int icon = DirectoryToIconIndex(i);
+		int selectedIcon = icon;
+		if (icon < 0) {
+			icon = 5;
+			selectedIcon = 2;
+		}
+		InsertTreeItem(m_Tree, PEStrings::GetDataDirectoryName(i), icon, selectedIcon, TreeItemWithIndex(TreeItemType::Directories, index++), dirs);
 	}
 	m_Tree.Expand(dirs, TVE_EXPAND);
 	if (image.has_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE)) {
@@ -164,6 +176,7 @@ void CMainFrame::InitMenu() {
 			AddCommand(cmd.id, cmd.hIcon);
 	}
 	AddMenu(GetMenu());
+	UIAddMenu(GetMenu());
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot) {
@@ -181,6 +194,16 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 		-1, -1, -1, 7, 0,			// manifest
 	};
 	return type >= _countof(indices) ? -1 : indices[type];
+}
+
+int CMainFrame::DirectoryToIconIndex(int dir) {
+	static const int icons[] = {
+		8, 9, 3, -1,
+		-1, -1, -1, -1,
+		-1, -1, -1, -1,
+		-1, -1, -1, -1,
+	};
+	return icons[dir];
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth) {
@@ -207,7 +230,7 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 	if (depth == 0) {
 		type = node.is_named() ? TreeItemType::ResourceTypeName : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
 		icon = ResourceTypeIconIndex(node.get_id());
-		icon = icon < 0 ? 3 : icon + 8;	// first icon index for resources
+		icon = icon < 0 ? 3 : icon + 10;	// first icon index for resources
 
 	}
 	else if (depth == 1) {
@@ -247,6 +270,9 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	s_Frames++;
 	CreateSimpleStatusBar();
+	m_StatusBar.SubclassWindow(m_hWndStatusBar);
+	int parts[] = { 200, 400, 600 };
+	m_StatusBar.SetParts(_countof(parts), parts);
 
 	ToolBarButtonInfo const buttons[] = {
 		{ ID_FILE_OPEN, IDI_FILE_OPEN },
@@ -269,6 +295,9 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	InitMenu();
 	UISetCheck(ID_VIEW_STATUS_BAR, 1);
 	UIEnable(ID_FILE_CLOSE, false);
+
+	SetCheckIcon(AtlLoadIconImage(IDI_CHECK, 0, 16, 16), AtlLoadIconImage(IDI_RADIO, 0, 16, 16));
+	UISetRadioMenuItem(ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
 
 	// register object for message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -341,5 +370,14 @@ LRESULT CMainFrame::OnFileClose(WORD, WORD, HWND, BOOL&) {
 		m_Tree.DeleteAllItems();
 		m_Splitter.SetSplitterPane(1, nullptr);
 	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnChangeTreeIconSize(WORD, WORD id, HWND, BOOL&) {
+	m_TreeIconSize = (id - ID_TREEICONSIZE_SMALL) * 4 + 16;
+	BuildTreeImageList();
+	m_Tree.RedrawWindow();
+	UISetRadioMenuItem(id, ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
+
 	return 0;
 }

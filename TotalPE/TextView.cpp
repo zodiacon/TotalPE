@@ -27,6 +27,11 @@ LRESULT CTextView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
     return 0;
 }
 
+LRESULT CTextView::OnCopy(WORD, WORD, HWND, BOOL&) {
+    m_Edit.Copy();
+    return 0;
+}
+
 void CTextView::FormatText(CString& text, TextFormat format) {
     switch (format) {
         case TextFormat::Xml:
