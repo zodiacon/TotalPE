@@ -540,6 +540,26 @@ std::wstring PEStrings::UndecorateName(PCWSTR name) {
 	return result;
 }
 
+std::wstring PEStrings::VersionFileOSToString(DWORD type) {
+	static const std::unordered_map<DWORD, std::wstring> types = {
+		{ VOS_DOS,			L"MS-DOS" },
+		{ VOS_NT,			L"Windows NT" },
+		{ VOS__WINDOWS16,	L"16-bit Windows" },
+		{ VOS__WINDOWS32,	L"32-bit Windows" },
+		{ VOS_OS216,		L"16-bit OS/2" },
+		{ VOS_OS232,		L"32-bit OS/2" },
+		{ VOS__PM16,		L"16-bit Presentation Manager" },
+		{ VOS__PM32,		L"32-bit Presentation Manager" },
+		{ VOS_NT_WINDOWS32, L"Windows NT" },
+		{ VOS_UNKNOWN,		L"Unknown" },
+		{ VOS_DOS_WINDOWS32, L"32-bit Windows on MS-DOS" },
+		{ VOS_DOS_WINDOWS16, L"16-bit Windows on MS-DOS" },
+	};
+	if (auto it = types.find(type); it != types.end())
+		return it->second;
+	return L"";
+}
+
 std::wstring PEStrings::LanguageToString(DWORD l) {
 	static const std::unordered_map<DWORD, std::wstring> languages = {
 		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),				L"en-US" },
@@ -571,5 +591,41 @@ std::wstring PEStrings::LanguageToString(DWORD l) {
 		return it->second;
 	}
 	return PrimaryLanguageToString(PRIMARYLANGID(l));
+}
+
+std::wstring PEStrings::FileTypeToString(DWORD type) {
+	switch (type) {
+		case VFT_APP: return L"Application";
+		case VFT_DLL: return L"Dynamic Link Library";
+		case VFT_DRV: return L"Device Driver";
+		case VFT_FONT: return L"Font";
+		case VFT_STATIC_LIB: return L"Static Library";
+		case VFT_VXD: return L"VxD";
+	}
+	return L"Unknown";
+}
+
+std::wstring PEStrings::FileSubTypeToString(DWORD type, DWORD subType) {
+	return L"";
+}
+
+std::wstring PEStrings::FileFlagsToString(DWORD flags) {
+	static const struct {
+		DWORD value;
+		PCWSTR text;
+	} fflags[] = {
+		{ VS_FF_DEBUG, L"Debug Information" },
+		{ VS_FF_PATCHED, L"Patched" },
+		{ VS_FF_PRERELEASE, L"Development" },
+		{ VS_FF_PRIVATEBUILD, L"Private Build" },
+		{ VS_FF_SPECIALBUILD, L"Special Build" },
+	};
+	std::wstring result;
+	for (auto& flag : fflags)
+		if (flag.value & flags)
+			result += flag.text + std::wstring(L", ");
+	if (!result.empty())
+		result = result.substr(0, result.length() - 2);
+	return result;
 }
 

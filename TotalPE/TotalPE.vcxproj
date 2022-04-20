@@ -228,6 +228,7 @@
     <ClCompile Include="Selection.cpp" />
     <ClCompile Include="SimpleHexControl.cpp" />
     <ClCompile Include="TotalPE.cpp" />
+    <ClCompile Include="VersionView.cpp" />
     <ClCompile Include="View.cpp" />
     <ClCompile Include="ViewManager.cpp" />
     <ClCompile Include="TextView.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="SectionsView.h" />
     <ClInclude Include="Selection.h" />
     <ClInclude Include="SimpleHexControl.h" />
+    <ClInclude Include="VersionView.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="ViewManager.h" />
     <ClInclude Include="TextView.h" />

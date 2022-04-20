@@ -18,6 +18,8 @@ public:
 	bool IsSortable(HWND h, int col) const;
 
 	BEGIN_MSG_MAP(CImportsView)
+		MESSAGE_HANDLER(WM_SETFOCUS, OnSetFocus)
+		NOTIFY_CODE_HANDLER(LVN_KEYDOWN, OnListViewKeyDown)
 		COMMAND_CODE_HANDLER(EN_DELAYCHANGE, OnFilterChanged)
 		COMMAND_CODE_HANDLER(ID_FILE_SAVE, OnExport)
 		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
@@ -30,6 +32,8 @@ public:
 	LRESULT OnShowWindow(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnFilterChanged(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnExport(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnSetFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnListViewKeyDown(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
 
 private:
 	void ApplyFilter(PCWSTR text);

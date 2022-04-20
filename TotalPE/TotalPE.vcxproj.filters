@@ -75,6 +75,9 @@
     <ClCompile Include="ImportsView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="VersionView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="ImportsView.h">
       <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionView.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

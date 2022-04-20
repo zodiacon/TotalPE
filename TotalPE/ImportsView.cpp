@@ -40,6 +40,7 @@ void CImportsView::OnStateChanged(HWND h, int from, int to, DWORD oldState, DWOR
 			Sort(GetSortInfo(m_List));
 			m_List.SetItemCount((int)m_Imports.size());
 		}
+		UpdateStatusText();
 	}
 }
 
@@ -132,7 +133,8 @@ LRESULT CImportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 }
 
 LRESULT CImportsView::OnShowWindow(UINT, WPARAM, LPARAM, BOOL&) {
-	return LRESULT();
+	UpdateStatusText();
+	return 0;
 }
 
 LRESULT CImportsView::OnFilterChanged(WORD, WORD, HWND, BOOL&) {
@@ -143,6 +145,11 @@ LRESULT CImportsView::OnExport(WORD, WORD, HWND, BOOL&) {
 	return LRESULT();
 }
 
+LRESULT CImportsView::OnSetFocus(UINT, WPARAM, LPARAM, BOOL&) {
+	m_LibList.SetFocus();
+	return 0;
+}
+
 void CImportsView::BuildItems() {
 	auto& imports = PE().get_imports();
 
@@ -151,4 +158,19 @@ void CImportsView::BuildItems() {
 }
 
 void CImportsView::UpdateStatusText() {
+	Frame()->SetStatusText(2, std::format(L"Libraries: {}", m_ImportLibs.size()).c_str());
+	if(m_LibList.GetSelectedIndex() >= 0)
+		Frame()->SetStatusText(3, std::format(L"Imported: {}", m_Imports.size()).c_str());
 }
+
+LRESULT CImportsView::OnListViewKeyDown(int /*idCtrl*/, LPNMHDR hdr, BOOL& /*bHandled*/) {
+	auto lv = (NMLVKEYDOWN*)hdr;
+	if (lv->wVKey == VK_TAB) {
+		if (hdr->hwndFrom == m_LibList)
+			m_List.SetFocus();
+		else
+			m_LibList.SetFocus();
+	}
+	return 0;
+}
+

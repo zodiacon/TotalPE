@@ -10,10 +10,6 @@ void CHexControl::DoPaint(CDCHandle dc, RECT& rect) {
 	if (m_EndOffset > m_Buffer->GetSize())
 		m_EndOffset = m_Buffer->GetSize() + m_DataSize;
 
-	//Gdiplus::Graphics g(dc.m_hDC);
-	//DoPaint(g, rect);
-	//return;
-
 	SCROLLINFO si;
 	si.cbSize = sizeof(si);
 	si.fMask = SIF_POS;
@@ -131,7 +127,7 @@ void CHexControl::DoPaint(CDCHandle dc, RECT& rect) {
 				dc.SetBkColor(m_Colors.SelectionBackground);
 			}
 			else {
-				dc.SetTextColor((int64_t)m_Modified.size() > offset + j && m_Modified[offset + j] ? m_Colors.Modified : m_Colors.Text);
+				dc.SetTextColor((int64_t)m_Modified.size() > offset + j && m_Modified[offset + j] ? m_Colors.Modified : m_Colors.Ascii);
 				dc.SetBkColor(m_Colors.Background);
 			}
 			dc.TextOut(x + xstart + j * m_CharWidth, y * m_CharHeight, text, 1);
@@ -531,12 +527,11 @@ void CHexControl::UpdateCaret() {
 	HideCaret();
 	if (pt.y >= 0) {
 		SetCaretPos(pt.x, pt.y);
-		ShowCaret();
 	}
 	else {
 		SetCaretPos(-1000, -1000);
-		ShowCaret();
 	}
+	ShowCaret();
 }
 
 void CHexControl::RedrawWindow(RECT* rc) {

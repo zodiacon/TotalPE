@@ -63,3 +63,8 @@ LRESULT CReadOnlyHexView::OnSave(WORD, WORD, HWND, BOOL&) {
 	return 0;
 }
 
+LRESULT CReadOnlyHexView::OnSetFocus(UINT, WPARAM, LPARAM, BOOL&) {
+	m_Hex.SetFocus();
+	return 0;
+}
+

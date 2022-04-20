@@ -6,6 +6,7 @@
 #include "ReadOnlyHexView.h"
 #include "ExportsView.h"
 #include "ImportsView.h"
+#include "VersionView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -69,8 +70,9 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 view->SetText(CString(xml), TextFormat::Xml);
             }
             else if (typeName == L"Version") {
-                pe_file_version_info info(data.data(), data.size());
-                auto& fi = info.get_file_info();
+                auto view = new CVersionView(m_pFrame, type, pe);
+                hView = view->DoCreate(hParent);
+                view->SetData(data);
             }
             else {
                 auto view = new CReadOnlyHexView(m_pFrame, type, pe);

@@ -171,6 +171,8 @@ void CMainFrame::InitMenu() {
 		{ ID_VIEW_RESOURCES, IDI_RESOURCE },
 		{ ID_VIEW_EXPORTS, IDI_EXPORT_DIR },
 		{ ID_VIEW_IMPORTS, IDI_IMPORT_DIR },
+		{ ID_VIEW_MANIFEST, IDI_MANIFEST },
+		{ ID_VIEW_VERSION, IDI_VERSION },
 	};
 
 	for (auto& cmd : commands) {
@@ -190,6 +192,9 @@ void CMainFrame::UpdateUI() {
 	UIEnable(ID_VIEW_SECTIONS, m_pe != nullptr);
 	UIEnable(ID_VIEW_DIRECTORIES, m_pe != nullptr);
 	UIEnable(ID_FILE_CLOSE, m_pe != nullptr);
+	pe_resource_directory_entry const* dummy;
+	UIEnable(ID_VIEW_MANIFEST, m_pe != nullptr && m_pe->get_resources().entry_by_id(dummy, 24));
+	UIEnable(ID_VIEW_VERSION, m_pe != nullptr && m_pe->get_resources().entry_by_id(dummy, 16));
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot) {
@@ -302,6 +307,8 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 		{ ID_VIEW_RESOURCES, IDI_RESOURCE },
 		{ ID_VIEW_EXPORTS, IDI_EXPORT_DIR },
 		{ ID_VIEW_IMPORTS, IDI_IMPORT_DIR },
+		{ ID_VIEW_MANIFEST, IDI_MANIFEST },
+		{ ID_VIEW_VERSION, IDI_VERSION },
 	};
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 	auto tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons));
@@ -395,6 +402,7 @@ LRESULT CMainFrame::OnFileClose(WORD, WORD, HWND, BOOL&) {
 		m_ViewMgr.Clear();
 		m_Tree.DeleteAllItems();
 		m_Splitter.SetSplitterPane(1, nullptr);
+		UpdateUI();
 	}
 	return 0;
 }
@@ -426,6 +434,8 @@ LRESULT CMainFrame::OnViewPEItem(WORD, WORD id, HWND, BOOL&) {
 		TreeItemType::Sections,
 		TreeItemType::Directories,
 		TreeItemType::Resources,
+		TreeItemWithIndex(TreeItemType::Resource, 24),
+		TreeItemWithIndex(TreeItemType::Resource, 16),
 	};
 	auto hItem = FindItemByData(m_Tree, m_Tree.GetRootItem(), items[item]);
 	if (hItem) {

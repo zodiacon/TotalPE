@@ -72,6 +72,8 @@ BEGIN
         MENUITEM "&Sections",                   ID_VIEW_SECTIONS
         MENUITEM "&Directories",                ID_VIEW_DIRECTORIES
         MENUITEM "&Resources",                  ID_VIEW_RESOURCES
+        MENUITEM "&Manifest",                   ID_VIEW_MANIFEST
+        MENUITEM "&Version",                    ID_VIEW_VERSION
         MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
@@ -89,7 +91,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About TotalPE...",           ID_APP_ABOUT
+        MENUITEM "&About Total PE...",          ID_APP_ABOUT
     END
 END
 
@@ -206,7 +208,7 @@ CAPTION "About Total PE"
 FONT 9, "Segoe UI", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,61,50,14
-    CTEXT           "Total PE v0.1\n\n©2022 Pavel Yosifovich",IDC_STATIC,49,7,78,32
+    CTEXT           "Total PE v0.1\n\n©2022 Pavel Yosifovich",IDC_STATIC,49,7,86,30
     ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
 END
 
@@ -276,7 +278,7 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "TotalPE Module"
+            VALUE "FileDescription", "Total PE Application"
             VALUE "FileVersion", "0.1.0.0"
             VALUE "InternalName", "TotalPE"
             VALUE "LegalCopyright", "©2022 Pavel Yosifovich"
@@ -317,7 +319,7 @@ END
 STRINGTABLE
 BEGIN
     ID_FILE_NEW             "Create a new document\nNew"
-    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_OPEN            "Open PE\nOpen"
     ID_FILE_CLOSE           "Close the active document\nClose"
     ID_FILE_SAVE            "Save the active document\nSave"
     ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
@@ -395,6 +397,28 @@ END
 STRINGTABLE
 BEGIN
     ATL_IDS_MRU_FILE        "Open this document"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_EXPORTS         "View exports\\Exports"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_IMPORTS         "View imports\\Imports"
+    ID_VIEW_SECTIONS        "View sections\\Sections"
+    ID_VIEW_DIRECTORIES     "View Directories\nDirectories"
+    ID_VIEW_RESOURCES       "View resources\nResources"
+    ID_VIEW_MANIFEST        "View manifest\nManifest"
+    ID_VIEW_VERSION         "View version\nVersion"
+END
+
+STRINGTABLE
+BEGIN
+    ID_OPTIONS_ALWAYSONTOP  "Always on Top\nAlways on Top"
+    ID_OPTIONS_DARKMODE     "Toggle dark mode\nDark Mode"
+    ID_FILE_OPENINANEWWINDOW "Open a PE in a new Window\nOpen in New Window"
 END
 
 #endif    // English (United States) resources

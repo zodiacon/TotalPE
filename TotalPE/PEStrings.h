@@ -42,5 +42,9 @@ struct PEStrings abstract final {
 	static std::wstring PrimaryLanguageToString(WORD l);
 	static std::wstring LanguageToString(DWORD lang);
 	static std::wstring UndecorateName(PCWSTR name);
+	static std::wstring VersionFileOSToString(DWORD type);
+	static std::wstring FileTypeToString(DWORD type);
+	static std::wstring FileSubTypeToString(DWORD type, DWORD subType);
+	static std::wstring FileFlagsToString(DWORD flags);
 };
 
