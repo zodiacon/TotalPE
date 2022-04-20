@@ -18,7 +18,7 @@ LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 		{ ID_FILE_SAVE, IDI_SAVE, BTNS_BUTTON, L"Export" },
 	};
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
-	CToolBarCtrl tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons));
+	CToolBarCtrl tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons), 16);
 
 	AddSimpleReBarBand(tb);
 	Frame()->AddToolBar(tb);

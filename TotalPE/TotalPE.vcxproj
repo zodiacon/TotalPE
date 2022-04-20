@@ -211,6 +211,7 @@
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="ExportsView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
     <ClCompile Include="pch.cpp">
@@ -233,6 +234,7 @@
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="BufferManager.h" />
+    <ClInclude Include="ExportsView.h" />
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MemoryBuffer.h" />
@@ -269,6 +271,9 @@
     <Image Include="res\icon.ico" />
     <Image Include="res\keyboard.ico" />
     <Image Include="res\manifest.ico" />
+    <Image Include="res\method-export.ico" />
+    <Image Include="res\method-import.ico" />
+    <Image Include="res\method.ico" />
     <Image Include="res\number-1.ico" />
     <Image Include="res\number-2.ico" />
     <Image Include="res\number-4.ico" />

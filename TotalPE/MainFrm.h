@@ -33,6 +33,7 @@ public:
 	const UINT WM_CREATE_VIEW = WM_APP + 55;
 
 	BEGIN_MSG_MAP(CMainFrame)
+		NOTIFY_CODE_HANDLER(TVN_KEYDOWN, OnTreeKeyDown)
 		MESSAGE_HANDLER(WM_CREATE_VIEW, OnCreateView)
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
 		COMMAND_ID_HANDLER(ID_FILE_OPENINANEWWINDOW, OnFileOpenNewWindow)
@@ -86,6 +87,7 @@ private:
 	LRESULT OnFileOpenNewWindow(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnFileClose(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnChangeTreeIconSize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnTreeKeyDown(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;

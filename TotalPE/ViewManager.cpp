@@ -4,6 +4,7 @@
 #include "SectionsView.h"
 #include "TextView.h"
 #include "ReadOnlyHexView.h"
+#include "ExportsView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -13,6 +14,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
     if (auto it = m_views.find(type); it != m_views.end())
         return it->second;
 
+    auto vtype = (DWORD_PTR)type;
     HWND hView { nullptr };
 
     switch (type) {
@@ -29,6 +31,15 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             break;
         }
     }
+    if (!hView && type > TreeItemType::Directories && vtype < (DWORD_PTR)TreeItemType::Directories + 16) {
+        switch (vtype - (DWORD_PTR)TreeItemType::Directories - 1) {
+            case IMAGE_DIRECTORY_ENTRY_EXPORT:
+                auto view = new CExportsView(m_pFrame, type, pe);
+                hView = view->DoCreate(hParent);
+                break;
+        }
+    }
+
     if (!hView && type > TreeItemType::Sections && DWORD_PTR(type) < (DWORD_PTR)TreeItemType::Sections + 999) {
         // section - show as hex for now
         auto view = new CReadOnlyHexView(m_pFrame, type, pe);

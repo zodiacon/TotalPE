@@ -178,6 +178,12 @@ IDI_CHECK               ICON                    "res\\check.ico"
 
 IDI_RADIO               ICON                    "res\\circle.ico"
 
+IDI_FUNCTION            ICON                    "res\\function.ico"
+
+IDI_FUNC_FORWARD        ICON                    "res\\function-export.ico"
+
+IDI_FUNC_IMPORT         ICON                    "res\\function-import.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

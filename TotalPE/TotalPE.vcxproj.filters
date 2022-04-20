@@ -69,6 +69,9 @@
     <ClCompile Include="MemoryBuffer.cpp">
       <Filter>HexControl</Filter>
     </ClCompile>
+    <ClCompile Include="ExportsView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="Selection.h">
       <Filter>HexControl</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportsView.h">
+      <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,20 +204,29 @@
     <Image Include="res\save.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
-    <Image Include="res\database-export.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\database-import.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\keyboard.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\check.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\circle.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\database-export.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\database-import.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\keyboard.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\method-import.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\method.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\method-export.ico">
+      <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

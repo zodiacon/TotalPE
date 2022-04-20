@@ -86,6 +86,8 @@ bool pe_file_version_info::parse(const uint8_t* version_info, size_t version_inf
         size_t hi_entry_position = 0;
 
         uint16_t hi_entry_length = *(uint16_t*)&version_info[ver_position + hi_entry_position];
+        if (hi_entry_length == 0)
+            break;
 
         if (version_info_size - ver_position < hi_entry_length) {
 

@@ -33,8 +33,11 @@
 #define IDI_IMPORT_DIR                  227
 #define IDI_KEYBOARD                    228
 #define IDI_CHECK                       229
-#define IDI_ICON2                       230
 #define IDI_RADIO                       230
+#define IDI_FUNCTION                    231
+#define IDI_FUNC_FORWARD                232
+#define IDI_ICON3                       233
+#define IDI_FUNC_IMPORT                 233
 #define ID_OPTIONS_ALWAYSONTOP          32775
 #define ID_OPTIONS_FONT                 32776
 #define ID_OPTIONS_DARKMODE             32777
@@ -64,7 +67,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        231
+#define _APS_NEXT_RESOURCE_VALUE        234
 #define _APS_NEXT_COMMAND_VALUE         32799
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101

@@ -1,6 +1,3 @@
-// MainFrm.cpp : implmentation of the CMainFrame class
-//
-/////////////////////////////////////////////////////////////////////////////
 
 #include "pch.h"
 #include "resource.h"
@@ -22,6 +19,8 @@ CMainFrame::CMainFrame() : m_ViewMgr(this) {
 LRESULT CMainFrame::OnCreateView(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	auto ln = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
 	CWaitCursor wait;
+	for (int i = 2; i < 6; i++)
+		SetStatusText(i, L"");
 	auto hView = m_ViewMgr.CreateOrGetView((TreeItemType)wParam, m_Splitter, *m_pe);
 	if (hView) {
 		if (m_CurrentView)
@@ -271,7 +270,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	s_Frames++;
 	CreateSimpleStatusBar();
 	m_StatusBar.SubclassWindow(m_hWndStatusBar);
-	int parts[] = { 200, 400, 600 };
+	int parts[] = { 200, 400, 600, 800, 1000 };
 	m_StatusBar.SetParts(_countof(parts), parts);
 
 	ToolBarButtonInfo const buttons[] = {
@@ -379,5 +378,14 @@ LRESULT CMainFrame::OnChangeTreeIconSize(WORD, WORD id, HWND, BOOL&) {
 	m_Tree.RedrawWindow();
 	UISetRadioMenuItem(id, ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
 
+	return 0;
+}
+
+LRESULT CMainFrame::OnTreeKeyDown(int /*idCtrl*/, LPNMHDR hdr, BOOL& /*bHandled*/) {
+	auto tv = (NMTVKEYDOWN*)hdr;
+	if (m_CurrentView && tv->wVKey == VK_TAB) {
+		::SetFocus(m_CurrentView);
+		return 1;
+	}
 	return 0;
 }
