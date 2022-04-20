@@ -212,6 +212,7 @@
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="ExportsView.cpp" />
+    <ClCompile Include="ImportsView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
     <ClCompile Include="pch.cpp">
@@ -235,6 +236,7 @@
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="ExportsView.h" />
+    <ClInclude Include="ImportsView.h" />
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MemoryBuffer.h" />
@@ -265,11 +267,16 @@
     <Image Include="res\folder_closed.ico" />
     <Image Include="res\font.ico" />
     <Image Include="res\form.ico" />
+    <Image Include="res\function-export.ico" />
+    <Image Include="res\function-import.ico" />
+    <Image Include="res\function.ico" />
     <Image Include="res\globe.ico" />
     <Image Include="res\headers.ico" />
     <Image Include="res\html.ico" />
     <Image Include="res\icon.ico" />
+    <Image Include="res\interface.ico" />
     <Image Include="res\keyboard.ico" />
+    <Image Include="res\library-import.ico" />
     <Image Include="res\manifest.ico" />
     <Image Include="res\method-export.ico" />
     <Image Include="res\method-import.ico" />

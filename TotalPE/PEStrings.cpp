@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "PEStrings.h"
 #include <atltime.h>
+#include <DbgHelp.h>
+
+#pragma comment(lib, "dbghelp")
 
 static PCWSTR memberVisiblity[] = {
 	L"Private Scope", L"Private", L"Protected and Internal", L"Internal", L"Protected",
@@ -529,6 +532,12 @@ std::wstring PEStrings::PrimaryLanguageToString(WORD l) {
 	if (auto it = languages.find(l); it != languages.end())
 		return it->second;
 	return L"";
+}
+
+std::wstring PEStrings::UndecorateName(PCWSTR name) {
+	WCHAR result[512];
+	::UnDecorateSymbolNameW(name, result, _countof(result), 0);
+	return result;
 }
 
 std::wstring PEStrings::LanguageToString(DWORD l) {

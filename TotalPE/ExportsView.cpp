@@ -2,6 +2,9 @@
 #include "ExportsView.h"
 #include "resource.h"
 #include <ToolbarHelper.h>
+#include "ListViewhelper.h"
+#include <SortHelper.h>
+#include <ClipboardHelper.h>
 
 CString CExportsView::GetColumnText(HWND, int row, int col) const {
 	auto& exp = m_Exports[row];
@@ -20,6 +23,14 @@ int CExportsView::GetRowImage(HWND, int row, int) const {
 }
 
 void CExportsView::DoSort(SortInfo const* si) {
+	auto asc = si->SortAscending;
+	auto compare = [&](auto& exp1, auto& exp2) {
+		switch (si->SortColumn) {
+			case 0: return SortHelper::Sort(exp1.get_func_name(), exp2.get_func_name(), asc);
+		}
+		return false;
+	};
+	m_Exports.Sort(compare);
 }
 
 LRESULT CExportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
@@ -49,13 +60,6 @@ LRESULT CExportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
 		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
 	auto cm = GetColumnManager(m_List);
-	//LOGFONT lf;
-	//if (::GetObject(m_List.GetFont(), sizeof(LOGFONT), &lf)) {
-	//	wcscpy_s(lf.lfFaceName, L"Consolas");
-	//	CFont font;
-	//	font.CreateFontIndirect(&lf);
-	//	m_List.SetFont(font.Detach());
-	//}
 
 	CImageList images;
 	images.Create(16, 16, ILC_COLOR32 | ILC_MASK, 4, 4);
@@ -91,6 +95,22 @@ LRESULT CExportsView::OnFilterChanged(WORD, WORD, HWND, BOOL&) {
 	m_QuickFind.GetWindowText(text);
 	ApplyFilter(text);
 
+	return 0;
+}
+
+LRESULT CExportsView::OnExport(WORD, WORD, HWND, BOOL&) {
+	CSimpleFileDialog dlg(FALSE, nullptr, nullptr, OFN_EXPLORER | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT,
+		L"All Files\0*.*\0", m_hWnd);
+	if (IDOK == dlg.DoModal()) {
+		ListViewHelper::SaveAll(dlg.m_szFileName, m_List, true);
+	}
+	return 0;
+}
+
+LRESULT CExportsView::OnCopy(WORD, WORD, HWND, BOOL&) {
+	auto text = ListViewHelper::GetSelectedRowsAsString(m_List);
+	if (!text.IsEmpty())
+		ClipboardHelper::CopyText(m_hWnd, text);
 	return 0;
 }
 

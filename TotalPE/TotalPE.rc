@@ -67,6 +67,12 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
+        MENUITEM "&Exports",                    ID_VIEW_EXPORTS
+        MENUITEM "&Imports",                    ID_VIEW_IMPORTS
+        MENUITEM "&Sections",                   ID_VIEW_SECTIONS
+        MENUITEM "&Directories",                ID_VIEW_DIRECTORIES
+        MENUITEM "&Resources",                  ID_VIEW_RESOURCES
+        MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
     POPUP "&Options"
@@ -183,6 +189,10 @@ IDI_FUNCTION            ICON                    "res\\function.ico"
 IDI_FUNC_FORWARD        ICON                    "res\\function-export.ico"
 
 IDI_FUNC_IMPORT         ICON                    "res\\function-import.ico"
+
+IDI_IMPORTLIB           ICON                    "res\\library-import.ico"
+
+IDI_INTERFACE           ICON                    "res\\interface.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

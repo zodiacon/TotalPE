@@ -42,6 +42,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg) {
 }
 
 BOOL CMainFrame::OnIdle() {
+	UIUpdateToolBar();
 	return FALSE;
 }
 
@@ -133,7 +134,6 @@ void CMainFrame::InitPETree() {
 	m_Tree.Expand(sections, TVE_EXPAND);
 
 	auto dirs = InsertTreeItem(m_Tree, L"Directories", 5, 2, TreeItemType::Directories, root);
-	index = 1;
 	for (int i = 0; i < 16; i++) {
 		if (!image.has_directory(i))
 			continue;
@@ -143,7 +143,7 @@ void CMainFrame::InitPETree() {
 			icon = 5;
 			selectedIcon = 2;
 		}
-		InsertTreeItem(m_Tree, PEStrings::GetDataDirectoryName(i), icon, selectedIcon, TreeItemWithIndex(TreeItemType::Directories, index++), dirs);
+		InsertTreeItem(m_Tree, PEStrings::GetDataDirectoryName(i), icon, selectedIcon, TreeItemWithIndex(TreeItemType::Directories, i + 1), dirs);
 	}
 	m_Tree.Expand(dirs, TVE_EXPAND);
 	if (image.has_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE)) {
@@ -166,6 +166,11 @@ void CMainFrame::InitMenu() {
 		{ ID_EDIT_COPY, IDI_COPY },
 		{ ID_EDIT_PASTE, IDI_PASTE },
 		{ ID_FILE_OPEN, IDI_FILE_OPEN },
+		{ ID_VIEW_SECTIONS, IDI_SECTIONS },
+		{ ID_VIEW_DIRECTORIES, IDI_DIR_OPEN },
+		{ ID_VIEW_RESOURCES, IDI_RESOURCE },
+		{ ID_VIEW_EXPORTS, IDI_EXPORT_DIR },
+		{ ID_VIEW_IMPORTS, IDI_IMPORT_DIR },
 	};
 
 	for (auto& cmd : commands) {
@@ -176,6 +181,15 @@ void CMainFrame::InitMenu() {
 	}
 	AddMenu(GetMenu());
 	UIAddMenu(GetMenu());
+}
+
+void CMainFrame::UpdateUI() {
+	UIEnable(ID_VIEW_EXPORTS, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_EXPORT));
+	UIEnable(ID_VIEW_IMPORTS, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_IMPORT));
+	UIEnable(ID_VIEW_RESOURCES, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE));
+	UIEnable(ID_VIEW_SECTIONS, m_pe != nullptr);
+	UIEnable(ID_VIEW_DIRECTORIES, m_pe != nullptr);
+	UIEnable(ID_FILE_CLOSE, m_pe != nullptr);
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot) {
@@ -261,7 +275,12 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 	m_Path = path;
 	m_ViewMgr.Clear();
 	InitPETree();
-	UIEnable(ID_FILE_CLOSE, true);
+	UpdateUI();
+
+	CString ftitle;
+	ftitle.LoadString(IDR_MAINFRAME);
+	CString title = m_Path.Mid(m_Path.ReverseFind(L'\\') + 1) + L" - " + ftitle;
+	SetWindowText(title);
 
 	return true;
 }
@@ -277,6 +296,12 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 		{ ID_FILE_OPEN, IDI_FILE_OPEN },
 		{ 0 },
 		{ ID_EDIT_COPY, IDI_COPY },
+		{ 0 },
+		{ ID_VIEW_SECTIONS, IDI_SECTIONS },
+		{ ID_VIEW_DIRECTORIES, IDI_DIR_OPEN },
+		{ ID_VIEW_RESOURCES, IDI_RESOURCE },
+		{ ID_VIEW_EXPORTS, IDI_EXPORT_DIR },
+		{ ID_VIEW_IMPORTS, IDI_IMPORT_DIR },
 	};
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 	auto tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons));
@@ -297,6 +322,8 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 	SetCheckIcon(AtlLoadIconImage(IDI_CHECK, 0, 16, 16), AtlLoadIconImage(IDI_RADIO, 0, 16, 16));
 	UISetRadioMenuItem(ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
+
+	UpdateUI();
 
 	// register object for message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -386,6 +413,24 @@ LRESULT CMainFrame::OnTreeKeyDown(int /*idCtrl*/, LPNMHDR hdr, BOOL& /*bHandled*
 	if (m_CurrentView && tv->wVKey == VK_TAB) {
 		::SetFocus(m_CurrentView);
 		return 1;
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnViewPEItem(WORD, WORD id, HWND, BOOL&) {
+	ATLASSERT(m_pe);
+	auto item = id - ID_VIEW_EXPORTS;
+	static const TreeItemType items[] = {
+		TreeItemWithIndex(TreeItemType::Directories, IMAGE_DIRECTORY_ENTRY_EXPORT + 1),
+		TreeItemWithIndex(TreeItemType::Directories, IMAGE_DIRECTORY_ENTRY_IMPORT + 1),
+		TreeItemType::Sections,
+		TreeItemType::Directories,
+		TreeItemType::Resources,
+	};
+	auto hItem = FindItemByData(m_Tree, m_Tree.GetRootItem(), items[item]);
+	if (hItem) {
+		m_Tree.SelectItem(hItem);
+		m_Tree.EnsureVisible(hItem);
 	}
 	return 0;
 }

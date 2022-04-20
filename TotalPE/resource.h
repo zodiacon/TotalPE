@@ -38,6 +38,8 @@
 #define IDI_FUNC_FORWARD                232
 #define IDI_ICON3                       233
 #define IDI_FUNC_IMPORT                 233
+#define IDI_IMPORTLIB                   234
+#define IDI_INTERFACE                   235
 #define ID_OPTIONS_ALWAYSONTOP          32775
 #define ID_OPTIONS_FONT                 32776
 #define ID_OPTIONS_DARKMODE             32777
@@ -62,13 +64,18 @@
 #define ID_BYTESPERLINE_64              32796
 #define ID_BYTESPERLINE_96              32797
 #define ID_BYTESPERLINE_128             32798
+#define ID_VIEW_EXPORTS                 32799
+#define ID_VIEW_IMPORTS                 32800
+#define ID_VIEW_SECTIONS                32801
+#define ID_VIEW_DIRECTORIES             32802
+#define ID_VIEW_RESOURCES               32803
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        234
-#define _APS_NEXT_COMMAND_VALUE         32799
+#define _APS_NEXT_RESOURCE_VALUE        236
+#define _APS_NEXT_COMMAND_VALUE         32804
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

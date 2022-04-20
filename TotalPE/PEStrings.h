@@ -41,5 +41,6 @@ struct PEStrings abstract final {
 	static std::wstring SectionCharacteristicsToString(DWORD c);
 	static std::wstring PrimaryLanguageToString(WORD l);
 	static std::wstring LanguageToString(DWORD lang);
+	static std::wstring UndecorateName(PCWSTR name);
 };
 

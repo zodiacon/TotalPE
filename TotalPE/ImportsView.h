@@ -5,32 +5,31 @@
 #include <SortedFilteredVector.h>
 #include <QuickFindEdit.h>
 
-class CExportsView :
-	public CView<CExportsView>,
-	public CVirtualListView<CExportsView> {
+class CImportsView :
+	public CView<CImportsView>,
+	public CVirtualListView<CImportsView> {
 public:
 	using CView::CView;
 
 	CString GetColumnText(HWND, int row, int col) const;
 	int GetRowImage(HWND, int row, int) const;
-
+	void OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState);
 	void DoSort(SortInfo const* si);
+	bool IsSortable(HWND h, int col) const;
 
-	BEGIN_MSG_MAP(CExportsView)
+	BEGIN_MSG_MAP(CImportsView)
 		COMMAND_CODE_HANDLER(EN_DELAYCHANGE, OnFilterChanged)
-		COMMAND_CODE_HANDLER(ID_EDIT_COPY, OnCopy)
 		COMMAND_CODE_HANDLER(ID_FILE_SAVE, OnExport)
 		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
-		CHAIN_MSG_MAP(CView<CExportsView>)
-		CHAIN_MSG_MAP(CVirtualListView<CExportsView>)
+		CHAIN_MSG_MAP(CView<CImportsView>)
+		CHAIN_MSG_MAP(CVirtualListView<CImportsView>)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnShowWindow(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnFilterChanged(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnExport(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnCopy(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 private:
 	void ApplyFilter(PCWSTR text);
@@ -38,7 +37,10 @@ private:
 	void UpdateStatusText();
 
 	CQuickFindEdit m_QuickFind;
+	CListViewCtrl m_LibList;
 	CListViewCtrl m_List;
-	SortedFilteredVector<pe_export_entry> m_Exports;
+	CSplitterWindow m_Splitter;
+	std::vector<pe_import_library> m_ImportLibs;
+	SortedFilteredVector<pe_import_function> m_Imports;
 };
 

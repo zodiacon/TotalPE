@@ -38,6 +38,7 @@ public:
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
 		COMMAND_ID_HANDLER(ID_FILE_OPENINANEWWINDOW, OnFileOpenNewWindow)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
+		COMMAND_RANGE_HANDLER(ID_VIEW_EXPORTS, ID_VIEW_RESOURCES, OnViewPEItem)
 		COMMAND_ID_HANDLER(ID_FILE_CLOSE, OnFileClose)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
@@ -66,6 +67,7 @@ private:
 
 	void InitPETree();
 	void InitMenu();
+	void UpdateUI();
 	void BuildTreeImageList();
 	void ParseResources(HTREEITEM hRoot);
 	void ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth = 0);
@@ -88,6 +90,7 @@ private:
 	LRESULT OnFileClose(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnChangeTreeIconSize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnTreeKeyDown(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
+	LRESULT OnViewPEItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;
