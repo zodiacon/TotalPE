@@ -84,6 +84,9 @@
     <ClCompile Include="DebugView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="ResourcesView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -147,6 +150,9 @@
       <Filter>Views</Filter>
     </ClInclude>
     <ClInclude Include="DebugView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcesView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>

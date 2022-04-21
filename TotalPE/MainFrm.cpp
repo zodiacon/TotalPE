@@ -325,7 +325,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
 
 	m_Splitter.SetSplitterPane(0, m_Tree);
-	m_Splitter.SetSplitterPosPct(20);
+	m_Splitter.SetSplitterPosPct(15);
 
 	InitMenu();
 	UISetCheck(ID_VIEW_STATUS_BAR, 1);

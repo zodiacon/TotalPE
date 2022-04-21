@@ -226,6 +226,7 @@
     <ClCompile Include="PEImageView.cpp" />
     <ClCompile Include="PEStrings.cpp" />
     <ClCompile Include="ReadOnlyHexView.cpp" />
+    <ClCompile Include="ResourcesView.cpp" />
     <ClCompile Include="SectionsView.cpp" />
     <ClCompile Include="Selection.cpp" />
     <ClCompile Include="SimpleHexControl.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="ReadOnlyHexView.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ResourcesView.h" />
     <ClInclude Include="SectionsView.h" />
     <ClInclude Include="Selection.h" />
     <ClInclude Include="SimpleHexControl.h" />

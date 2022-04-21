@@ -8,6 +8,7 @@
 #include "ImportsView.h"
 #include "VersionView.h"
 #include "DirectoriesView.h"
+#include "ResourcesView.h"
 #include "DebugView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
@@ -37,6 +38,12 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
         case TreeItemType::Directories:
         {
             auto view = new CDirectoriesView(m_pFrame, pe);
+            hView = view->DoCreate(hParent);
+            break;
+        }
+        case TreeItemType::Resources:
+        {
+            auto view = new CResourcesView(m_pFrame, pe);
             hView = view->DoCreate(hParent);
             break;
         }
