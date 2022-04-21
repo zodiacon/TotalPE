@@ -7,7 +7,7 @@
 
 class CReadOnlyHexView : public CView<CReadOnlyHexView> {
 public:
-	using CView::CView;
+	CReadOnlyHexView(IMainFrame* frame) : CView(frame) {}
 
 	void SetData(std::vector<uint8_t> const& data);
 	void ClearData();

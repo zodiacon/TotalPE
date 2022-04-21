@@ -96,7 +96,7 @@ LRESULT CImportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 		images.AddIcon(AtlLoadIconImage(icon, 0, 16, 16));
 	m_List.SetImageList(images, LVSIL_SMALL);
 
-	cm->AddColumn(L"Name", LVCFMT_LEFT, 250);
+	cm->AddColumn(L"Name", LVCFMT_LEFT, 300);
 	cm->AddColumn(L"Hint", LVCFMT_RIGHT, 70);
 	cm->AddColumn(L"Undecorated Name", LVCFMT_LEFT, 300);
 	cm->AddColumn(L"Ordinal", LVCFMT_RIGHT, 70);

@@ -623,6 +623,10 @@ PCWSTR PEStrings::DebugTypeToString(DWORD type) {
 		case IMAGE_DEBUG_TYPE_BORLAND: return L"Borland";
 		case IMAGE_DEBUG_TYPE_CLSID: return L"CLSID";
 		case IMAGE_DEBUG_TYPE_REPRO: return L"Repro";
+		case IMAGE_DEBUG_TYPE_POGO: return L"POGO";
+		case IMAGE_DEBUG_TYPE_ILTCG: return L"IL TCG";
+		case IMAGE_DEBUG_TYPE_MPX: return L"MPX";
+		case IMAGE_DEBUG_TYPE_VC_FEATURE: return L"Visual C++ Feature";
 		case IMAGE_DEBUG_TYPE_EX_DLLCHARACTERISTICS: return L"Extended DLL Characteristics";
 	}
 	return L"(Reserved)";

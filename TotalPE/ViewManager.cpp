@@ -68,7 +68,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
 
     if (!hView && type > TreeItemType::Sections && DWORD_PTR(type) < (DWORD_PTR)TreeItemType::Sections + 999) {
         // section - show as hex for now
-        auto view = new CReadOnlyHexView(m_pFrame, pe);
+        auto view = new CReadOnlyHexView(m_pFrame);
         hView = view->DoCreate(hParent);
         auto section = pe.get_image().get_sections()[DWORD_PTR(type) - DWORD_PTR(TreeItemType::Sections) - 1];
         view->SetData(section->get_section_data());
@@ -90,7 +90,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 view->SetData(data);
             }
             else {
-                auto view = new CReadOnlyHexView(m_pFrame, pe);
+                auto view = new CReadOnlyHexView(m_pFrame);
                 hView = view->DoCreate(hParent);
                 view->SetData(data);
             }

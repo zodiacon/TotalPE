@@ -174,6 +174,7 @@ void CMainFrame::InitMenu() {
 		{ ID_VIEW_IMPORTS, IDI_IMPORT_DIR },
 		{ ID_VIEW_MANIFEST, IDI_MANIFEST },
 		{ ID_VIEW_VERSION, IDI_VERSION },
+		{ ID_VIEW_DEBUG, IDI_DEBUG},
 	};
 
 	for (auto& cmd : commands) {
@@ -190,6 +191,7 @@ void CMainFrame::UpdateUI() {
 	UIEnable(ID_VIEW_EXPORTS, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_EXPORT));
 	UIEnable(ID_VIEW_IMPORTS, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_IMPORT));
 	UIEnable(ID_VIEW_RESOURCES, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE));
+	UIEnable(ID_VIEW_DEBUG, m_pe && m_pe->get_image().has_directory(IMAGE_DIRECTORY_ENTRY_DEBUG));
 	UIEnable(ID_VIEW_SECTIONS, m_pe != nullptr);
 	UIEnable(ID_VIEW_DIRECTORIES, m_pe != nullptr);
 	UIEnable(ID_FILE_CLOSE, m_pe != nullptr);
@@ -310,6 +312,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 		{ ID_VIEW_IMPORTS, IDI_IMPORT_DIR },
 		{ ID_VIEW_MANIFEST, IDI_MANIFEST },
 		{ ID_VIEW_VERSION, IDI_VERSION },
+		{ ID_VIEW_DEBUG, IDI_DEBUG},
 	};
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 	auto tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons));
@@ -437,6 +440,7 @@ LRESULT CMainFrame::OnViewPEItem(WORD, WORD id, HWND, BOOL&) {
 		TreeItemType::Resources,
 		TreeItemWithIndex(TreeItemType::Resource, 24),
 		TreeItemWithIndex(TreeItemType::Resource, 16),
+		TreeItemWithIndex(TreeItemType::Directories, IMAGE_DIRECTORY_ENTRY_DEBUG + 1),
 	};
 	auto hItem = FindItemByData(m_Tree, m_Tree.GetRootItem(), items[item]);
 	if (hItem) {

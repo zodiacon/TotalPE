@@ -17,6 +17,22 @@ CString CDebugView::GetColumnText(HWND, int row, int col) const {
 }
 
 void CDebugView::DoSort(SortInfo const* si) {
+	if (si == nullptr)
+		return;
+
+	auto asc = si->SortAscending;
+	auto compare = [&](auto& d1, auto& d2) {
+		switch (si->SortColumn) {
+			case 0: return SortHelper::Sort(PEStrings::DebugTypeToString(d1.get_type()), PEStrings::DebugTypeToString(d2.get_type()), asc);
+			case 1: return SortHelper::Sort(d1.get_timestamp(), d2.get_timestamp(), asc);
+			case 2: return SortHelper::Sort((d1.get_major_version() << 16) | d1.get_minor_version(), (d2.get_major_version() << 16) | d2.get_minor_version(), asc);
+			case 3: return SortHelper::Sort(d1.get_address_of_raw_data(), d2.get_address_of_raw_data(), asc);
+			case 4: return SortHelper::Sort(d1.get_size_of_data(), d2.get_size_of_data(), asc);
+			case 5: return SortHelper::Sort(d1.get_pointer_to_raw_data(), d2.get_pointer_to_raw_data(), asc);
+		}
+		return false;
+	};
+	std::sort(m_Items.begin(), m_Items.end(), compare);
 }
 
 void CDebugView::OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState) {

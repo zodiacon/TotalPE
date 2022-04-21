@@ -8,7 +8,7 @@ class CDebugView :
 	public CView<CDebugView>,
 	public CVirtualListView<CDebugView> {
 public:
-	CDebugView(IMainFrame* frame, pe_image_full const& pe) : CView(frame, pe), m_HexView(frame, pe) {}
+	CDebugView(IMainFrame* frame, pe_image_full const& pe) : CView(frame, pe), m_HexView(frame) {}
 
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);

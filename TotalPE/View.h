@@ -11,14 +11,15 @@ class CView abstract :
 	public CFrameWindowImpl<T, CWindow, CControlWinTraits> {
 	using BaseFrame = CFrameWindowImpl<T, CWindow, CControlWinTraits>;
 public:
-	CView(IMainFrame* frame, pe_image_full const& pe) : m_pFrame(frame), m_pe(pe) {}
+	CView(IMainFrame* frame, pe_image_full const& pe) : m_pFrame(frame), m_pe(&pe) {}
+	CView(IMainFrame* frame) : m_pFrame(frame) {}
 
 	IMainFrame* Frame() const {
 		return m_pFrame;
 	}
 
 	auto& PE() {
-		return m_pe;
+		return *m_pe;
 	}
 
 	void OnFinalMessage(HWND) override {
@@ -46,7 +47,7 @@ private:
 	//	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
 	IMainFrame* m_pFrame;
-	pe_image_full const& m_pe;
+	pe_image_full const* m_pe;
 	bool m_IsDynamicAlloc{ true };
 };
 

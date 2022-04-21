@@ -74,6 +74,7 @@ BEGIN
         MENUITEM "&Resources",                  ID_VIEW_RESOURCES
         MENUITEM "&Manifest",                   ID_VIEW_MANIFEST
         MENUITEM "&Version",                    ID_VIEW_VERSION
+        MENUITEM "&Debug",                      ID_VIEW_DEBUG
         MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
