@@ -22,6 +22,9 @@
     <Filter Include="HexControl">
       <UniqueIdentifier>{f173c94d-4c44-4586-a906-a9a47c6f1fc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{6daecbb8-f0d9-473b-ac07-cefc757e01a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="ResourcesView.cpp">
       <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="SecurityHelper.cpp">
+      <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="ResourcesView.h">
       <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="SecurityHelper.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

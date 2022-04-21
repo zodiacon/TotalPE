@@ -11,6 +11,7 @@ public:
 	CResourcesView(IMainFrame* frame, pe_image_full const& pe) : CView(frame, pe), m_HexView(frame) {}
 
 	CString GetColumnText(HWND, int row, int col) const;
+	int GetRowImage(HWND, int row, int) const;
 	void DoSort(SortInfo const* si);
 	void OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState);
 
@@ -30,6 +31,7 @@ private:
 		std::wstring Name;
 		std::wstring Language;
 		pe_resource_data_entry Data;
+		WORD TypeIndex;
 	};
 
 	CListViewCtrl m_List;

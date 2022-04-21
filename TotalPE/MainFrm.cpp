@@ -6,6 +6,7 @@
 #include "AboutDlg.h"
 #include "PEStrings.h"
 #include <ToolbarHelper.h>
+#include "SecurityHelper.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "../WTLHelper/x64/Debug/WTLHelper.lib")
@@ -82,6 +83,14 @@ CString CMainFrame::GetTreeItemText(int parents) const {
 	CString text;
 	m_Tree.GetItemText(hItem, text);
 	return text;
+}
+
+HIMAGELIST CMainFrame::GetTreeImageList() const {
+	return m_Tree.GetImageList(TVSIL_NORMAL).m_hImageList;
+}
+
+int CMainFrame::GetResourceIconIndex(WORD type) const {
+	return ResourceTypeIconIndex(type);
 }
 
 TreeItemType CMainFrame::TreeItemWithIndex(TreeItemType type, int index) {
@@ -214,7 +223,9 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 		-1, 2, -1, 1, 4, -1, -1,	// P&P
 		-1, -1, -1, 7, 0,			// manifest
 	};
-	return type >= _countof(indices) ? -1 : indices[type];
+	if (type >= _countof(indices))
+		return 3;
+	return indices[type] < 0 ? 3 : (indices[type] + 13);
 }
 
 int CMainFrame::DirectoryToIconIndex(int dir) {
@@ -251,7 +262,7 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 	if (depth == 0) {
 		type = node.is_named() ? TreeItemType::ResourceTypeName : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
 		icon = ResourceTypeIconIndex(node.get_id());
-		icon = icon < 0 ? 3 : icon + 13;	// first icon index for resources (IDI_MANIFEST)
+//		icon = icon < 0 ? 3 : icon + 13;	// first icon index for resources (IDI_MANIFEST)
 
 	}
 	else if (depth == 1) {
@@ -314,6 +325,15 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 		{ ID_VIEW_VERSION, IDI_VERSION },
 		{ ID_VIEW_DEBUG, IDI_DEBUG},
 	};
+	CMenuHandle hMenu = GetMenu();
+	if (SecurityHelper::IsRunningElevated()) {
+		hMenu.GetSubMenu(0).DeleteMenu(ID_FILE_RUNASADMINISTRATOR, MF_BYCOMMAND);
+		hMenu.GetSubMenu(0).DeleteMenu(0, MF_BYPOSITION);
+		CString text;
+		GetWindowText(text);
+		SetWindowText(text + L" (Administrator)");
+	}
+
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 	auto tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons));
 
@@ -447,5 +467,14 @@ LRESULT CMainFrame::OnViewPEItem(WORD, WORD id, HWND, BOOL&) {
 		m_Tree.SelectItem(hItem);
 		m_Tree.EnsureVisible(hItem);
 	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnRunAsAdmin(WORD, WORD, HWND, BOOL&) {
+	if (SecurityHelper::RunElevated(nullptr, true)) {
+		s_Frames = 1;
+		SendMessage(WM_CLOSE);
+	}
+
 	return 0;
 }

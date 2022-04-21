@@ -10,6 +10,9 @@ LRESULT CResourcesView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 	m_HexView.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 	m_HexView.SetDynamicAlloc(false);
+	m_HexView.GetHexControl().SetBytesPerLine(24);
+
+	m_List.SetImageList(Frame()->GetTreeImageList(), LVSIL_SMALL);
 
 	auto cm = GetColumnManager(m_List);
 	cm->AddColumn(L"Type", LVCFMT_LEFT, 130);
@@ -35,6 +38,10 @@ CString CResourcesView::GetColumnText(HWND, int row, int col) const {
 		case 3: return PEStrings::ToMemorySize(item.Data.get_data().size()).c_str();
 	}
 	return CString();
+}
+
+int CResourcesView::GetRowImage(HWND, int row, int) const {
+	return Frame()->GetResourceIconIndex(m_Items[row].TypeIndex);
 }
 
 void CResourcesView::DoSort(SortInfo const* si) {
@@ -85,6 +92,7 @@ void CResourcesView::ParseResourceDir(pe_resource_directory_entry const& dir, in
 				name = PEStrings::ResourceTypeToString(dir.get_id());
 			if (name.empty())
 				name = std::format(L"#{}", dir.get_id());
+			m_CurrentResource.TypeIndex = dir.is_named() ? 0xffff : dir.get_id();
 			m_CurrentResource.Type = std::move(name);
 			break;
 

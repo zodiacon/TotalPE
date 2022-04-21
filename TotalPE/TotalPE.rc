@@ -53,6 +53,8 @@ IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
+        MENUITEM "&Run As Administrator...",    ID_FILE_RUNASADMINISTRATOR
+        MENUITEM SEPARATOR
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "Open in a &New Window...",    ID_FILE_OPENINANEWWINDOW
         MENUITEM SEPARATOR

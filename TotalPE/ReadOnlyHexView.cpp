@@ -13,6 +13,14 @@ void CReadOnlyHexView::ClearData() {
 	m_Hex.SetBufferManager(nullptr);
 }
 
+CHexControl& CReadOnlyHexView::GetHexControl() {
+	return m_Hex;
+}
+
+CHexControl const& CReadOnlyHexView::GetHexControl() const {
+	return m_Hex;
+}
+
 LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	ToolBarButtonInfo const buttons[] = {
 		{ ID_DATASIZE_1BYTE, IDI_NUM1, BTNS_CHECKGROUP },

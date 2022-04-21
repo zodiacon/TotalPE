@@ -29,6 +29,13 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             hView = view->DoCreate(hParent);
             break;
         }
+        case TreeItemType::Headers:
+        {
+            auto view = new CReadOnlyHexView(m_pFrame);
+            hView = view->DoCreate(hParent);
+            view->SetData(pe.get_image().get_headers_data());
+            break;
+        }
         case TreeItemType::Sections:
         {
             auto view = new CSectionsView(m_pFrame, pe);
@@ -49,7 +56,8 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
         }
     }
     if (!hView && type > TreeItemType::Directories && vtype < (DWORD_PTR)TreeItemType::Directories + 16) {
-        switch (vtype - (DWORD_PTR)TreeItemType::Directories - 1) {
+        auto index = uint32_t(vtype - (DWORD_PTR)TreeItemType::Directories - 1);
+        switch (index) {
             case IMAGE_DIRECTORY_ENTRY_EXPORT:
             {
                 auto view = new CExportsView(m_pFrame, pe);
@@ -70,6 +78,18 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 hView = view->DoCreate(hParent);
                 break;
             }
+
+            default:
+                // all other directories...
+
+                auto view = new CReadOnlyHexView(m_pFrame);
+                hView = view->DoCreate(hParent);
+                pe_image_io io(pe.get_image());
+                io.set_image_offset(pe.get_image().get_directory_virtual_address(index));
+                std::vector<uint8_t> data;
+                io.read(data, pe.get_image().get_directory_virtual_size(index));               
+                view->SetData(std::move(data));
+                break;
         }
     }
 

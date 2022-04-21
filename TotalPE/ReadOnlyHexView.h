@@ -11,6 +11,8 @@ public:
 
 	void SetData(std::vector<uint8_t> const& data);
 	void ClearData();
+	CHexControl& GetHexControl();
+	CHexControl const& GetHexControl() const;
 
 	BEGIN_MSG_MAP(CreadOnlyHexView)
 		MESSAGE_HANDLER(WM_SETFOCUS, OnSetFocus)

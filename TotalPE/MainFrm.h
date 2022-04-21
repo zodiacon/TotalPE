@@ -27,6 +27,9 @@ public:
 
 	void OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew);
 
+	static int ResourceTypeIconIndex(WORD type);
+	static int DirectoryToIconIndex(int dir);
+
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnIdle();
 
@@ -43,6 +46,7 @@ public:
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		COMMAND_RANGE_HANDLER(ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE, OnChangeTreeIconSize)
+		COMMAND_ID_HANDLER(ID_FILE_RUNASADMINISTRATOR, OnRunAsAdmin)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		CHAIN_MSG_MAP(CAutoUpdateUI<CMainFrame>)
@@ -61,6 +65,8 @@ private:
 	CString const& GetPEPath() const override;
 	CString GetSelectedTreeItemPath() const override;
 	CString GetTreeItemText(int parents) const override;
+	HIMAGELIST GetTreeImageList() const override;
+	int GetResourceIconIndex(WORD type) const override;
 
 	static TreeItemType TreeItemWithIndex(TreeItemType type, int index);
 	CString DoFileOpen() const;
@@ -71,8 +77,6 @@ private:
 	void BuildTreeImageList();
 	void ParseResources(HTREEITEM hRoot);
 	void ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth = 0);
-	static int ResourceTypeIconIndex(WORD type);
-	static int DirectoryToIconIndex(int dir);
 
 	// Handler prototypes (uncomment arguments if needed):
 	//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -91,6 +95,7 @@ private:
 	LRESULT OnChangeTreeIconSize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnTreeKeyDown(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
 	LRESULT OnViewPEItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnRunAsAdmin(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;

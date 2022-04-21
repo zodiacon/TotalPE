@@ -30,4 +30,6 @@ struct IMainFrame abstract {
 	virtual CString const& GetPEPath() const = 0;
 	virtual CString GetSelectedTreeItemPath() const = 0;
 	virtual CString GetTreeItemText(int parents) const = 0;
+	virtual HIMAGELIST GetTreeImageList() const = 0;
+	virtual int GetResourceIconIndex(WORD type) const = 0;
 };

@@ -228,6 +228,7 @@
     <ClCompile Include="ReadOnlyHexView.cpp" />
     <ClCompile Include="ResourcesView.cpp" />
     <ClCompile Include="SectionsView.cpp" />
+    <ClCompile Include="SecurityHelper.cpp" />
     <ClCompile Include="Selection.cpp" />
     <ClCompile Include="SimpleHexControl.cpp" />
     <ClCompile Include="TotalPE.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="ResourcesView.h" />
     <ClInclude Include="SectionsView.h" />
+    <ClInclude Include="SecurityHelper.h" />
     <ClInclude Include="Selection.h" />
     <ClInclude Include="SimpleHexControl.h" />
     <ClInclude Include="VersionView.h" />

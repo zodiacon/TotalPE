@@ -68,9 +68,6 @@ public:
         return *this;
     }
 
-
-
-
     enma_io_code read(void * data, size_t size);
     enma_io_code write(const void * data, size_t size);
 
