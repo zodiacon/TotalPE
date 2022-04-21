@@ -11,26 +11,28 @@ class CView abstract :
 	public CFrameWindowImpl<T, CWindow, CControlWinTraits> {
 	using BaseFrame = CFrameWindowImpl<T, CWindow, CControlWinTraits>;
 public:
-	CView(IMainFrame* frame, TreeItemType type, pe_image_full const& pe) : m_pFrame(frame), m_nodeType(type), m_pe(pe) {}
+	CView(IMainFrame* frame, pe_image_full const& pe) : m_pFrame(frame), m_pe(pe) {}
 
 	IMainFrame* Frame() const {
 		return m_pFrame;
 	}
+
 	auto& PE() {
 		return m_pe;
 	}
 
-	auto NodeType() const {
-		return m_nodeType;
-	}
-
 	void OnFinalMessage(HWND) override {
-		delete this;
+		if(m_IsDynamicAlloc)
+			delete this;
 	}
 
 	HWND DoCreate(HWND hParent) {
 		auto p = static_cast<T*>(this);
 		return p->Create(hParent, p->rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS);
+	}
+
+	void SetDynamicAlloc(bool dynamic) {
+		m_IsDynamicAlloc = dynamic;
 	}
 
 	BEGIN_MSG_MAP(CView)
@@ -44,7 +46,7 @@ private:
 	//	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
 	IMainFrame* m_pFrame;
-	TreeItemType m_nodeType;
 	pe_image_full const& m_pe;
+	bool m_IsDynamicAlloc{ true };
 };
 

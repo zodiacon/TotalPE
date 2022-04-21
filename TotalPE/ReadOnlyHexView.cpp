@@ -3,9 +3,14 @@
 #include "ToolbarHelper.h"
 
 void CReadOnlyHexView::SetData(std::vector<uint8_t> const& data) {
+	m_data.Clear();
 	m_data.SetData(0, data.data(), (ULONG)data.size());
 	m_Hex.SetBufferManager(&m_data);
 	Frame()->SetStatusText(2, std::format(L"Size: {} bytes", m_data.GetSize()).c_str());
+}
+
+void CReadOnlyHexView::ClearData() {
+	m_Hex.SetBufferManager(nullptr);
 }
 
 LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
@@ -22,12 +27,10 @@ LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 
 	AddSimpleReBarBand(tb);
 	Frame()->AddToolBar(tb);
+	Frame()->GetUI().UISetCheck(ID_DATASIZE_1BYTE, true);
 
 	m_hWndClient = m_Hex.Create(m_hWnd, rcDefault, nullptr,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_VSCROLL | WS_HSCROLL,
-		WS_EX_CLIENTEDGE);
-
-	tb.CheckButton(ID_DATASIZE_1BYTE);
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_VSCROLL | WS_HSCROLL, WS_EX_CLIENTEDGE);
 
 	return 0;
 }

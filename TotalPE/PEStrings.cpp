@@ -609,6 +609,25 @@ std::wstring PEStrings::FileSubTypeToString(DWORD type, DWORD subType) {
 	return L"";
 }
 
+PCWSTR PEStrings::DebugTypeToString(DWORD type) {
+	switch (type) {
+		case IMAGE_DEBUG_TYPE_UNKNOWN: return L"Unknown";
+		case IMAGE_DEBUG_TYPE_COFF: return L"COFF";
+		case IMAGE_DEBUG_TYPE_CODEVIEW: return L"Visual C++";
+		case IMAGE_DEBUG_TYPE_FPO: return L"Frame Point Omission (FPO)";
+		case IMAGE_DEBUG_TYPE_MISC: return L"Location";
+		case IMAGE_DEBUG_TYPE_EXCEPTION: return L"Exception";
+		case IMAGE_DEBUG_TYPE_FIXUP: return L"Fixup";
+		case IMAGE_DEBUG_TYPE_OMAP_TO_SRC: return L"Image to Source";
+		case IMAGE_DEBUG_TYPE_OMAP_FROM_SRC: return L"Source to Image";
+		case IMAGE_DEBUG_TYPE_BORLAND: return L"Borland";
+		case IMAGE_DEBUG_TYPE_CLSID: return L"CLSID";
+		case IMAGE_DEBUG_TYPE_REPRO: return L"Repro";
+		case IMAGE_DEBUG_TYPE_EX_DLLCHARACTERISTICS: return L"Extended DLL Characteristics";
+	}
+	return L"(Reserved)";
+}
+
 std::wstring PEStrings::FileFlagsToString(DWORD flags) {
 	static const struct {
 		DWORD value;

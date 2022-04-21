@@ -7,6 +7,8 @@ public:
 	MemoryBuffer(uint32_t initialSize = 0);
 	MemoryBuffer(const uint8_t* data, uint32_t size);
 
+	void Clear();
+
 	// Inherited via IBufferManager
 	uint32_t GetData(int64_t offset, uint8_t* buffer, uint32_t count) override;
 	bool Insert(int64_t offset, const uint8_t* data, uint32_t count) override;

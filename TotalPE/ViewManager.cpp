@@ -8,6 +8,7 @@
 #include "ImportsView.h"
 #include "VersionView.h"
 #include "DirectoriesView.h"
+#include "DebugView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -23,19 +24,19 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
     switch (type) {
         case TreeItemType::Image:
         {
-            auto view = new CPEImageView(m_pFrame, type, pe);
+            auto view = new CPEImageView(m_pFrame, pe);
             hView = view->DoCreate(hParent);
             break;
         }
         case TreeItemType::Sections:
         {
-            auto view = new CSectionsView(m_pFrame, type, pe);
+            auto view = new CSectionsView(m_pFrame, pe);
             hView = view->DoCreate(hParent);
             break;
         }
         case TreeItemType::Directories:
         {
-            auto view = new CDirectoriesView(m_pFrame, type, pe);
+            auto view = new CDirectoriesView(m_pFrame, pe);
             hView = view->DoCreate(hParent);
             break;
         }
@@ -44,14 +45,21 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
         switch (vtype - (DWORD_PTR)TreeItemType::Directories - 1) {
             case IMAGE_DIRECTORY_ENTRY_EXPORT:
             {
-                auto view = new CExportsView(m_pFrame, type, pe);
+                auto view = new CExportsView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 break;
             }
 
             case IMAGE_DIRECTORY_ENTRY_IMPORT:
             {
-                auto view = new CImportsView(m_pFrame, type, pe);
+                auto view = new CImportsView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                break;
+            }
+
+            case IMAGE_DIRECTORY_ENTRY_DEBUG:
+            {
+                auto view = new CDebugView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 break;
             }
@@ -60,7 +68,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
 
     if (!hView && type > TreeItemType::Sections && DWORD_PTR(type) < (DWORD_PTR)TreeItemType::Sections + 999) {
         // section - show as hex for now
-        auto view = new CReadOnlyHexView(m_pFrame, type, pe);
+        auto view = new CReadOnlyHexView(m_pFrame, pe);
         hView = view->DoCreate(hParent);
         auto section = pe.get_image().get_sections()[DWORD_PTR(type) - DWORD_PTR(TreeItemType::Sections) - 1];
         view->SetData(section->get_section_data());
@@ -72,17 +80,17 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             auto typeName = m_pFrame->GetTreeItemText(2);
             if (typeName == L"Manifest" || typeName == L"HTML") {
                 CStringA xml((PCSTR)data.data(), (int)data.size());
-                auto view = new CTextView(m_pFrame, type, pe);
+                auto view = new CTextView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 view->SetText(CString(xml), TextFormat::Xml);
             }
             else if (typeName == L"Version") {
-                auto view = new CVersionView(m_pFrame, type, pe);
+                auto view = new CVersionView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 view->SetData(data);
             }
             else {
-                auto view = new CReadOnlyHexView(m_pFrame, type, pe);
+                auto view = new CReadOnlyHexView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 view->SetData(data);
             }

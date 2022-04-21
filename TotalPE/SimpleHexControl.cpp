@@ -704,6 +704,7 @@ HWND CHexControl::GetHwnd() const {
 void CHexControl::SetBufferManager(IBufferManager* mgr) {
 	m_Buffer = mgr;
 	RecalcLayout();
+	Invalidate();
 }
 
 IBufferManager* CHexControl::GetBufferManager() const {

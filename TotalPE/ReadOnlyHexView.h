@@ -10,6 +10,7 @@ public:
 	using CView::CView;
 
 	void SetData(std::vector<uint8_t> const& data);
+	void ClearData();
 
 	BEGIN_MSG_MAP(CreadOnlyHexView)
 		MESSAGE_HANDLER(WM_SETFOCUS, OnSetFocus)

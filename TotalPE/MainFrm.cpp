@@ -107,7 +107,8 @@ void CMainFrame::BuildTreeImageList() {
 
 	UINT icons[] = {
 		IDI_SECTIONS, IDI_DIR_OPEN, IDI_RESOURCE, IDI_HEADER, IDI_DIR_CLOSED,
-		IDI_SECTION, IDI_GLOBE, IDI_EXPORT_DIR, IDI_IMPORT_DIR,
+		IDI_SECTION, IDI_GLOBE, IDI_EXPORT_DIR, IDI_IMPORT_DIR, IDI_DEBUG,
+		IDI_DELAY_IMPORT, IDI_EXCEPTION,
 
 		IDI_MANIFEST, IDI_VERSION, IDI_ICONS, IDI_CURSORS, IDI_DIALOGS,
 		IDI_BITMAP, IDI_FONT, IDI_HTML,
@@ -216,8 +217,8 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 
 int CMainFrame::DirectoryToIconIndex(int dir) {
 	static const int icons[] = {
-		8, 9, 3, -1,
-		-1, -1, -1, -1,
+		8, 9, 3, 12,
+		-1, -1, 10, -1,
 		-1, -1, -1, -1,
 		-1, -1, -1, -1,
 	};
@@ -248,7 +249,7 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 	if (depth == 0) {
 		type = node.is_named() ? TreeItemType::ResourceTypeName : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
 		icon = ResourceTypeIconIndex(node.get_id());
-		icon = icon < 0 ? 3 : icon + 10;	// first icon index for resources
+		icon = icon < 0 ? 3 : icon + 13;	// first icon index for resources (IDI_MANIFEST)
 
 	}
 	else if (depth == 1) {

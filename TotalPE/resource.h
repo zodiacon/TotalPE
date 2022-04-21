@@ -39,6 +39,11 @@
 #define IDI_FUNC_IMPORT                 233
 #define IDI_IMPORTLIB                   234
 #define IDI_INTERFACE                   235
+#define IDI_DEBUG                       236
+#define IDI_EXCEPTION                   237
+#define IDI_PIN                         238
+#define IDI_ICON4                       239
+#define IDI_DELAY_IMPORT                239
 #define ID_OPTIONS_ALWAYSONTOP          32775
 #define ID_OPTIONS_FONT                 32776
 #define ID_OPTIONS_DARKMODE             32777
@@ -75,7 +80,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        236
+#define _APS_NEXT_RESOURCE_VALUE        240
 #define _APS_NEXT_COMMAND_VALUE         32806
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101

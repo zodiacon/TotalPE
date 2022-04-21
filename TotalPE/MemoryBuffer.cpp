@@ -9,6 +9,10 @@ MemoryBuffer::MemoryBuffer(const uint8_t* data, uint32_t size) : m_buffer(size) 
     ::memcpy(m_buffer.data(), data, size);
 }
 
+void MemoryBuffer::Clear() {
+    m_buffer.clear();
+}
+
 uint32_t MemoryBuffer::GetData(int64_t offset, uint8_t* buffer, uint32_t count) {
     if (count + offset > GetSize())
         count = max(0, int32_t(GetSize() - offset));

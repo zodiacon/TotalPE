@@ -196,6 +196,14 @@ IDI_IMPORTLIB           ICON                    "res\\library-import.ico"
 
 IDI_INTERFACE           ICON                    "res\\interface.ico"
 
+IDI_DEBUG               ICON                    "res\\debug.ico"
+
+IDI_EXCEPTION           ICON                    "res\\Exception.ico"
+
+IDI_PIN                 ICON                    "res\\pin_green.ico"
+
+IDI_DELAY_IMPORT        ICON                    "res\\time-import.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -81,6 +81,9 @@
     <ClCompile Include="VersionView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="DebugView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -141,6 +144,9 @@
       <Filter>Views</Filter>
     </ClInclude>
     <ClInclude Include="VersionView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
@@ -259,6 +265,18 @@
       <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\interface.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\time-import.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\pin_green.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\Exception.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\debug.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>
