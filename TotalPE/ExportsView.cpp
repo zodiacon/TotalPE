@@ -5,6 +5,8 @@
 #include "ListViewhelper.h"
 #include <SortHelper.h>
 #include <ClipboardHelper.h>
+#include "GenericWindow.h"
+#include "AssemblyView.h"
 
 CString CExportsView::GetColumnText(HWND, int row, int col) const {
 	auto& exp = m_Exports[row];
@@ -20,6 +22,16 @@ CString CExportsView::GetColumnText(HWND, int row, int col) const {
 
 int CExportsView::GetRowImage(HWND, int row, int) const {
 	return m_Exports[row].is_forward() ? 1 : 0;
+}
+
+bool CExportsView::OnRightClickList(HWND, int row, int, CPoint const& pt) {
+	if (row >= 0) {
+		m_Selected = row;
+		CMenu menu;
+		menu.LoadMenu(IDR_CONTEXT);
+		return Frame()->TrackPopupMenu(menu.GetSubMenu(2), 0, pt.x, pt.y);
+	}
+	return false;
 }
 
 void CExportsView::DoSort(SortInfo const* si) {
@@ -111,6 +123,30 @@ LRESULT CExportsView::OnCopy(WORD, WORD, HWND, BOOL&) {
 	auto text = ListViewHelper::GetSelectedRowsAsString(m_List);
 	if (!text.IsEmpty())
 		ClipboardHelper::CopyText(m_hWnd, text);
+	return 0;
+}
+
+LRESULT CExportsView::OnViewAssembly(WORD, WORD, HWND, BOOL&) {
+	ATLASSERT(m_Selected >= 0);
+	auto& exp = m_Exports[m_Selected];
+
+	auto frame = new CGenericFrame<CAssemblyView>;
+	frame->Create(nullptr, rcDefault, CString(exp.get_func_name().c_str()) + L" (Assembly)",
+		WS_OVERLAPPEDWINDOW);
+	auto hSmall = AtlLoadIconImage(IDI_CODE, 0, 16, 16);
+	auto hBig = AtlLoadIconImage(IDI_CODE, 0, 32, 32);
+	frame->SetIcon(hSmall, FALSE);
+	frame->SetIcon(hBig, TRUE);
+	auto view = new CAssemblyView(PE());
+	view->Create(frame->m_hWnd, rcDefault, L"", WS_CHILD | WS_VISIBLE);
+	pe_image_io io(PE().get_image());
+	io.set_image_offset(exp.get_rva());
+	std::vector<uint8_t> code;
+	io.read(code, 0x400);		// hard-coded for now
+	view->SetCode(exp.get_rva() + PE().get_image().get_image_base(), code);
+	frame->SetClient(view);
+	frame->ShowWindow(SW_SHOWDEFAULT);
+
 	return 0;
 }
 

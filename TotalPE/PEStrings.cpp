@@ -2,6 +2,7 @@
 #include "PEStrings.h"
 #include <atltime.h>
 #include <DbgHelp.h>
+#include "External/Capstone/capstone.h"
 
 #pragma comment(lib, "dbghelp")
 
@@ -652,3 +653,11 @@ std::wstring PEStrings::FileFlagsToString(DWORD flags) {
 	return result;
 }
 
+CString PEStrings::FormatInstruction(const cs_insn& inst) {
+	CStringA text;
+	CStringA sbytes;
+	for (int i = 0; i < inst.size; i++)
+		sbytes += std::format("{:02X} ", inst.bytes[i]).c_str();
+	text.Format("%llX %-48s %-10s %s", inst.address, (PCSTR)sbytes, inst.mnemonic, inst.op_str);
+	return CString(text);
+}

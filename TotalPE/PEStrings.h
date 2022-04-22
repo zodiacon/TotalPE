@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma once
+struct cs_insn;
 
 enum class DllCharacteristics : unsigned short {
 	None = 0,
@@ -30,7 +30,7 @@ struct PEStrings abstract final {
 	static std::wstring ToHex(ULONGLONG value);
 	static std::wstring ToMemorySize(ULONGLONG size);
 	static std::wstring ResourceTypeToString(WORD id);
-	//static std::wstring FormatInstruction(const cs_insn& inst);
+	static CString FormatInstruction(const cs_insn& inst);
 	static std::wstring ManagedTypeAttributesToString(CorTypeAttr attr);
 	//static std::wstring MemberAttributesToString(const ManagedMember& member);
 	static std::wstring MethodAttributesToString(CorMethodAttr attr);

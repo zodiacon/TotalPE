@@ -211,10 +211,12 @@
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="AppSettings.cpp" />
+    <ClCompile Include="AssemblyView.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="DebugView.cpp" />
     <ClCompile Include="DirectoriesView.cpp" />
     <ClCompile Include="ExportsView.cpp" />
+    <ClCompile Include="GenericWindow.cpp" />
     <ClCompile Include="ImportsView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
@@ -242,10 +244,12 @@
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AppSettings.h" />
+    <ClInclude Include="AssemblyView.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="DebugView.h" />
     <ClInclude Include="DirectoriesView.h" />
     <ClInclude Include="ExportsView.h" />
+    <ClInclude Include="GenericWindow.h" />
     <ClInclude Include="ImportsView.h" />
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="MainFrm.h" />
@@ -273,6 +277,7 @@
     <Image Include="res\bitmap.ico" />
     <Image Include="res\check.ico" />
     <Image Include="res\circle.ico" />
+    <Image Include="res\code.ico" />
     <Image Include="res\copy.ico" />
     <Image Include="res\cursor.ico" />
     <Image Include="res\database-export.ico" />

@@ -38,6 +38,10 @@ LRESULT CAboutDlg::OnClickSyslink(int, LPNMHDR hdr, BOOL&) {
 				case 1:
 					target = L"https://github.com/jnastarot/enma_pe";
 					break;
+
+				case 2:
+					target = L"http://www.capstone-engine.org/";
+					break;
 			}
 			if(!target.empty())
 				::ShellExecute(nullptr, L"open", target.c_str(), nullptr, nullptr, SW_SHOWDEFAULT);
