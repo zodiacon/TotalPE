@@ -7,6 +7,7 @@
 #include "PEStrings.h"
 #include <ToolbarHelper.h>
 #include "SecurityHelper.h"
+#include "IconHelper.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "../WTLHelper/x64/Debug/WTLHelper.lib")
@@ -105,7 +106,8 @@ CString CMainFrame::DoFileOpen() const {
 
 void CMainFrame::BuildTreeImageList() {
 	CImageList images;
-	images.Create(m_TreeIconSize, m_TreeIconSize, ILC_COLOR32, 10, 6);
+	int iconSize = s_settings.TreeIconSize() * 4 + 16;
+	images.Create(iconSize, iconSize, ILC_COLOR32, 10, 6);
 	m_Tree.SetImageList(images, TVSIL_NORMAL);
 
 	WORD icon = 0;
@@ -124,7 +126,7 @@ void CMainFrame::BuildTreeImageList() {
 	};
 
 	for (auto icon : icons)
-		images.AddIcon(AtlLoadIconImage(icon, 0, m_TreeIconSize, m_TreeIconSize));
+		images.AddIcon(AtlLoadIconImage(icon, 0, iconSize, iconSize));
 }
 
 void CMainFrame::InitPETree() {
@@ -184,6 +186,7 @@ void CMainFrame::InitMenu() {
 		{ ID_VIEW_MANIFEST, IDI_MANIFEST },
 		{ ID_VIEW_VERSION, IDI_VERSION },
 		{ ID_VIEW_DEBUG, IDI_DEBUG},
+		{ ID_FILE_RUNASADMINISTRATOR, 0, IconHelper::GetShieldIcon() },
 	};
 
 	for (auto& cmd : commands) {
@@ -255,14 +258,15 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 	}
 	if (depth == 0 && !node.is_named()) {
 		auto friendlyName = PEStrings::ResourceTypeToString(node.get_id());
-		if (friendlyName) {
-			name = friendlyName;
+		if (!friendlyName.empty()) {
+			name = std::move(friendlyName);
 		}
 	}
 	if (depth == 0) {
+		if (name.empty())
+			name = std::format(L"#{}", node.get_id());
 		type = node.is_named() ? TreeItemType::ResourceTypeName : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
 		icon = ResourceTypeIconIndex(node.get_id());
-//		icon = icon < 0 ? 3 : icon + 13;	// first icon index for resources (IDI_MANIFEST)
 
 	}
 	else if (depth == 1) {
@@ -280,6 +284,33 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 		for (auto& child : node.get_resource_directory().get_entry_list())
 			ParseResources(hRoot, child, depth + 1);
 	}
+}
+
+void CMainFrame::UpdateRecentFilesMenu() {
+	if (s_recentFiles.IsEmpty())
+		return;
+
+	auto menu = ((CMenuHandle)GetMenu()).GetSubMenu(0);
+	CString text;
+	int i = 0;
+	for (; ; i++) {
+		menu.GetMenuString(i, text, MF_BYPOSITION);
+		if (text == L"&Recent Files")
+			break;
+	}
+	menu = menu.GetSubMenu(i);
+	while (menu.DeleteMenu(0, MF_BYPOSITION))
+		;
+
+	i = 0;
+	for (auto& file : s_recentFiles.Files()) {
+		menu.AppendMenu(MF_BYPOSITION, ATL_IDS_MRU_FILE + i++, file.c_str());
+	}
+}
+
+void CMainFrame::MakeAlwaysOnTop() {
+	UISetCheck(ID_OPTIONS_ALWAYSONTOP, s_settings.AlwaysOnTop());
+	SetWindowPos(s_settings.AlwaysOnTop() ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
 bool CMainFrame::OpenPE(PCWSTR path) {
@@ -300,12 +331,20 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 	ftitle.LoadString(IDR_MAINFRAME);
 	CString title = m_Path.Mid(m_Path.ReverseFind(L'\\') + 1) + L" - " + ftitle;
 	SetWindowText(title);
+	s_recentFiles.AddFile(path);
+	s_settings.RecentFiles(s_recentFiles.Files());
+	UpdateRecentFilesMenu();
 
 	return true;
 }
 
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	s_Frames++;
+	if (s_Frames == 1) {
+		if (s_settings.LoadFromKey(L"SOFTWARE\\ScorpioSoftware\\TotalPE")) {
+			s_recentFiles.Set(s_settings.RecentFiles());
+		}
+	}
 	CreateSimpleStatusBar();
 	m_StatusBar.SubclassWindow(m_hWndStatusBar);
 	int parts[] = { 200, 400, 600, 800, 1000 };
@@ -352,9 +391,11 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	UIEnable(ID_FILE_CLOSE, false);
 
 	SetCheckIcon(AtlLoadIconImage(IDI_CHECK, 0, 16, 16), AtlLoadIconImage(IDI_RADIO, 0, 16, 16));
-	UISetRadioMenuItem(ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
+	UISetRadioMenuItem(ID_TREEICONSIZE_SMALL + s_settings.TreeIconSize(), ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
 
 	UpdateUI();
+	MakeAlwaysOnTop();
+	UpdateRecentFilesMenu();
 
 	// register object for message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -367,6 +408,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
 	if (--s_Frames == 0) {
+		s_settings.Save();
 		// unregister message filtering and idle updates
 		CMessageLoop* pLoop = _Module.GetMessageLoop();
 		ATLASSERT(pLoop != nullptr);
@@ -379,6 +421,12 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 
 LRESULT CMainFrame::OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
 	PostMessage(WM_CLOSE);
+	return 0;
+}
+
+LRESULT CMainFrame::OnAlwaysOnTop(WORD, WORD, HWND, BOOL&) {
+	s_settings.AlwaysOnTop(!s_settings.AlwaysOnTop());
+	MakeAlwaysOnTop();
 	return 0;
 }
 
@@ -432,7 +480,7 @@ LRESULT CMainFrame::OnFileClose(WORD, WORD, HWND, BOOL&) {
 }
 
 LRESULT CMainFrame::OnChangeTreeIconSize(WORD, WORD id, HWND, BOOL&) {
-	m_TreeIconSize = (id - ID_TREEICONSIZE_SMALL) * 4 + 16;
+	s_settings.TreeIconSize(id - ID_TREEICONSIZE_SMALL);
 	BuildTreeImageList();
 	m_Tree.RedrawWindow();
 	UISetRadioMenuItem(id, ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
@@ -476,5 +524,10 @@ LRESULT CMainFrame::OnRunAsAdmin(WORD, WORD, HWND, BOOL&) {
 		SendMessage(WM_CLOSE);
 	}
 
+	return 0;
+}
+
+LRESULT CMainFrame::OnRecentFile(WORD, WORD id, HWND, BOOL&) {
+	OpenPE(s_recentFiles.Files()[id - ATL_IDS_MRU_FILE].c_str());
 	return 0;
 }

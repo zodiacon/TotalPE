@@ -11,8 +11,6 @@ public:
 	CDirectoriesView(IMainFrame* frame, pe_image_full const& pe) : CView(frame, pe), m_HexView(frame) {}
 
 	CString GetColumnText(HWND, int row, int col) const;
-	void PreSort(HWND);
-	void PostSort(HWND);
 	void DoSort(SortInfo const* si);
 	void OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState);
 

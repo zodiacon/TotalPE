@@ -76,13 +76,16 @@
 #define ID_VIEW_VERSION                 32805
 #define ID_VIEW_DEBUG                   32806
 #define ID_FILE_RUNASADMINISTRATOR      32807
+#define ID_FILE_RECENTFILES             32808
+#define ID_RECENTFILES_                 32809
+#define ID_RECENTFILES_EMPTY            32810
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        240
-#define _APS_NEXT_COMMAND_VALUE         32808
+#define _APS_NEXT_COMMAND_VALUE         32811
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

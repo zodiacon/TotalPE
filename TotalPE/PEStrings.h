@@ -29,7 +29,7 @@ struct PEStrings abstract final {
 	static std::wstring ToHex(DWORD value, bool leadingZero = false);
 	static std::wstring ToHex(ULONGLONG value);
 	static std::wstring ToMemorySize(ULONGLONG size);
-	static wchar_t const* ResourceTypeToString(WORD id);
+	static std::wstring ResourceTypeToString(WORD id);
 	//static std::wstring FormatInstruction(const cs_insn& inst);
 	static std::wstring ManagedTypeAttributesToString(CorTypeAttr attr);
 	//static std::wstring MemberAttributesToString(const ManagedMember& member);

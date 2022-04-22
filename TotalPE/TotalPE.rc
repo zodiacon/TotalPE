@@ -60,6 +60,11 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Close",                      ID_FILE_CLOSE
         MENUITEM SEPARATOR
+        POPUP "&Recent Files"
+        BEGIN
+            MENUITEM "(Empty)",                     ID_RECENTFILES_EMPTY
+        END
+        MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
     POPUP "&Edit"

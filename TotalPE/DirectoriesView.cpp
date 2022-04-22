@@ -16,22 +16,6 @@ CString CDirectoriesView::GetColumnText(HWND, int row, int col) const {
 	return CString();
 }
 
-void CDirectoriesView::PreSort(HWND) {
-	auto index = m_List.GetSelectedIndex();
-	if (index >= 0) {
-		m_Selected = m_Directories[index];
-	}
-}
-
-void CDirectoriesView::PostSort(HWND) {
-	auto index = m_List.GetSelectedIndex();
-	if (index >= 0) {
-		index = ListViewHelper::FindItem(m_List, m_Selected.Name.c_str(), false);
-		ATLASSERT(index >= 0);
-		m_List.SelectItem(index);
-	}
-}
-
 void CDirectoriesView::DoSort(SortInfo const* si) {
 	if (si == nullptr)
 		return;
