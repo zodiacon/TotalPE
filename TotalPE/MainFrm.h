@@ -51,6 +51,9 @@ public:
 		COMMAND_RANGE_HANDLER(ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE, OnChangeTreeIconSize)
 		COMMAND_ID_HANDLER(ID_FILE_RUNASADMINISTRATOR, OnRunAsAdmin)
 		COMMAND_RANGE_HANDLER(ATL_IDS_MRU_FILE, ATL_IDS_MRU_FILE + 29, OnRecentFile)
+		if (uMsg == WM_COMMAND && m_CurrentView) {
+			::SendMessage(m_CurrentView, WM_COMMAND, wParam, lParam);
+		}
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		CHAIN_MSG_MAP(CAutoUpdateUI<CMainFrame>)
@@ -71,6 +74,7 @@ private:
 	CString GetTreeItemText(int parents) const override;
 	HIMAGELIST GetTreeImageList() const override;
 	int GetResourceIconIndex(WORD type) const override;
+	bool GotoTreeItemResource(PCWSTR path) override;
 
 	static TreeItemType TreeItemWithIndex(TreeItemType type, int index);
 	CString DoFileOpen() const;

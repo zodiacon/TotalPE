@@ -32,4 +32,5 @@ struct IMainFrame abstract {
 	virtual CString GetTreeItemText(int parents) const = 0;
 	virtual HIMAGELIST GetTreeImageList() const = 0;
 	virtual int GetResourceIconIndex(WORD type) const = 0;
+	virtual bool GotoTreeItemResource(PCWSTR path) = 0;
 };

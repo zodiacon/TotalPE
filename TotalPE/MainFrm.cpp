@@ -94,6 +94,19 @@ int CMainFrame::GetResourceIconIndex(WORD type) const {
 	return ResourceTypeIconIndex(type);
 }
 
+bool CMainFrame::GotoTreeItemResource(PCWSTR path) {
+	auto hRoot = FindChild(m_Tree, m_Tree.GetRootItem(), L"Resources");
+	ATLASSERT(hRoot);
+	auto hItem = FindItem(m_Tree, hRoot, path);
+	ATLASSERT(hItem);
+	if (hItem) {
+		m_Tree.SelectItem(hItem);
+		m_Tree.EnsureVisible(hItem);
+		return true;
+	}
+	return false;
+}
+
 TreeItemType CMainFrame::TreeItemWithIndex(TreeItemType type, int index) {
 	return static_cast<TreeItemType>((int)type + index);
 }

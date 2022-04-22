@@ -14,8 +14,10 @@ public:
 	int GetRowImage(HWND, int row, int) const;
 	void DoSort(SortInfo const* si);
 	void OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState);
+	bool OnRightClickList(HWND, int row, int col, CPoint const& pt);
 
 	BEGIN_MSG_MAP(CResourcesView)
+		COMMAND_ID_HANDLER(ID_RESOURCES_GOTORESOURCE, OnGoToResource)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		CHAIN_MSG_MAP(CVirtualListView<CResourcesView>)
 		CHAIN_MSG_MAP(CView<CResourcesView>)
@@ -24,7 +26,9 @@ public:
 private:
 	void BuildItems();
 	void ParseResourceDir(pe_resource_directory_entry const& dir, int level);
+
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnGoToResource(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	struct ResourceItem {
 		std::wstring Type;

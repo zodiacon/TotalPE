@@ -29,6 +29,16 @@ LRESULT CResourcesView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	return 0;
 }
 
+LRESULT CResourcesView::OnGoToResource(WORD, WORD, HWND, BOOL&) {
+	int selected = m_List.GetSelectedIndex();
+	ATLASSERT(selected >= 0);
+	if (selected) {
+		auto& item = m_Items[selected];
+		Frame()->GotoTreeItemResource((item.Type + L"\\" + item.Name + L"\\" + item.Language).c_str());
+	}
+	return 0;
+}
+
 CString CResourcesView::GetColumnText(HWND, int row, int col) const {
 	auto& item = m_Items[row];
 	switch (col) {
@@ -70,6 +80,15 @@ void CResourcesView::OnStateChanged(HWND h, int from, int to, DWORD oldState, DW
 			m_HexView.SetData(m_Items[index].Data.get_data());
 		}
 	}
+}
+
+bool CResourcesView::OnRightClickList(HWND, int row, int col, CPoint const& pt) {
+	if (row >= 0) {
+		CMenu menu;
+		menu.LoadMenu(IDR_CONTEXT);
+		return Frame()->TrackPopupMenu(menu.GetSubMenu(1), 0, pt.x, pt.y);
+	}
+	return false;
 }
 
 void CResourcesView::BuildItems() {
