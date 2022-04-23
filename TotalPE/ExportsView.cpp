@@ -39,6 +39,9 @@ void CExportsView::DoSort(SortInfo const* si) {
 	auto compare = [&](auto& exp1, auto& exp2) {
 		switch (si->SortColumn) {
 			case 0: return SortHelper::Sort(exp1.get_func_name(), exp2.get_func_name(), asc);
+			case 1: return SortHelper::Sort(exp1.get_ordinal(), exp2.get_ordinal(), asc);
+			case 2: return SortHelper::Sort(exp1.get_rva(), exp2.get_rva(), asc);
+			case 3: return SortHelper::Sort(exp1.get_forward_name(), exp2.get_forward_name(), asc);
 		}
 		return false;
 	};
