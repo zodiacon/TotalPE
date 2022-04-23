@@ -105,6 +105,9 @@
     <ClCompile Include="GenericWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MessageTableView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="GenericWindow.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageTableView.h">
+      <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -220,6 +220,7 @@
     <ClCompile Include="ImportsView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
+    <ClCompile Include="MessageTableView.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -254,6 +255,7 @@
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MemoryBuffer.h" />
+    <ClInclude Include="MessageTableView.h" />
     <ClInclude Include="PEImageView.h" />
     <ClInclude Include="PEStrings.h" />
     <ClInclude Include="ReadOnlyHexView.h" />

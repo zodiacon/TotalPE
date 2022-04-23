@@ -10,6 +10,7 @@
 #include "DirectoriesView.h"
 #include "ResourcesView.h"
 #include "DebugView.h"
+#include "MessageTableView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -115,6 +116,11 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 auto view = new CVersionView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 view->SetData(data);
+            }
+            else if (typeName == L"Message Table") {
+                auto view = new CMessageTableView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                view->SetData(data.data());
             }
             else {
                 auto view = new CReadOnlyHexView(m_pFrame);
