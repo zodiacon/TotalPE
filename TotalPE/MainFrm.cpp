@@ -241,7 +241,7 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 	};
 	if (type >= _countof(indices))
 		return 3;
-	return indices[type] < 0 ? 3 : (indices[type] + 13);
+	return indices[type] < 0 ? 3 : (indices[type] + 15);
 }
 
 int CMainFrame::DirectoryToIconIndex(int dir) {
