@@ -661,3 +661,13 @@ CString PEStrings::FormatInstruction(const cs_insn& inst) {
 	text.Format("%llX %-48s %-10s %s", inst.address, (PCSTR)sbytes, inst.mnemonic, inst.op_str);
 	return CString(text);
 }
+
+PCWSTR PEStrings::CertificateTypeToString(DWORD type) {
+	switch (type) {
+		case WIN_CERT_TYPE_X509: return L"X.509";
+		case WIN_CERT_TYPE_PKCS_SIGNED_DATA: return L"PKCS SignedData";
+		case WIN_CERT_TYPE_TS_STACK_SIGNED: return L"Terminal Server Protocol Stack";
+		case WIN_CERT_TYPE_PKCS1_SIGN: return L"PKCS1";
+	}
+	return L"";
+}

@@ -99,13 +99,16 @@
     <ClCompile Include="AppSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssemblyView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GenericWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MessageTableView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblyView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="SecurityView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,13 +188,16 @@
     <ClInclude Include="AppSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssemblyView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GenericWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MessageTableView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblyView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="SecurityView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
@@ -325,6 +331,9 @@
       <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\code.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\shield.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>

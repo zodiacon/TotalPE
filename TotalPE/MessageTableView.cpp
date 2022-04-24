@@ -38,7 +38,7 @@ LRESULT CMessageTableView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 void CMessageTableView::BuildItems() {
 	ATLASSERT(m_data);
 	auto data = m_data;
-	int index = 0;
+	uint32_t index = 0;
 	m_Items.clear();
 	m_Items.reserve(32);
 	auto res = (MESSAGE_RESOURCE_DATA*)data;

@@ -25,7 +25,7 @@ public:
 
 private:
 	struct Item {
-		int Index;
+		uint32_t Index;
 		uint32_t Id;
 		CString Text;
 	};

@@ -11,6 +11,7 @@
 #include "ResourcesView.h"
 #include "DebugView.h"
 #include "MessageTableView.h"
+#include "SecurityView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -76,6 +77,13 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             case IMAGE_DIRECTORY_ENTRY_DEBUG:
             {
                 auto view = new CDebugView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                break;
+            }
+
+            case IMAGE_DIRECTORY_ENTRY_SECURITY:
+            {
+                auto view = new CSecurityView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 break;
             }

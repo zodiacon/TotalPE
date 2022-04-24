@@ -234,6 +234,7 @@
     <ClCompile Include="ResourcesView.cpp" />
     <ClCompile Include="SectionsView.cpp" />
     <ClCompile Include="SecurityHelper.cpp" />
+    <ClCompile Include="SecurityView.cpp" />
     <ClCompile Include="Selection.cpp" />
     <ClCompile Include="SimpleHexControl.cpp" />
     <ClCompile Include="TotalPE.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="ResourcesView.h" />
     <ClInclude Include="SectionsView.h" />
     <ClInclude Include="SecurityHelper.h" />
+    <ClInclude Include="SecurityView.h" />
     <ClInclude Include="Selection.h" />
     <ClInclude Include="SimpleHexControl.h" />
     <ClInclude Include="VersionView.h" />
@@ -315,6 +317,7 @@
     <Image Include="res\save.ico" />
     <Image Include="res\section.ico" />
     <Image Include="res\sections.ico" />
+    <Image Include="res\shield.ico" />
     <Image Include="res\time-import.ico" />
     <Image Include="res\TotalPE.ico" />
     <Image Include="res\version.ico" />

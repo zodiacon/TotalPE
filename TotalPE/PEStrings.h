@@ -47,5 +47,6 @@ struct PEStrings abstract final {
 	static std::wstring FileSubTypeToString(DWORD type, DWORD subType);
 	static std::wstring FileFlagsToString(DWORD flags);
 	static PCWSTR DebugTypeToString(DWORD type);
+	static PCWSTR CertificateTypeToString(DWORD type);
 };
 

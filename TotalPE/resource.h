@@ -43,8 +43,8 @@
 #define IDI_EXCEPTION                   237
 #define IDI_PIN                         238
 #define IDI_DELAY_IMPORT                239
-#define IDI_ICON1                       240
 #define IDI_CODE                        240
+#define IDI_SHIELD2                     241
 #define IDC_EXTLINK                     1000
 #define IDC_LINK                        1001
 #define ID_OPTIONS_ALWAYSONTOP          32775
@@ -90,7 +90,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        241
+#define _APS_NEXT_RESOURCE_VALUE        242
 #define _APS_NEXT_COMMAND_VALUE         32813
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           101

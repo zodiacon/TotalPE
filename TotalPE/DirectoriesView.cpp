@@ -41,8 +41,8 @@ void CDirectoriesView::OnStateChanged(HWND h, int from, int to, DWORD oldState, 
 		m_HexView.ClearData();
 		if (index >= 0) {
 			auto& image = PE().get_image();
-			pe_image_io io(image);
 			auto& dir = m_Directories[index];
+			pe_image_io io(image, dir.Index == IMAGE_DIRECTORY_ENTRY_SECURITY ? enma_io_address_raw : enma_io_address_rva);
 			io.set_image_offset(dir.Address);
 			std::vector<uint8_t> data;
 			io.read(data, dir.Size);
@@ -77,7 +77,7 @@ LRESULT CDirectoriesView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 		item.Index = i;
 		item.Address = image.get_directory_virtual_address(i);
 		item.Size = image.get_directory_virtual_size(i);
-		auto section = image.get_section_by_rva(item.Address);
+		auto section = i == IMAGE_DIRECTORY_ENTRY_SECURITY ? image.get_section_by_raw(item.Address) : image.get_section_by_rva(item.Address);
 		if (section)
 			item.Section = section->get_section_name();
 		m_Directories.push_back(std::move(item));
