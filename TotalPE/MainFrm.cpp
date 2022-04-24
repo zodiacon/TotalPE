@@ -132,7 +132,7 @@ void CMainFrame::BuildTreeImageList() {
 	UINT icons[] = {
 		IDI_SECTIONS, IDI_DIR_OPEN, IDI_RESOURCE, IDI_HEADER, IDI_DIR_CLOSED,
 		IDI_SECTION, IDI_GLOBE, IDI_EXPORT_DIR, IDI_IMPORT_DIR, IDI_DEBUG,
-		IDI_DELAY_IMPORT, IDI_EXCEPTION,
+		IDI_DELAY_IMPORT, IDI_EXCEPTION, IDI_SHIELD2, IDI_RELOC,
 
 		IDI_MANIFEST, IDI_VERSION, IDI_ICONS, IDI_CURSORS, IDI_DIALOGS,
 		IDI_BITMAP, IDI_FONT, IDI_HTML,
@@ -247,7 +247,7 @@ int CMainFrame::ResourceTypeIconIndex(WORD type) {
 int CMainFrame::DirectoryToIconIndex(int dir) {
 	static const int icons[] = {
 		8, 9, 3, 12,
-		-1, -1, 10, -1,
+		13, 14, 10, -1,
 		-1, -1, -1, -1,
 		-1, -1, -1, -1,
 	};
@@ -334,6 +334,7 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 		return false;
 	}
 
+	
 	m_pe = std::move(pe);
 	m_Path = path;
 	m_ViewMgr.Clear();
@@ -352,6 +353,7 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 }
 
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	DragAcceptFiles();
 	s_Frames++;
 	if (s_Frames == 1) {
 		if (s_settings.LoadFromKey(L"SOFTWARE\\ScorpioSoftware\\TotalPE")) {
@@ -544,3 +546,13 @@ LRESULT CMainFrame::OnRecentFile(WORD, WORD id, HWND, BOOL&) {
 	OpenPE(s_recentFiles.Files()[id - ATL_IDS_MRU_FILE].c_str());
 	return 0;
 }
+
+LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	auto hDrop = (HDROP)wParam;
+	WCHAR path[MAX_PATH];
+	if (::DragQueryFile(hDrop, 0, path, _countof(path)))
+		OpenPE(path);
+	::DragFinish(hDrop);
+	return 0;
+}
+

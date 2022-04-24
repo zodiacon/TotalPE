@@ -336,6 +336,9 @@
     <Image Include="res\shield.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
+    <Image Include="res\relocation.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

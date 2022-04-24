@@ -313,6 +313,7 @@
     <Image Include="res\open.ico" />
     <Image Include="res\paste.ico" />
     <Image Include="res\pin_green.ico" />
+    <Image Include="res\relocation.ico" />
     <Image Include="res\resources.ico" />
     <Image Include="res\save.ico" />
     <Image Include="res\section.ico" />

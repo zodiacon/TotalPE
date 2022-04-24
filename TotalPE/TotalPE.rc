@@ -222,7 +222,9 @@ IDI_DELAY_IMPORT        ICON                    "res\\time-import.ico"
 
 IDI_CODE                ICON                    "res\\code.ico"
 
-IDI_SHIELD              ICON                    "res\\shield.ico"
+IDI_SHIELD2             ICON                    "res\\shield.ico"
+
+IDI_RELOC               ICON                    "res\\relocation.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
