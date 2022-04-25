@@ -210,6 +210,7 @@ void CMainFrame::InitMenu() {
 	}
 	AddMenu(GetMenu());
 	UIAddMenu(GetMenu());
+	UIAddMenu(IDR_CONTEXT);
 }
 
 void CMainFrame::UpdateUI() {

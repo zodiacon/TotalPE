@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ReadOnlyHexView.h"
-#include "ToolbarHelper.h"
+#include <ToolbarHelper.h>
 
 void CReadOnlyHexView::SetData(std::vector<uint8_t> const& data) {
 	m_data.Clear();
@@ -29,6 +29,8 @@ LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 		{ ID_DATASIZE_8BYTES, IDI_NUM8, BTNS_CHECKGROUP },
 		{ 0 },
 		{ ID_FILE_SAVE, IDI_SAVE, BTNS_BUTTON, L"Export" },
+		{ 0 },
+		{ ID_BYTESPERLINE, 0, BTNS_DROPDOWN | BTNS_WHOLEDROPDOWN | BTNS_SHOWTEXT, L"Bytes Per Line" },
 	};
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
 	CToolBarCtrl tb = ToolbarHelper::CreateAndInitToolBar(m_hWnd, buttons, _countof(buttons), 16);
@@ -36,6 +38,7 @@ LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	AddSimpleReBarBand(tb);
 	Frame()->AddToolBar(tb);
 	Frame()->GetUI().UISetCheck(ID_DATASIZE_1BYTE, true);
+	Frame()->GetUI().UISetRadioMenuItem(ID_BYTESPERLINE_32, ID_BYTESPERLINE_8, ID_BYTESPERLINE_128);
 
 	m_hWndClient = m_Hex.Create(m_hWnd, rcDefault, nullptr,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_VSCROLL | WS_HSCROLL, WS_EX_CLIENTEDGE);
@@ -52,6 +55,15 @@ LRESULT CReadOnlyHexView::OnShowWindow(UINT, WPARAM wp, LPARAM, BOOL&) {
 
 LRESULT CReadOnlyHexView::OnChangeDataSize(WORD, WORD id, HWND, BOOL&) {
 	m_Hex.SetDataSize(1 << (id - ID_DATASIZE_1BYTE));
+	return 0;
+}
+
+LRESULT CReadOnlyHexView::OnChangeBytesPerLine(WORD, WORD id, HWND, BOOL&) {
+	auto index = id - ID_BYTESPERLINE_8;
+	int bytes[] = { 8, 16, 24, 32, 48, 64, 96, 128 };
+	m_Hex.SetBytesPerLine(bytes[index]);
+	Frame()->GetUI().UISetRadioMenuItem(id, ID_BYTESPERLINE_8, ID_BYTESPERLINE_128);
+
 	return 0;
 }
 
@@ -76,6 +88,15 @@ LRESULT CReadOnlyHexView::OnSave(WORD, WORD, HWND, BOOL&) {
 
 LRESULT CReadOnlyHexView::OnSetFocus(UINT, WPARAM, LPARAM, BOOL&) {
 	m_Hex.SetFocus();
+	return 0;
+}
+
+LRESULT CReadOnlyHexView::OnDropDown(int, LPNMHDR hdr, BOOL&) {
+	CMenu menu;
+	menu.LoadMenu(IDR_CONTEXT);
+	auto pt = ToolbarHelper::GetDropdownMenuPoint(hdr->hwndFrom, ID_BYTESPERLINE);
+	Frame()->TrackPopupMenu(menu.GetSubMenu(0).GetSubMenu(1), TPM_VERTICAL, pt.x, pt.y);
+
 	return 0;
 }
 
