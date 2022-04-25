@@ -36,6 +36,7 @@ bool CSecurityView::OnDoubleClickList(HWND, int row, int, CPoint const& pt) {
 		return false;
 
 	auto& item = m_Items[row];
+	// always fails :(
 	auto ctx = ::CertCreateCertificateContext(PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, item.get_certificate_data().data(), (DWORD)item.get_certificate_data().size());
 	if (ctx) {
 		::CryptUIDlgViewContext(CERT_STORE_CERTIFICATE_CONTEXT, ctx, m_hWnd, nullptr, 0, nullptr);
@@ -45,8 +46,9 @@ bool CSecurityView::OnDoubleClickList(HWND, int row, int, CPoint const& pt) {
 }
 
 LRESULT CSecurityView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
-	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
+	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPSIBLINGS);
+	m_List.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
+		LVS_REPORT | LVS_OWNERDATA | LVS_SINGLESEL | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 
 	auto cm = GetColumnManager(m_List);
@@ -55,9 +57,20 @@ LRESULT CSecurityView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Data Size", LVCFMT_RIGHT, 100);
 	cm->UpdateColumns();
 
+	m_HexView.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPSIBLINGS);
+	m_HexView.SetDynamicAlloc(false);
+	m_Splitter.SetSplitterPanes(m_List, m_HexView);
+	m_Splitter.SetSplitterPosPct(15);
+
 	m_Items = PE().get_security().get_certificates();
 	ATLASSERT(PE().get_security().get_certificates_count() == (int)m_Items.size());
 	m_List.SetItemCount((int)m_Items.size());
 
 	return 0;
+}
+
+void CSecurityView::OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState) {
+	if (from >= 0 && (newState & LVIS_SELECTED)) {
+		m_HexView.SetData(m_Items[from].get_certificate_data());
+	}
 }

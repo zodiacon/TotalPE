@@ -231,6 +231,7 @@
     <ClCompile Include="PEStrings.cpp" />
     <ClCompile Include="ReadOnlyHexView.cpp" />
     <ClCompile Include="RecentFilesManager.cpp" />
+    <ClCompile Include="RelocationsView.cpp" />
     <ClCompile Include="ResourcesView.cpp" />
     <ClCompile Include="SectionsView.cpp" />
     <ClCompile Include="SecurityHelper.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="PEStrings.h" />
     <ClInclude Include="ReadOnlyHexView.h" />
     <ClInclude Include="RecentFilesManager.h" />
+    <ClInclude Include="RelocationsView.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ResourcesView.h" />

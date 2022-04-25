@@ -633,6 +633,29 @@ PCWSTR PEStrings::DebugTypeToString(DWORD type) {
 	return L"(Reserved)";
 }
 
+PCWSTR PEStrings::x64RelocationTypeToString(BYTE type) {
+	switch (type) {
+		case IMAGE_REL_AMD64_ABSOLUTE:	return L"Absolute";
+		case IMAGE_REL_AMD64_ADDR64:	return L"64-bit Address";
+		case IMAGE_REL_AMD64_ADDR32:	return L"32-bit Address";
+		case IMAGE_REL_AMD64_ADDR32NB:	return L"32-bit Address without Image Base";
+		case IMAGE_REL_AMD64_REL32:		return L"32-bit relative";
+		case IMAGE_REL_AMD64_REL32_1:	return L"32-bit relative (distance 1)";
+		case IMAGE_REL_AMD64_REL32_2:	return L"32-bit relative (distance 2)";
+		case IMAGE_REL_AMD64_REL32_3:	return L"32-bit relative (distance 3)";
+		case IMAGE_REL_AMD64_REL32_4:	return L"32-bit relative (distance 4)";
+		case IMAGE_REL_AMD64_REL32_5:	return L"32-bit relative (distance 5)";
+		case IMAGE_REL_AMD64_SECTION:	return L"Section Index";
+		case IMAGE_REL_AMD64_SECREL:	return L"32-bit Offset from Target Section";
+		case IMAGE_REL_AMD64_SECREL7:	return L"7-bit Unsigned Offset from Target Section";
+		case IMAGE_REL_AMD64_TOKEN:		return L"32-bit Metadata Token";
+		case IMAGE_REL_AMD64_SREL32:	return L"32 bit Signed Span-Dependent";
+		case IMAGE_REL_AMD64_PAIR:		return L"Pair";
+		case IMAGE_REL_AMD64_SSPAN32:	return L"32 bit Signed Span-Dependent (Link Time)";
+	}
+	return L"";
+}
+
 std::wstring PEStrings::FileFlagsToString(DWORD flags) {
 	static const struct {
 		DWORD value;

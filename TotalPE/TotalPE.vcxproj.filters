@@ -111,6 +111,9 @@
     <ClCompile Include="SecurityView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="RelocationsView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -198,6 +201,9 @@
       <Filter>Views</Filter>
     </ClInclude>
     <ClInclude Include="SecurityView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="RelocationsView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
@@ -337,7 +343,7 @@
       <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\relocation.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
