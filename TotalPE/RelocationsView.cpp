@@ -15,6 +15,19 @@ CString CRelocationsView::GetColumnText(HWND, int row, int col) const {
 }
 
 void CRelocationsView::DoSort(SortInfo const* si) {
+	if (si == nullptr)
+		return;
+
+	auto compare = [&](auto& item1, auto& item2) {
+		switch (si->SortColumn) {
+			case 0: return SortHelper::Sort(item1.type, item2.type, si->SortAscending);
+			case 1: return SortHelper::Sort(item1.relative_virtual_address, item2.relative_virtual_address, si->SortAscending);
+			case 2: return SortHelper::Sort(item1.relocation_id, item2.relocation_id, si->SortAscending);
+			case 3: return SortHelper::Sort(item1.data, item2.data, si->SortAscending);
+		}
+		return false;
+	};
+	std::ranges::sort(m_Items, compare);
 }
 
 LRESULT CRelocationsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {

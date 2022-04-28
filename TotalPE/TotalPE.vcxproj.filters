@@ -114,6 +114,9 @@
     <ClCompile Include="RelocationsView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="ExceptionsView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -204,6 +207,9 @@
       <Filter>Views</Filter>
     </ClInclude>
     <ClInclude Include="RelocationsView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="ExceptionsView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>

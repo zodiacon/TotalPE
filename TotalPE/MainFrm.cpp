@@ -187,7 +187,7 @@ void CMainFrame::InitMenu() {
 		int id;
 		UINT icon;
 		HICON hIcon{ nullptr };
-	} commands[] = {
+	} const commands[] = {
 		{ ID_EDIT_COPY, IDI_COPY },
 		{ ID_EDIT_PASTE, IDI_PASTE },
 		{ ID_FILE_OPEN, IDI_FILE_OPEN },
@@ -201,7 +201,6 @@ void CMainFrame::InitMenu() {
 		{ ID_VIEW_DEBUG, IDI_DEBUG},
 		{ ID_FILE_RUNASADMINISTRATOR, 0, IconHelper::GetShieldIcon() },
 	};
-
 	for (auto& cmd : commands) {
 		if (cmd.icon)
 			AddCommand(cmd.id, cmd.icon);
@@ -228,7 +227,7 @@ void CMainFrame::UpdateUI() {
 
 void CMainFrame::ParseResources(HTREEITEM hRoot) {
 	auto& node = m_pe->get_resources();
-	for (auto& entry : node.get_entry_list()) {
+	for (auto const& entry : node.get_entry_list()) {
 		ParseResources(hRoot, entry);
 	}
 }
@@ -335,7 +334,6 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 		return false;
 	}
 
-	
 	m_pe = std::move(pe);
 	m_Path = path;
 	m_ViewMgr.Clear();

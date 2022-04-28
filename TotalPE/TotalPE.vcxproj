@@ -215,6 +215,7 @@
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="DebugView.cpp" />
     <ClCompile Include="DirectoriesView.cpp" />
+    <ClCompile Include="ExceptionsView.cpp" />
     <ClCompile Include="ExportsView.cpp" />
     <ClCompile Include="GenericWindow.cpp" />
     <ClCompile Include="ImportsView.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="DebugView.h" />
     <ClInclude Include="DirectoriesView.h" />
+    <ClInclude Include="ExceptionsView.h" />
     <ClInclude Include="ExportsView.h" />
     <ClInclude Include="GenericWindow.h" />
     <ClInclude Include="ImportsView.h" />
