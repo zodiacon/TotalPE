@@ -3,9 +3,9 @@
 #include "..\External\tinyxml2.h"
 
 #ifdef _DEBUG
-    #pragma comment(lib, "..\\External\\tinyxml2d")
+    #pragma comment(lib, "../External/tinyxml2d")
 #else
-    #pragma comment(lib, "../External/tinyxml2.lib")
+    #pragma comment(lib, "../External/tinyxml2")
 #endif
 
 void CTextView::SetText(PCWSTR text, TextFormat format) {

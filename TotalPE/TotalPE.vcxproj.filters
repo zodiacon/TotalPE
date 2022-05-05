@@ -117,6 +117,9 @@
     <ClCompile Include="ExceptionsView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="LoadConfigView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -210,6 +213,9 @@
       <Filter>Views</Filter>
     </ClInclude>
     <ClInclude Include="ExceptionsView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadConfigView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>

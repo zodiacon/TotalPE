@@ -14,6 +14,7 @@
 #include "SecurityView.h"
 #include "RelocationsView.h"
 #include "ExceptionsView.h"
+#include "LoadConfigView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -100,6 +101,13 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             case IMAGE_DIRECTORY_ENTRY_EXCEPTION:
             {
                 auto view = new CExceptionsView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                break;
+            }
+
+            case IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG:
+            {
+                auto view = new CLoadConfigView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 break;
             }

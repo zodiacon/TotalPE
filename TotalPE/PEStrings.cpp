@@ -54,7 +54,7 @@ std::wstring PEStrings::SubsystemToString(uint32_t type) {
 	return L"(Unknown)";
 }
 
-std::wstring PEStrings::ToDecAndHex(DWORD value, bool hexFirst) {
+std::wstring PEStrings::ToDecAndHex(uint32_t value, bool hexFirst) {
 	std::wstring text;
 	if (hexFirst)
 		text = std::format(L"0x{:X} ({})", value, value);
@@ -116,7 +116,7 @@ std::wstring PEStrings::DllCharacteristicsToString(uint32_t dc) {
 
 }
 
-std::wstring PEStrings::Sec1970ToString(DWORD secs) {
+std::wstring PEStrings::Sec1970ToString(uint32_t secs) {
 	return (PCWSTR)CTime(secs).Format(L"%X");
 }
 
@@ -124,7 +124,7 @@ std::wstring PEStrings::CharacteristicsToString(uint32_t cs) {
 	std::wstring result;
 
 	static const struct {
-		DWORD cs;
+		uint32_t cs;
 		PCWSTR text;
 	} chars[] = {
 		{ IMAGE_FILE_RELOCS_STRIPPED,			L"Relocations Stripped" },
@@ -145,7 +145,7 @@ std::wstring PEStrings::CharacteristicsToString(uint32_t cs) {
 	};
 
 	for (auto& ch : chars) {
-		if ((ch.cs & (DWORD)cs) == ch.cs)
+		if ((ch.cs & (uint32_t)cs) == ch.cs)
 			result += std::wstring(ch.text) + L", ";
 	}
 
@@ -154,7 +154,7 @@ std::wstring PEStrings::CharacteristicsToString(uint32_t cs) {
 	return result;
 }
 
-std::wstring PEStrings::ToHex(DWORD value, bool leadingZero) {
+std::wstring PEStrings::ToHex(uint32_t value, bool leadingZero) {
 	if (leadingZero)
 		return std::format(L"0x{:08X}", value);
 	return std::format(L"0x{:X}", value);
@@ -350,7 +350,7 @@ PCWSTR PEStrings::GetDataDirectoryName(int index) {
 	return index < 0 || index >= _countof(names) ? L"" : names[index];
 }
 
-std::wstring PEStrings::SectionCharacteristicsToString(DWORD c) {
+std::wstring PEStrings::SectionCharacteristicsToString(uint32_t c) {
 	std::wstring result;
 	auto ch = static_cast<SectionFlags>(c);
 
@@ -541,8 +541,8 @@ std::wstring PEStrings::UndecorateName(PCWSTR name) {
 	return result;
 }
 
-std::wstring PEStrings::VersionFileOSToString(DWORD type) {
-	static const std::unordered_map<DWORD, std::wstring> types = {
+std::wstring PEStrings::VersionFileOSToString(uint32_t type) {
+	static const std::unordered_map<uint32_t, std::wstring> types = {
 		{ VOS_DOS,			L"MS-DOS" },
 		{ VOS_NT,			L"Windows NT" },
 		{ VOS__WINDOWS16,	L"16-bit Windows" },
@@ -561,8 +561,8 @@ std::wstring PEStrings::VersionFileOSToString(DWORD type) {
 	return L"";
 }
 
-std::wstring PEStrings::LanguageToString(DWORD l) {
-	static const std::unordered_map<DWORD, std::wstring> languages = {
+std::wstring PEStrings::LanguageToString(uint32_t l) {
+	static const std::unordered_map<uint32_t, std::wstring> languages = {
 		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),				L"en-US" },
 		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_UK),				L"en-UK" },
 		{ MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_AUS),			L"en-Australia" },
@@ -594,7 +594,7 @@ std::wstring PEStrings::LanguageToString(DWORD l) {
 	return PrimaryLanguageToString(PRIMARYLANGID(l));
 }
 
-std::wstring PEStrings::FileTypeToString(DWORD type) {
+std::wstring PEStrings::FileTypeToString(uint32_t type) {
 	switch (type) {
 		case VFT_APP: return L"Application";
 		case VFT_DLL: return L"Dynamic Link Library";
@@ -606,11 +606,11 @@ std::wstring PEStrings::FileTypeToString(DWORD type) {
 	return L"Unknown";
 }
 
-std::wstring PEStrings::FileSubTypeToString(DWORD type, DWORD subType) {
+std::wstring PEStrings::FileSubTypeToString(uint32_t type, uint32_t subType) {
 	return L"";
 }
 
-PCWSTR PEStrings::DebugTypeToString(DWORD type) {
+PCWSTR PEStrings::DebugTypeToString(uint32_t type) {
 	switch (type) {
 		case IMAGE_DEBUG_TYPE_UNKNOWN: return L"Unknown";
 		case IMAGE_DEBUG_TYPE_COFF: return L"COFF";
@@ -656,9 +656,36 @@ PCWSTR PEStrings::x64RelocationTypeToString(BYTE type) {
 	return L"";
 }
 
-std::wstring PEStrings::FileFlagsToString(DWORD flags) {
+std::wstring PEStrings::CFGFlagsToString(uint32_t flags) {
 	static const struct {
-		DWORD value;
+		uint32_t value;
+		PCWSTR text;
+	} fflags[] = {
+		{ IMAGE_GUARD_CF_INSTRUMENTED,						L"Instrumented" },
+		{ IMAGE_GUARD_CFW_INSTRUMENTED,						L"Write Instrumented" },
+		{ IMAGE_GUARD_CF_FUNCTION_TABLE_PRESENT,			L"Function Table Present" },
+		{ IMAGE_GUARD_SECURITY_COOKIE_UNUSED,				L"Security Cookie Unused" },
+		{ IMAGE_GUARD_PROTECT_DELAYLOAD_IAT,				L"Protect Delay-Load IAT" },
+		{ IMAGE_GUARD_DELAYLOAD_IAT_IN_ITS_OWN_SECTION,		L"Delay-Load IAT in Own Section" },
+		{ IMAGE_GUARD_CF_EXPORT_SUPPRESSION_INFO_PRESENT,	L"Export Suppression Info" },
+		{ IMAGE_GUARD_CF_ENABLE_EXPORT_SUPPRESSION,			L"Export Suppression" },
+		{ IMAGE_GUARD_CF_LONGJUMP_TABLE_PRESENT,			L"Longjmp Table Present" },
+		{ IMAGE_GUARD_RF_INSTRUMENTED,						L"Return Flow Info" },
+		{ IMAGE_GUARD_RF_ENABLE,							L"Return Flow Enable" },
+		{ IMAGE_GUARD_RF_STRICT,							L"Strict Mode Return Flow Enable" },
+	};
+	std::wstring result;
+	for (auto& flag : fflags)
+		if (flag.value & flags)
+			result += flag.text + std::wstring(L", ");
+	if (!result.empty())
+		result = result.substr(0, result.length() - 2);
+	return result;
+}
+
+std::wstring PEStrings::FileFlagsToString(uint32_t flags) {
+	static const struct {
+		uint32_t value;
 		PCWSTR text;
 	} fflags[] = {
 		{ VS_FF_DEBUG, L"Debug Information" },
@@ -685,7 +712,7 @@ CString PEStrings::FormatInstruction(const cs_insn& inst) {
 	return CString(text);
 }
 
-PCWSTR PEStrings::CertificateTypeToString(DWORD type) {
+PCWSTR PEStrings::CertificateTypeToString(uint32_t type) {
 	switch (type) {
 		case WIN_CERT_TYPE_X509: return L"X.509";
 		case WIN_CERT_TYPE_PKCS_SIGNED_DATA: return L"PKCS SignedData";

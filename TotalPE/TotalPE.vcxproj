@@ -219,6 +219,7 @@
     <ClCompile Include="ExportsView.cpp" />
     <ClCompile Include="GenericWindow.cpp" />
     <ClCompile Include="ImportsView.cpp" />
+    <ClCompile Include="LoadConfigView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
     <ClCompile Include="MessageTableView.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="GenericWindow.h" />
     <ClInclude Include="ImportsView.h" />
     <ClInclude Include="Interfaces.h" />
+    <ClInclude Include="LoadConfigView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MemoryBuffer.h" />
     <ClInclude Include="MessageTableView.h" />

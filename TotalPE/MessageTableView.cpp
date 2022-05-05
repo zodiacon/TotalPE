@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MessageTableView.h"
+#include "SortHelper.h"
 
 void CMessageTableView::SetData(uint8_t const* data) {
 	m_data = data;
@@ -17,6 +18,18 @@ CString CMessageTableView::GetColumnText(HWND, int row, int col) const {
 }
 
 void CMessageTableView::DoSort(SortInfo const* si) {
+	if (si == nullptr)
+		return;
+
+	auto compare = [&](auto& item1, auto& item2) {
+		switch (si->SortColumn) {
+			case 0: return SortHelper::Sort(item1.Index, item2.Index, si->SortAscending);
+			case 1: return SortHelper::Sort(item1.Id, item2.Id, si->SortAscending);
+			case 2: return SortHelper::Sort(item1.Text, item2.Text, si->SortAscending);
+		}
+		return false;
+	};
+	m_Items.Sort(compare);
 }
 
 LRESULT CMessageTableView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
