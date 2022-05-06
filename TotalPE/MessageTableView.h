@@ -10,30 +10,30 @@ class CMessageTableView :
 public:
 	using CView::CView;
 
-	void SetData(uint8_t const* data);
+	void SetMessageTableData(uint8_t const* data);
+	void SetStringTableData(uint8_t const* data, int size, UINT id);
 
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);
 
 	BEGIN_MSG_MAP(CMessageTableView)
+		COMMAND_ID_HANDLER(ID_EDIT_COPY, OnCopy)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		CHAIN_MSG_MAP(CView<CMessageTableView>)
 		CHAIN_MSG_MAP(CVirtualListView<CMessageTableView>)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnCopy(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) const;
 
 private:
 	struct Item {
 		uint32_t Index;
 		uint32_t Id;
-		CString Text;
+		std::wstring Text;
 	};
-
-	void BuildItems();
 
 	CListViewCtrl m_List;
 	SortedFilteredVector<Item> m_Items;
-	uint8_t const* m_data{ nullptr };
 };
 

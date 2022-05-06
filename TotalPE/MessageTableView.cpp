@@ -1,10 +1,52 @@
 #include "pch.h"
 #include "MessageTableView.h"
 #include "SortHelper.h"
+#include "ClipboardHelper.h"
 
-void CMessageTableView::SetData(uint8_t const* data) {
-	m_data = data;
-	BuildItems();
+void CMessageTableView::SetMessageTableData(uint8_t const* data) {
+	uint32_t index = 0;
+	m_Items.clear();
+	m_Items.reserve(32);
+	auto res = (MESSAGE_RESOURCE_DATA const*)data;
+	for (DWORD i = 0; i < res->NumberOfBlocks; i++) {
+		auto const& block = res->Blocks[i];
+		auto entries = (MESSAGE_RESOURCE_ENTRY*)((PBYTE const)res + block.OffsetToEntries);
+		for (DWORD id = block.LowId; id <= block.HighId; id++) {
+			Item item;
+			item.Index = ++index;
+			item.Id = id;
+			if (entries->Flags & 1)
+				item.Text = (PCWSTR)CString((PCWSTR)entries->Text, entries->Length / sizeof(WCHAR));
+			else
+				item.Text = (PCWSTR)CString(CStringA((PCSTR)entries->Text, entries->Length));
+			m_Items.push_back(std::move(item));
+			entries = (MESSAGE_RESOURCE_ENTRY*)((PBYTE)entries + entries->Length);
+		}
+	}
+	m_List.SetItemCount((int)m_Items.size());
+}
+
+void CMessageTableView::SetStringTableData(uint8_t const* data, int size, UINT id) {
+	m_Items.clear();
+	m_Items.reserve(32);
+
+	UINT index = 0;
+	auto st = (WORD const*)data;
+	id = (id - 1) * 16;
+	while (size > 0) {
+		while (*st == 0) {
+			st++;
+			id++;
+			size -= 2;
+		}
+		if (size <= 0)
+			break;
+		std::wstring s((PCWSTR)(st + 1), *st);
+		m_Items.push_back({ ++index, id++, std::move(s) });
+		size -= (*st + 1) * 2;
+		st += *st + 1;
+	}
+	m_List.SetItemCount((int)m_Items.size());
 }
 
 CString CMessageTableView::GetColumnText(HWND, int row, int col) const {
@@ -12,7 +54,7 @@ CString CMessageTableView::GetColumnText(HWND, int row, int col) const {
 	switch (col) {
 		case 0: return std::to_wstring(item.Index).c_str();
 		case 1: return std::format(L"0x{:X}", item.Id).c_str();
-		case 2: return item.Text;
+		case 2: return item.Text.c_str();
 	}
 	return CString();
 }
@@ -42,33 +84,16 @@ LRESULT CMessageTableView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Index", LVCFMT_RIGHT, 80);
 	cm->AddColumn(L"ID", LVCFMT_RIGHT, 80);
 	cm->AddColumn(L"Text", LVCFMT_LEFT, 600);
-	m_List.DeleteColumn(0);
+	cm->UpdateColumns();
 	cm->DeleteColumn(0);
 
 	return 0;
 }
 
-void CMessageTableView::BuildItems() {
-	ATLASSERT(m_data);
-	auto data = m_data;
-	uint32_t index = 0;
-	m_Items.clear();
-	m_Items.reserve(32);
-	auto res = (MESSAGE_RESOURCE_DATA*)data;
-	for (DWORD i = 0; i < res->NumberOfBlocks; i++) {
-		auto& block = res->Blocks[i];
-		auto entries = (MESSAGE_RESOURCE_ENTRY*)((PBYTE)res + block.OffsetToEntries);
-		for (DWORD id = block.LowId; id <= block.HighId; id++) {
-			Item item;
-			item.Index = ++index;
-			item.Id = id;
-			if (entries->Flags & 1)
-				item.Text = CString((PCWSTR)entries->Text, entries->Length / sizeof(WCHAR));
-			else
-				item.Text = CStringA((PCSTR)entries->Text, entries->Length);
-			m_Items.push_back(std::move(item));
-			entries = (MESSAGE_RESOURCE_ENTRY*)((PBYTE)entries + entries->Length);
-		}
-	}
-	m_List.SetItemCount((int)m_Items.size());
+LRESULT CMessageTableView::OnCopy(WORD, WORD, HWND, BOOL&) const {
+	auto text = ListViewHelper::GetSelectedRowsAsString(m_List);
+	if (!text.IsEmpty())
+		ClipboardHelper::CopyText(m_hWnd, text);
+	return 0;
 }
+

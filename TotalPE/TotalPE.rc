@@ -226,6 +226,8 @@ IDI_SHIELD2             ICON                    "res\\shield.ico"
 
 IDI_RELOC               ICON                    "res\\relocation.ico"
 
+IDI_TEXT                ICON                    "res\\text.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

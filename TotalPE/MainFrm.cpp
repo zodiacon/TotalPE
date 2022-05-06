@@ -135,7 +135,7 @@ void CMainFrame::BuildTreeImageList() {
 		IDI_DELAY_IMPORT, IDI_EXCEPTION, IDI_SHIELD2, IDI_RELOC,
 
 		IDI_MANIFEST, IDI_VERSION, IDI_ICONS, IDI_CURSORS, IDI_DIALOGS,
-		IDI_BITMAP, IDI_FONT, IDI_HTML,
+		IDI_BITMAP, IDI_FONT, IDI_HTML, IDI_TEXT,
 	};
 
 	for (auto icon : icons)
@@ -234,7 +234,7 @@ void CMainFrame::ParseResources(HTREEITEM hRoot) {
 
 int CMainFrame::ResourceTypeIconIndex(WORD type) {
 	static const int indices[] = {
-		-1, 3, 5, 2, -1, 4, -1,		// string table
+		-1, 3, 5, 2, -1, 4, 8,		// string table
 		-1, 6, 6, -1, -1, 3,		// group cursor
 		-1, 2, -1, 1, 4, -1, -1,	// P&P
 		-1, -1, -1, 7, 0,			// manifest

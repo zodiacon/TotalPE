@@ -152,7 +152,13 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             else if (typeName == L"Message Table") {
                 auto view = new CMessageTableView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
-                view->SetData(data.data());
+                view->SetMessageTableData(data.data());
+            }
+            else if (typeName == L"String Table") {
+                auto view = new CMessageTableView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                auto sid = m_pFrame->GetTreeItemText(1);
+                view->SetStringTableData(data.data(), (ULONG)data.size(), _wtoi(sid.Mid(1)));
             }
             else {
                 auto view = new CReadOnlyHexView(m_pFrame);

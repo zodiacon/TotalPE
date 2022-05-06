@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -154,7 +154,7 @@
       <DebugInformationFormat />
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -186,7 +186,7 @@
       <DebugInformationFormat />
       <PreprocessorDefinitions>_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -325,6 +325,7 @@
     <Image Include="res\section.ico" />
     <Image Include="res\sections.ico" />
     <Image Include="res\shield.ico" />
+    <Image Include="res\text.ico" />
     <Image Include="res\time-import.ico" />
     <Image Include="res\TotalPE.ico" />
     <Image Include="res\version.ico" />

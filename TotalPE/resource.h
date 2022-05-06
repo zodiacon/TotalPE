@@ -47,6 +47,8 @@
 #define IDI_CODE                        240
 #define IDI_SHIELD2                     241
 #define IDI_RELOC                       242
+#define IDI_ICON1                       243
+#define IDI_TEXT                        243
 #define IDC_EXTLINK                     1000
 #define IDC_LINK                        1001
 #define ID_OPTIONS_ALWAYSONTOP          32775
@@ -92,7 +94,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        243
+#define _APS_NEXT_RESOURCE_VALUE        244
 #define _APS_NEXT_COMMAND_VALUE         32813
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           102
