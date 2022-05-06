@@ -123,6 +123,9 @@
     <ClCompile Include="ResourceHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="AcceleratorTableView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="ResourceHelper.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="AcceleratorTableView.h">
+      <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

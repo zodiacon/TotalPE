@@ -278,7 +278,7 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 	if (depth == 0) {
 		if (name.empty())
 			name = std::format(L"#{}", node.get_id());
-		type = !name.empty() ? TreeItemType::ResourceTypeName : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
+		type = !name.empty() ? TreeItemWithIndex(TreeItemType::ResourceTypeName, node.get_id()) : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
 		icon = ResourceTypeIconIndex(node.get_id());
 
 	}

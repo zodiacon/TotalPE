@@ -16,6 +16,7 @@
 #include "ExceptionsView.h"
 #include "LoadConfigView.h"
 #include "ResourceHelper.h"
+#include "AcceleratorTableView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -134,7 +135,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
         auto section = pe.get_image().get_sections()[DWORD_PTR(type) - DWORD_PTR(TreeItemType::Sections) - 1];
         view->SetData(section->get_section_data());
     }
-    if (!hView && type == TreeItemType::ResourceTypeName) {
+    if (!hView && (type & TreeItemType::ResourceTypeName) == TreeItemType::ResourceTypeName) {
         auto typeName = m_pFrame->GetTreeItemText(0);
         ResourceHelper rh(pe);
         auto res = rh.GetFlatResources(typeName);
@@ -143,6 +144,13 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             hView = view->DoCreate(hParent);
             for (auto const& r : res) {
                 view->SetStringTableData(r.Entry->get_data(), _wtoi(r.Name.substr(1).c_str()));
+            }
+        }
+        else if (typeName == L"Accelerators") {
+            auto view = new CAcceleratorTableView(m_pFrame, pe);
+            hView = view->DoCreate(hParent);
+            for (auto const& r : res) {
+                view->AddAccelTable(r.Entry->get_data());
             }
         }
     }
@@ -172,6 +180,11 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 hView = view->DoCreate(hParent);
                 auto sid = m_pFrame->GetTreeItemText(1);
                 view->SetStringTableData(data, _wtoi(sid.Mid(1)));
+            }
+            else if (typeName == L"Accelerators") {
+                auto view = new CAcceleratorTableView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                view->AddAccelTable(data);
             }
             else {
                 auto view = new CReadOnlyHexView(m_pFrame);
