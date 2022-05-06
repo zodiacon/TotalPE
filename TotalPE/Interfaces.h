@@ -1,7 +1,7 @@
 #pragma once
 
 enum class TreeItemType : size_t {
-	Image = 1,
+	Image = 1 << 15,
 	Directories = 1 << 16,
 	Sections = 1 << 17,
 	Headers = 1 << 18,

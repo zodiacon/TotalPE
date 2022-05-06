@@ -11,7 +11,7 @@ public:
 	using CView::CView;
 
 	void SetMessageTableData(uint8_t const* data);
-	void SetStringTableData(uint8_t const* data, int size, UINT id);
+	void SetStringTableData(std::vector<uint8_t> const& data, UINT id);
 
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);

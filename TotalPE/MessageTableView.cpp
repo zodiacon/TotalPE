@@ -5,8 +5,6 @@
 
 void CMessageTableView::SetMessageTableData(uint8_t const* data) {
 	uint32_t index = 0;
-	m_Items.clear();
-	m_Items.reserve(32);
 	auto res = (MESSAGE_RESOURCE_DATA const*)data;
 	for (DWORD i = 0; i < res->NumberOfBlocks; i++) {
 		auto const& block = res->Blocks[i];
@@ -26,13 +24,11 @@ void CMessageTableView::SetMessageTableData(uint8_t const* data) {
 	m_List.SetItemCount((int)m_Items.size());
 }
 
-void CMessageTableView::SetStringTableData(uint8_t const* data, int size, UINT id) {
-	m_Items.clear();
-	m_Items.reserve(32);
-
-	UINT index = 0;
-	auto st = (WORD const*)data;
+void CMessageTableView::SetStringTableData(std::vector<uint8_t> const& data, UINT id) {
+	UINT index = (UINT)m_Items.size();
+	auto st = (WORD const*)data.data();
 	id = (id - 1) * 16;
+	int size = (int)data.size();
 	while (size > 0) {
 		while (*st == 0) {
 			st++;
@@ -86,6 +82,8 @@ LRESULT CMessageTableView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Text", LVCFMT_LEFT, 600);
 	cm->UpdateColumns();
 	cm->DeleteColumn(0);
+
+	m_Items.reserve(64);
 
 	return 0;
 }

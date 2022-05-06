@@ -15,6 +15,7 @@
 #include "RelocationsView.h"
 #include "ExceptionsView.h"
 #include "LoadConfigView.h"
+#include "ResourceHelper.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -121,7 +122,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 io.set_image_offset(pe.get_image().get_directory_virtual_address(index));
                 std::vector<uint8_t> data;
                 io.read(data, pe.get_image().get_directory_virtual_size(index));               
-                view->SetData(std::move(data));
+                view->SetData(data);
                 break;
         }
     }
@@ -132,6 +133,18 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
         hView = view->DoCreate(hParent);
         auto section = pe.get_image().get_sections()[DWORD_PTR(type) - DWORD_PTR(TreeItemType::Sections) - 1];
         view->SetData(section->get_section_data());
+    }
+    if (!hView && type == TreeItemType::ResourceTypeName) {
+        auto typeName = m_pFrame->GetTreeItemText(0);
+        ResourceHelper rh(pe);
+        auto res = rh.GetFlatResources(typeName);
+        if (typeName == L"String Table") {
+            auto view = new CMessageTableView(m_pFrame, pe);
+            hView = view->DoCreate(hParent);
+            for (auto const& r : res) {
+                view->SetStringTableData(r.Entry->get_data(), _wtoi(r.Name.substr(1).c_str()));
+            }
+        }
     }
     if (!hView) {
         if ((type & TreeItemType::Resource) == TreeItemType::Resource) {
@@ -158,7 +171,7 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 auto view = new CMessageTableView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 auto sid = m_pFrame->GetTreeItemText(1);
-                view->SetStringTableData(data.data(), (ULONG)data.size(), _wtoi(sid.Mid(1)));
+                view->SetStringTableData(data, _wtoi(sid.Mid(1)));
             }
             else {
                 auto view = new CReadOnlyHexView(m_pFrame);
