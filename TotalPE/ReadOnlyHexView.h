@@ -11,6 +11,7 @@ public:
 
 	void SetData(std::vector<uint8_t> const& data);
 	void ClearData();
+	void SetAddress(uint32_t address);
 	CHexControl& GetHexControl();
 	CHexControl const& GetHexControl() const;
 

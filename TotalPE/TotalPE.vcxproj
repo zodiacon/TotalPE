@@ -219,6 +219,7 @@
     <ClCompile Include="ExceptionsView.cpp" />
     <ClCompile Include="ExportsView.cpp" />
     <ClCompile Include="GenericWindow.cpp" />
+    <ClCompile Include="IconGroupView.cpp" />
     <ClCompile Include="ImportsView.cpp" />
     <ClCompile Include="LoadConfigView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="ExceptionsView.h" />
     <ClInclude Include="ExportsView.h" />
     <ClInclude Include="GenericWindow.h" />
+    <ClInclude Include="IconGroupView.h" />
     <ClInclude Include="ImportsView.h" />
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="LoadConfigView.h" />

@@ -8,7 +8,7 @@ struct ResourceItem {
 class ResourceHelper {
 public:
 	explicit ResourceHelper(pe_image_full const& pe);
-	std::vector<ResourceItem> GetFlatResources(PCWSTR type);
+	std::vector<ResourceItem> GetFlatResources(PCWSTR type) const;
 
 private:
 	pe_image_full const& m_pe;

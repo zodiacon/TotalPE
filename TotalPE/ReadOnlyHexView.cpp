@@ -13,6 +13,10 @@ void CReadOnlyHexView::ClearData() {
 	m_Hex.SetBufferManager(nullptr);
 }
 
+void CReadOnlyHexView::SetAddress(uint32_t address) {
+	m_Hex.SetBiasOffset(address);
+}
+
 CHexControl& CReadOnlyHexView::GetHexControl() {
 	return m_Hex;
 }

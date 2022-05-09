@@ -126,6 +126,9 @@
     <ClCompile Include="AcceleratorTableView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="IconGroupView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -228,6 +231,9 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="AcceleratorTableView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="IconGroupView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>

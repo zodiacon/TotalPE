@@ -17,6 +17,7 @@
 #include "LoadConfigView.h"
 #include "ResourceHelper.h"
 #include "AcceleratorTableView.h"
+#include "IconGroupView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -120,10 +121,12 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 auto view = new CReadOnlyHexView(m_pFrame);
                 hView = view->DoCreate(hParent);
                 pe_image_io io(pe.get_image());
-                io.set_image_offset(pe.get_image().get_directory_virtual_address(index));
+                auto address = pe.get_image().get_directory_virtual_address(index);
+                io.set_image_offset(address);
                 std::vector<uint8_t> data;
                 io.read(data, pe.get_image().get_directory_virtual_size(index));               
                 view->SetData(data);
+                view->SetAddress(address);
                 break;
         }
     }
@@ -185,6 +188,14 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 auto view = new CAcceleratorTableView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
                 view->AddAccelTable(data);
+            }
+            else if (typeName == L"Icon" || typeName == L"Group Icon") {
+                auto view = new CIconGroupView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                if (typeName == L"Icon")
+                    view->SetIconData(data, true);
+                else
+                    view->SetGroupIconData(data);
             }
             else {
                 auto view = new CReadOnlyHexView(m_pFrame);
