@@ -10,6 +10,7 @@ enum class TreeItemType : size_t {
 	ResourceName,
 	ResourceLnaguage,
 	CLR = 1 << 22,
+	Language = 1LL << 62,
 	Resource = 1LL << 63,
 };
 DEFINE_ENUM_FLAG_OPERATORS(TreeItemType);

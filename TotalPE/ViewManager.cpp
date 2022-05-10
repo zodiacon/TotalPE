@@ -159,9 +159,10 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
     }
     if (!hView) {
         if ((type & TreeItemType::Resource) == TreeItemType::Resource) {
-            auto node = (pe_resource_directory_entry*)(DWORD_PTR(type) & ((1LL << 62) - 1));
+            auto combined = (type & TreeItemType::Language) == TreeItemType::Language;
+            auto node = (pe_resource_directory_entry*)(vtype & ((1LL << 61) - 1));
             auto& data = node->get_data_entry().get_data();
-            auto typeName = m_pFrame->GetTreeItemText(2);
+            auto typeName = m_pFrame->GetTreeItemText(combined ? 1 : 2);
             if (typeName == L"Manifest" || typeName == L"HTML") {
                 CStringA xml((PCSTR)data.data(), (int)data.size());
                 auto view = new CTextView(m_pFrame, pe);

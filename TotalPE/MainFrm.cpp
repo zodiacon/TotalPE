@@ -280,18 +280,25 @@ void CMainFrame::ParseResources(HTREEITEM hRoot, pe_resource_directory_entry con
 			name = std::format(L"#{}", node.get_id());
 		type = !name.empty() ? TreeItemWithIndex(TreeItemType::ResourceTypeName, node.get_id()) : TreeItemWithIndex(TreeItemType::Resource, node.get_id());
 		icon = ResourceTypeIconIndex(node.get_id());
-
 	}
 	else if (depth == 1) {
 		type = TreeItemType::ResourceName;
 		int dummy;
 		m_Tree.GetItemImage(hRoot, icon, dummy);
+		if (node.get_resource_directory().get_entry_list().size() == 1) {
+			// add the only resource, no need for another level
+			auto& child = node.get_resource_directory().get_entry_list()[0];
+			name += L" (" + PEStrings::LanguageToString(child.get_id()) + L")";
+			type = static_cast<TreeItemType>((DWORD_PTR)&child) | TreeItemType::Resource | TreeItemType::Language;
+		}
 	}
 	else if (depth == 2) {
 		ATLASSERT(node.is_includes_data());
 		type = static_cast<TreeItemType>((DWORD_PTR)&node) | TreeItemType::Resource;
 	}
 	hRoot = InsertTreeItem(m_Tree, name.c_str(), icon, type, hRoot, TVI_SORT);
+	if (depth == 1 && (type & TreeItemType::Language) == TreeItemType::Language)
+		return;
 
 	if (!node.is_includes_data()) {
 		for (auto& child : node.get_resource_directory().get_entry_list())
