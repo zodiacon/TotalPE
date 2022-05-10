@@ -35,6 +35,7 @@ extern CAppModule _Module;
 #include <cor.h>
 #include <format>
 #include <map>
+#include <atlscrl.h>
 
 #include "..\enma_pe\enma_pe.h"
 
