@@ -21,12 +21,18 @@ public:
 	END_MSG_MAP()
 
 private:
+	struct IconData {
+		CIconHandle Icon;
+		int Size;
+		UINT Id;
+		UINT Colors;
+	};
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnEraseBkgnd(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
 	CIconHandle m_Icon;
 	int m_IconSize;
-	std::vector<std::pair<CIconHandle, int>> m_Icons;
+	std::vector<IconData> m_Icons;
 };
 

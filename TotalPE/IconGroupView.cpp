@@ -45,7 +45,12 @@ void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 			icon.CreateIconFromResourceEx(const_cast<PBYTE>(idata.data()), 
 				(DWORD)idata.size(), 0x30000, width, width, LR_DEFAULTCOLOR);
 			if (icon) {
-				m_Icons.emplace_back(icon, width);
+				IconData id;
+				id.Icon = icon;
+				id.Size = width;
+				id.Id = entry.Id;
+				id.Colors = entry.bColorCount ? entry.bColorCount : (entry.wBitCount * entry.wPlanes);
+				m_Icons.emplace_back(std::move(id));
 				y += width + 12;
 			}
 		}
@@ -67,8 +72,8 @@ LRESULT CIconGroupView::OnCreate(UINT, WPARAM, LPARAM, BOOL& handled) {
 LRESULT CIconGroupView::OnDestroy(UINT, WPARAM, LPARAM, BOOL&) {
 	if(m_Icon)
 		m_Icon.DestroyIcon();
-	for (auto& [icon, _] : m_Icons)
-		icon.DestroyIcon();
+	for (auto& icon : m_Icons)
+		icon.Icon.DestroyIcon();
 
 	return 0;
 }
@@ -90,10 +95,13 @@ void CIconGroupView::DoPaint(CDCHandle dc) {
 	}
 	else {
 		int y = 10;
-		for (auto& [icon, size] : m_Icons) {
-			CRect rc(10, y, 90, y + size);
-			dc.DrawText(std::format(L"{} X {}", size, size).c_str(), -1, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-			icon.DrawIconEx(dc, 100, y, size, size, 0, nullptr, DI_NORMAL);
+		for (auto& icon : m_Icons) {
+			auto size = icon.Size;
+			CRect rc(10, y, 160, y + size);
+			auto text = std::format(L"{} X {} ({} bit)", size, size, icon.Colors);
+			dc.DrawText(text.c_str(), 
+				-1, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+			icon.Icon.DrawIconEx(dc, 180, y, size, size, 0, nullptr, DI_NORMAL);
 			y += size + 12;
 		}
 	}
