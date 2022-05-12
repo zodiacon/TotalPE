@@ -86,6 +86,7 @@ LRESULT CDirectoriesView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 
 	m_Splitter.SetSplitterPanes(m_List, m_HexView);
 	m_Splitter.SetSplitterPosPct(30);
+	Frame()->GetUI().UISetCheck(ID_DATASIZE_1BYTE, true);
 
 	return 0;
 }

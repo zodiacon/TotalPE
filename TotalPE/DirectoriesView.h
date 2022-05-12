@@ -16,6 +16,7 @@ public:
 
 	BEGIN_MSG_MAP(CDirectoriesView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
+		CHAIN_MSG_MAP_MEMBER(m_HexView)
 		CHAIN_MSG_MAP(CView<CDirectoriesView>)
 		CHAIN_MSG_MAP(CVirtualListView<CDirectoriesView>)
 	END_MSG_MAP()

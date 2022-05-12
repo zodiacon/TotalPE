@@ -16,6 +16,7 @@ public:
 
 	BEGIN_MSG_MAP(CDebugView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
+		CHAIN_MSG_MAP_MEMBER(m_HexView)
 		CHAIN_MSG_MAP(CView<CDebugView>)
 		CHAIN_MSG_MAP(CVirtualListView<CDebugView>)
 	END_MSG_MAP()
