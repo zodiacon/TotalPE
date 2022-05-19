@@ -13,6 +13,8 @@ public:
 	void DoPaint(CDCHandle);
 
 	BEGIN_MSG_MAP(CIconGroupView)
+		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
+		COMMAND_ID_HANDLER(ID_ICON_EXPORT, OnExportIcon)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -26,13 +28,17 @@ private:
 		int Size;
 		UINT Id;
 		UINT Colors;
+		CRect Rect;
 	};
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnEraseBkgnd(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnExportIcon(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CIconHandle m_Icon;
 	int m_IconSize;
 	std::vector<IconData> m_Icons;
+	int m_SelectedIcon{ -1 };
 };
 

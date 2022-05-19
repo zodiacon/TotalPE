@@ -9,12 +9,6 @@
 #include "SecurityHelper.h"
 #include "IconHelper.h"
 
-#ifdef _DEBUG
-#pragma comment(lib, "../WTLHelper/x64/Debug/WTLHelper.lib")
-#else
-#pragma comment(lib, "../WTLHelper/x64/Release/WTLHelper.lib")
-#endif
-
 CMainFrame::CMainFrame() : m_ViewMgr(this) {
 }
 

@@ -2,6 +2,7 @@
 #include "SectionsView.h"
 #include "PEStrings.h"
 #include "SortHelper.h"
+#include "resource.h"
 
 CString CSectionsView::GetColumnText(HWND, int row, int col) const {
 	auto& section = m_Sections[row];
@@ -36,9 +37,19 @@ void CSectionsView::DoSort(SortInfo const* si) {
 	m_Sections.Sort(compare);
 }
 
+int CSectionsView::GetRowImage(HWND, int row, int col) const {
+	return 0;
+}
+
 LRESULT CSectionsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
 		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
+	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
+	CImageList images;
+	images.Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 1);
+	images.AddIcon(AtlLoadIconImage(IDI_SECTION, 0, 16, 16));
+	m_List.SetImageList(images, LVSIL_SMALL);
+
 	auto cm = GetColumnManager(m_List);
 
 	cm->AddColumn(L"Name", LVCFMT_LEFT, 90);
@@ -47,10 +58,7 @@ LRESULT CSectionsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Ptr to Raw Data", LVCFMT_RIGHT, 110);
 	cm->AddColumn(L"Raw Data Size", LVCFMT_RIGHT, 130);
 	cm->AddColumn(L"Characteristics", LVCFMT_LEFT, 300);
-	
 	cm->UpdateColumns();
-
-	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 
 	BuildItems();
 	

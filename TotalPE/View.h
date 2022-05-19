@@ -12,7 +12,7 @@ class CView abstract :
 	using BaseFrame = CFrameWindowImpl<T, CWindow, CControlWinTraits>;
 public:
 	CView(IMainFrame* frame, pe_image_full const& pe) : m_pFrame(frame), m_pe(&pe) {}
-	CView(IMainFrame* frame) : m_pFrame(frame) {}
+	explicit CView(IMainFrame* frame) : m_pFrame(frame) {}
 
 	IMainFrame* Frame() const {
 		return m_pFrame;
@@ -29,7 +29,7 @@ public:
 
 	HWND DoCreate(HWND hParent) {
 		auto p = static_cast<T*>(this);
-		return p->Create(hParent, p->rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS);
+		return p->Create(hParent, p->rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 	}
 
 	void SetDynamicAlloc(bool dynamic) {

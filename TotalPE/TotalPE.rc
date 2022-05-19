@@ -134,6 +134,10 @@ BEGIN
     BEGIN
         MENUITEM "View &Assembly",              ID_EXPORTS_VIEWASSEMBLY
     END
+    POPUP "icon"
+    BEGIN
+        MENUITEM "Export...",                   ID_ICON_EXPORT
+    END
 END
 
 

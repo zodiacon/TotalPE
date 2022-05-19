@@ -176,6 +176,9 @@
       <TypeLibraryName>$(IntDir)/TotalPE.tlb</TypeLibraryName>
       <DllDataFileName />
     </Midl>
+    <PostBuildEvent>
+      <Command>signtool sign /i DigiCert /fd sha256 $(TargetPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -207,6 +210,9 @@
       <TypeLibraryName>$(IntDir)/TotalPE.tlb</TypeLibraryName>
       <DllDataFileName />
     </Midl>
+    <PostBuildEvent>
+      <Command>signtool sign /i DigiCert /fd sha256 $(TargetPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
@@ -220,6 +226,7 @@
     <ClCompile Include="ExportsView.cpp" />
     <ClCompile Include="GenericWindow.cpp" />
     <ClCompile Include="IconGroupView.cpp" />
+    <ClCompile Include="IconWriter.cpp" />
     <ClCompile Include="ImportsView.cpp" />
     <ClCompile Include="LoadConfigView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
@@ -261,6 +268,7 @@
     <ClInclude Include="ExportsView.h" />
     <ClInclude Include="GenericWindow.h" />
     <ClInclude Include="IconGroupView.h" />
+    <ClInclude Include="IconWriter.h" />
     <ClInclude Include="ImportsView.h" />
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="LoadConfigView.h" />
@@ -342,6 +350,9 @@
   <ItemGroup>
     <ProjectReference Include="..\enma_pe\enma_pe.vcxproj">
       <Project>{5b0e07a2-6928-44e0-af0a-445b067c71cc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\WTLHelper\WTLHelper.vcxproj">
+      <Project>{ae53419f-a769-4548-8e15-e311904df7df}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

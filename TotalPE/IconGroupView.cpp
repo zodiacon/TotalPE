@@ -1,6 +1,8 @@
 #include "pch.h"
+#include "resource.h"
 #include "IconGroupView.h"
 #include "ResourceHelper.h"
+#include "IconWriter.h"
 
 void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 #pragma pack(push, 1)
@@ -43,13 +45,13 @@ void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 			auto& idata = it->Entry->get_data();
 			auto width = entry.bWidth ? entry.bWidth : 256;
 			icon.CreateIconFromResourceEx(const_cast<PBYTE>(idata.data()), 
-				(DWORD)idata.size(), 0x30000, width, width, LR_DEFAULTCOLOR);
+				(DWORD)idata.size(), 0x30000, width, width);
 			if (icon) {
 				IconData id;
 				id.Icon = icon;
 				id.Size = width;
 				id.Id = entry.Id;
-				id.Colors = entry.bColorCount ? entry.bColorCount : (entry.wBitCount * entry.wPlanes);
+				id.Colors = entry.wBitCount * entry.wPlanes;
 				m_Icons.emplace_back(std::move(id));
 				y += width + 12;
 			}
@@ -60,12 +62,33 @@ void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 
 void CIconGroupView::SetIconData(std::vector<uint8_t> const& data, bool icon) {
 	m_IconSize = *(int*)(data.data() + sizeof(DWORD));
-	m_Icon.CreateIconFromResourceEx((PBYTE)data.data(), (DWORD)data.size(), 0x30000, m_IconSize, m_IconSize, LR_DEFAULTCOLOR);
+	m_Icon.CreateIconFromResourceEx((PBYTE)data.data(), (DWORD)data.size(), 0x30000, m_IconSize, m_IconSize);
 	SetScrollSize(500, 300);
 }
 
 LRESULT CIconGroupView::OnCreate(UINT, WPARAM, LPARAM, BOOL& handled) {
 	handled = FALSE;
+	return 0;
+}
+
+LRESULT CIconGroupView::OnContextMenu(UINT, WPARAM, LPARAM lp, BOOL&) {
+	CPoint pt(GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
+	CPoint pt2(pt);
+	ScreenToClient(&pt);
+	CPoint offset;
+	GetScrollOffset(offset);
+	pt += offset;
+	int i = 0;
+	for (auto const& icon : m_Icons) {
+		if (icon.Rect.PtInRect(pt)) {
+			CMenu menu;
+			menu.LoadMenu(IDR_CONTEXT);
+			m_SelectedIcon = i;
+			Frame()->TrackPopupMenu(menu.GetSubMenu(3), 0, pt2.x, pt2.y);
+			break;
+		}
+		i++;
+	}
 	return 0;
 }
 
@@ -81,6 +104,20 @@ LRESULT CIconGroupView::OnDestroy(UINT, WPARAM, LPARAM, BOOL&) {
 LRESULT CIconGroupView::OnEraseBkgnd(UINT, WPARAM wp, LPARAM, BOOL&) {
 	//CDCHandle dc((HDC)wp);
 	//dc.FillSolidRect(0, 0, 1000, 1000, 255);
+	return 0;
+}
+
+LRESULT CIconGroupView::OnExportIcon(WORD, WORD, HWND, BOOL&) {
+	ATLASSERT(m_SelectedIcon >= 0);
+	CSimpleFileDialog dlg(FALSE, L"ico", nullptr, OFN_EXPLORER | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT,
+		L"Icon Files (*.ico)\0*.ico\0All Files\0*.*\0", m_hWnd);
+	if (IDOK == dlg.DoModal()) {
+		auto const& icon = m_Icons[m_SelectedIcon];
+		if (!IconWriter::Save(dlg.m_szFileName, icon.Icon.m_hIcon, icon.Colors)) {
+			AtlMessageBox(m_hWnd, L"Failed to save icon", IDS_TITLE, MB_ICONERROR);
+		}
+	}
+
 	return 0;
 }
 
@@ -102,6 +139,7 @@ void CIconGroupView::DoPaint(CDCHandle dc) {
 			dc.DrawText(text.c_str(), 
 				-1, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 			icon.Icon.DrawIconEx(dc, 180, y, size, size, 0, nullptr, DI_NORMAL);
+			icon.Rect = CRect(180, y, 180 + size, y + size);
 			y += size + 12;
 		}
 	}
