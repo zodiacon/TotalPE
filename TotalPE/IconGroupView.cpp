@@ -27,25 +27,29 @@ void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 
 	auto header = (IconHeader const*)data.data();
 	ATLASSERT(header->Reserved == 0);
-	ATLASSERT(header->Type == 1);
+	bool isIcon = header->Type == 1;
 
-	static std::vector<ResourceItem> icons;
+	static std::vector<ResourceItem> icons, cursors;
 	static pe_image_full const* pe;
-	if (icons.empty() || pe != &PE()) {
+	if ((isIcon && icons.empty()) || (!isIcon && cursors.empty()) || pe != &PE()) {
 		pe = &PE();
 		ResourceHelper rh(*pe);
-		icons = rh.GetFlatResources(L"Icon");
+		if (isIcon)
+			icons = rh.GetFlatResources(L"Icon");
+		else
+			cursors = rh.GetFlatResources(L"Cursor");
 	}
+	auto& v = isIcon ? icons : cursors;
 	int y = 10;
 	for (int i = 0; i < header->Count; i++) {
 		auto const& entry = header->Entries[i];
 		auto id = std::format(L"#{}", entry.Id);
-		if (auto it = std::ranges::find_if(icons, [&](auto& e) { return e.Name == id; }); it != icons.end()) {
+		if (auto it = std::ranges::find_if(v, [&](auto& e) { return e.Name == id; }); it != v.end()) {
 			CIconHandle icon;
 			auto& idata = it->Entry->get_data();
 			auto width = entry.bWidth ? entry.bWidth : 256;
-			icon.CreateIconFromResourceEx(const_cast<PBYTE>(idata.data()), 
-				(DWORD)idata.size(), 0x30000, width, width);
+			icon.m_hIcon = ::CreateIconFromResourceEx(const_cast<PBYTE>(idata.data()), 
+				(DWORD)idata.size(), isIcon, 0x30000, width, width, LR_DEFAULTCOLOR);
 			if (icon) {
 				IconData id;
 				id.Icon = icon;
@@ -62,7 +66,7 @@ void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 
 void CIconGroupView::SetIconData(std::vector<uint8_t> const& data, bool icon) {
 	m_IconSize = *(int*)(data.data() + sizeof(DWORD));
-	m_Icon.CreateIconFromResourceEx((PBYTE)data.data(), (DWORD)data.size(), 0x30000, m_IconSize, m_IconSize);
+	m_Icon = ::CreateIconFromResourceEx((PBYTE)data.data(), (DWORD)data.size(), icon, 0x30000, m_IconSize, m_IconSize, LR_DEFAULTCOLOR);
 	SetScrollSize(500, 300);
 }
 

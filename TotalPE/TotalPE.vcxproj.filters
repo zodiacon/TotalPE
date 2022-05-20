@@ -132,6 +132,9 @@
     <ClCompile Include="IconWriter.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="BitmapView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="IconWriter.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapView.h">
+      <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

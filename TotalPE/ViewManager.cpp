@@ -18,6 +18,7 @@
 #include "ResourceHelper.h"
 #include "AcceleratorTableView.h"
 #include "IconGroupView.h"
+#include "BitmapView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -190,11 +191,16 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 hView = view->DoCreate(hParent);
                 view->AddAccelTable(data);
             }
-            else if (typeName == L"Icon" || typeName == L"Group Icon") {
+            else if (typeName == L"Bitmap" || typeName.CompareNoCase(L"image") == 0) {
+                auto view = new CBitmapView(m_pFrame, pe);
+                hView = view->DoCreate(hParent);
+                view->SetData(data);
+            }
+            else if (typeName == L"Icon" || typeName == L"Group Icon" || typeName == L"Group Cursor" || typeName == L"Cursor") {
                 auto view = new CIconGroupView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
-                if (typeName == L"Icon")
-                    view->SetIconData(data, true);
+                if (typeName == L"Icon" || typeName == L"Cursor")
+                    view->SetIconData(data, typeName == L"Icon");
                 else
                     view->SetGroupIconData(data);
             }
