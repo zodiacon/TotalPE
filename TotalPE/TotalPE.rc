@@ -301,8 +301,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,2,5,0
- PRODUCTVERSION 0,2,5,0
+ FILEVERSION 0,3,0,0
+ PRODUCTVERSION 0,3,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -317,13 +317,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "Total PE - Examine PE Files"
-            VALUE "FileVersion", "0.2.5.0"
+            VALUE "FileDescription", "Total PE - Explore PE Files"
+            VALUE "FileVersion", "0.3.0.0"
             VALUE "InternalName", "TotalPE"
             VALUE "LegalCopyright", "©2022 Pavel Yosifovich"
             VALUE "OriginalFilename", "TotalPE.exe"
             VALUE "ProductName", "Total PE"
-            VALUE "ProductVersion", "0.2.5.0"
+            VALUE "ProductVersion", "0.3.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -351,7 +351,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDR_MAINFRAME           "Total PE v0.25"
+    IDR_MAINFRAME           "Total PE v0.3"
     IDS_TITLE               "Total PE"
 END
 
