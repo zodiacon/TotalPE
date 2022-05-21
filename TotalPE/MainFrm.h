@@ -11,6 +11,8 @@
 #include "ViewManager.h"
 #include "RecentFilesManager.h"
 #include "AppSettings.h"
+#include <Theme.h>
+#include <OwnerDrawnMenu.h>
 
 class CMainFrame :
 	public CFrameWindowImpl<CMainFrame>,
@@ -42,6 +44,7 @@ public:
 		MESSAGE_HANDLER(WM_CREATE_VIEW, OnCreateView)
 		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
 		COMMAND_ID_HANDLER(ID_FILE_OPENINANEWWINDOW, OnFileOpenNewWindow)
+		COMMAND_ID_HANDLER(ID_OPTIONS_DARKMODE, OnToggleDarkMode)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
 		COMMAND_RANGE_HANDLER(ID_VIEW_EXPORTS, ID_VIEW_DEBUG, OnViewPEItem)
 		COMMAND_ID_HANDLER(ID_FILE_CLOSE, OnFileClose)
@@ -88,6 +91,7 @@ private:
 	void ParseResources(HTREEITEM hRoot, pe_resource_directory_entry const& node, int depth = 0);
 	void UpdateRecentFilesMenu();
 	void MakeAlwaysOnTop();
+	void InitDarkTheme() const;
 
 	// Handler prototypes (uncomment arguments if needed):
 	//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -110,6 +114,7 @@ private:
 	LRESULT OnViewPEItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnRunAsAdmin(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnRecentFile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;
@@ -118,6 +123,7 @@ private:
 	std::unique_ptr<pe_image_full> m_pe;
 	ViewManager m_ViewMgr;
 	HWND m_CurrentView{ nullptr };
+	inline static Theme s_DarkTheme;
 	inline static int s_Frames{ 0 };
 	inline static RecentFilesManager s_recentFiles;
 	inline static AppSettings s_settings;

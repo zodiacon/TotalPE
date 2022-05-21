@@ -22,6 +22,8 @@ public:
 		return *m_pe;
 	}
 
+	void OnActivate(bool activate) {}
+
 	void OnFinalMessage(HWND) override {
 		if(m_IsDynamicAlloc)
 			delete this;

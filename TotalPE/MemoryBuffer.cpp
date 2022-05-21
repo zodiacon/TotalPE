@@ -32,15 +32,13 @@ bool MemoryBuffer::Delete(int64_t offset, size_t count) {
 }
 
 bool MemoryBuffer::SetData(int64_t offset, const uint8_t* data, uint32_t count) {
-    if (offset + count >= (int64_t)m_buffer.size())
-        m_buffer.resize(offset + count);
+    m_buffer.resize(offset + count);
     ::memcpy(m_buffer.data() + offset, data, count);
     return true;
 }
 
 bool MemoryBuffer::SetData(int64_t offset, uint8_t value, uint32_t count) {
-    if (offset + count >= (int64_t)m_buffer.size())
-        m_buffer.resize(offset + count);
+    m_buffer.resize(offset + count);
     ::memset(m_buffer.data() + offset, value, count);
     return true;
 }

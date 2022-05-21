@@ -7,6 +7,7 @@
 #include <ClipboardHelper.h>
 #include "GenericWindow.h"
 #include "AssemblyView.h"
+#include <ThemeHelper.h>
 
 CString CExportsView::GetColumnText(HWND, int row, int col) const {
 	auto& exp = m_Exports[row];
@@ -116,9 +117,11 @@ LRESULT CExportsView::OnFilterChanged(WORD, WORD, HWND, BOOL&) {
 LRESULT CExportsView::OnExport(WORD, WORD, HWND, BOOL&) {
 	CSimpleFileDialog dlg(FALSE, nullptr, nullptr, OFN_EXPLORER | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT,
 		L"All Files\0*.*\0", m_hWnd);
+	ThemeHelper::Suspend();
 	if (IDOK == dlg.DoModal()) {
 		ListViewHelper::SaveAll(dlg.m_szFileName, m_List, true);
 	}
+	ThemeHelper::Resume();
 	return 0;
 }
 

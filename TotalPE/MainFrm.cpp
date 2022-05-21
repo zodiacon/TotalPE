@@ -8,6 +8,7 @@
 #include <ToolbarHelper.h>
 #include "SecurityHelper.h"
 #include "IconHelper.h"
+#include <ThemeHelper.h>
 
 CMainFrame::CMainFrame() : m_ViewMgr(this) {
 }
@@ -23,6 +24,7 @@ LRESULT CMainFrame::OnCreateView(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/
 			::ShowWindow(m_CurrentView, SW_HIDE);
 		::ShowWindow(hView, SW_SHOW);
 		m_Splitter.SetSplitterPane(1, hView);
+
 		m_CurrentView = hView;
 	}
 	return 0;
@@ -108,7 +110,10 @@ TreeItemType CMainFrame::TreeItemWithIndex(TreeItemType type, int index) {
 CString CMainFrame::DoFileOpen() const {
 	CSimpleFileDialog dlg(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_ENABLESIZING,
 		L"PE Files\0*.exe;*.dll;*.efi;*.ocx;*.cpl;*.sys;*.mui;*.mun\0All Files\0*.*\0");
-	return IDOK == dlg.DoModal() ? dlg.m_szFileName : L"";
+	ThemeHelper::Suspend();
+	auto path = IDOK == dlg.DoModal() ? dlg.m_szFileName : L"";
+	ThemeHelper::Resume();
+	return path;
 }
 
 void CMainFrame::BuildTreeImageList() {
@@ -320,6 +325,7 @@ void CMainFrame::UpdateRecentFilesMenu() {
 	for (auto& file : s_recentFiles.Files()) {
 		menu.AppendMenu(MF_BYPOSITION, ATL_IDS_MRU_FILE + i++, file.c_str());
 	}
+	AddSubMenu(menu);
 }
 
 void CMainFrame::MakeAlwaysOnTop() {
@@ -352,10 +358,32 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 	return true;
 }
 
+void CMainFrame::InitDarkTheme() const {
+	s_DarkTheme.BackColor = s_DarkTheme.SysColors[COLOR_WINDOW] = RGB(32, 32, 32);
+	s_DarkTheme.TextColor = s_DarkTheme.SysColors[COLOR_WINDOWTEXT] = RGB(248, 248, 248);
+	s_DarkTheme.SysColors[COLOR_HIGHLIGHT] = RGB(10, 10, 160);
+	s_DarkTheme.SysColors[COLOR_HIGHLIGHTTEXT] = RGB(240, 240, 240);
+	s_DarkTheme.SysColors[COLOR_MENUTEXT] = s_DarkTheme.TextColor;
+	s_DarkTheme.SysColors[COLOR_CAPTIONTEXT] = s_DarkTheme.TextColor;
+	s_DarkTheme.SysColors[COLOR_BTNFACE] = s_DarkTheme.BackColor;
+	s_DarkTheme.SysColors[COLOR_BTNTEXT] = s_DarkTheme.TextColor;
+	s_DarkTheme.SysColors[COLOR_3DLIGHT] = RGB(192, 192, 192);
+	s_DarkTheme.SysColors[COLOR_BTNHIGHLIGHT] = RGB(192, 192, 192);
+	s_DarkTheme.SysColors[COLOR_CAPTIONTEXT] = s_DarkTheme.TextColor;
+	s_DarkTheme.SysColors[COLOR_3DSHADOW] = s_DarkTheme.TextColor;
+	s_DarkTheme.SysColors[COLOR_SCROLLBAR] = s_DarkTheme.BackColor;
+	s_DarkTheme.SysColors[COLOR_APPWORKSPACE] = s_DarkTheme.BackColor;
+	s_DarkTheme.Name = L"Dark";
+	s_DarkTheme.Menu.BackColor = s_DarkTheme.BackColor;
+	s_DarkTheme.Menu.TextColor = s_DarkTheme.TextColor;
+}
+
+
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	DragAcceptFiles();
 	s_Frames++;
 	if (s_Frames == 1) {
+		InitDarkTheme();
 		if (s_settings.LoadFromKey(L"SOFTWARE\\ScorpioSoftware\\TotalPE")) {
 			s_recentFiles.Set(s_settings.RecentFiles());
 		}
@@ -396,12 +424,14 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 	m_Tree.Create(m_Splitter, rcDefault, nullptr,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | 0*TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+	m_Tree.SetExtendedStyle(TVS_EX_DOUBLEBUFFER | TVS_EX_RICHTOOLTIP, 0);
 
 	m_Splitter.SetSplitterPane(0, m_Tree);
 	m_Splitter.SetSplitterPosPct(15);
 
 	InitMenu();
+
 	UISetCheck(ID_VIEW_STATUS_BAR, 1);
 	UIEnable(ID_FILE_CLOSE, false);
 
@@ -409,8 +439,16 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	UISetRadioMenuItem(ID_TREEICONSIZE_SMALL + s_settings.TreeIconSize(), ID_TREEICONSIZE_SMALL, ID_TREEICONSIZE_LARGE);
 
 	UpdateUI();
-	MakeAlwaysOnTop();
 	UpdateRecentFilesMenu();
+
+	if (s_settings.DarkMode()) {
+		ThemeHelper::SetCurrentTheme(s_DarkTheme, m_hWnd);
+		ThemeHelper::UpdateMenuColors(*this, true);
+		UpdateMenu(GetMenu(), true);
+		DrawMenuBar();
+	}
+	MakeAlwaysOnTop();
+	UISetCheck(ID_OPTIONS_DARKMODE, s_settings.DarkMode());
 
 	// register object for message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -556,3 +594,16 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 	return 0;
 }
 
+LRESULT CMainFrame::OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
+	s_settings.DarkMode(!s_settings.DarkMode());
+	if (s_settings.DarkMode())
+		ThemeHelper::SetCurrentTheme(s_DarkTheme, m_hWnd);
+	else
+		ThemeHelper::SetDefaultTheme(m_hWnd);
+	ThemeHelper::UpdateMenuColors(*this, s_settings.DarkMode());
+	UpdateMenuBase(GetMenu(), true);
+	DrawMenuBar();
+	UISetCheck(ID_OPTIONS_DARKMODE, s_settings.DarkMode());
+
+	return 0;
+}

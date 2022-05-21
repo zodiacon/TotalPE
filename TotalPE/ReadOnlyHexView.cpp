@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "ReadOnlyHexView.h"
 #include <ToolbarHelper.h>
+#include <ThemeHelper.h>
 
 void CReadOnlyHexView::SetData(std::vector<uint8_t> const& data) {
 	m_data.Clear();
 	m_data.SetData(0, data.data(), (ULONG)data.size());
 	m_Hex.SetBufferManager(&m_data);
-	Frame()->SetStatusText(2, std::format(L"Size: {} bytes", m_data.GetSize()).c_str());
+	UpdateStatusText();
 }
 
 void CReadOnlyHexView::ClearData() {
@@ -23,6 +24,14 @@ CHexControl& CReadOnlyHexView::GetHexControl() {
 
 CHexControl const& CReadOnlyHexView::GetHexControl() const {
 	return m_Hex;
+}
+
+void CReadOnlyHexView::UpdateColors() {
+	HexControlColors colors;
+	colors.Offset = ThemeHelper::IsDefault() ? RGB(0, 0, 128) : RGB(0, 128, 255);
+	colors.Ascii = ThemeHelper::IsDefault() ? RGB(128, 0, 0) : RGB(255, 128, 0);
+	m_Hex.GetColors() = colors;
+	m_Hex.Invalidate();
 }
 
 LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
@@ -46,14 +55,26 @@ LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 
 	m_hWndClient = m_Hex.Create(m_hWnd, rcDefault, nullptr,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_VSCROLL | WS_HSCROLL, WS_EX_CLIENTEDGE);
+	UpdateColors();
 
 	return 0;
 }
 
-LRESULT CReadOnlyHexView::OnShowWindow(UINT, WPARAM wp, LPARAM, BOOL&) {
+LRESULT CReadOnlyHexView::OnUpdateTheme(UINT, WPARAM, LPARAM, BOOL&) {
+	UpdateColors();
+
+	return 0;
+}
+
+void CReadOnlyHexView::UpdateStatusText() {
+	Frame()->SetStatusText(2, std::format(L"Size: {} bytes", m_data.GetSize()).c_str());
+}
+
+LRESULT CReadOnlyHexView::OnShowWindow(UINT, WPARAM wp, LPARAM, BOOL& handled) {
 	if (wp) {
-		Frame()->SetStatusText(2, std::format(L"Size: {} bytes", m_data.GetSize()).c_str());
+		UpdateStatusText();
 	}
+	handled = FALSE;
 	return 0;
 }
 
@@ -74,7 +95,10 @@ LRESULT CReadOnlyHexView::OnChangeBytesPerLine(WORD, WORD id, HWND, BOOL&) {
 LRESULT CReadOnlyHexView::OnSave(WORD, WORD, HWND, BOOL&) {
 	CSimpleFileDialog dlg(FALSE, nullptr, nullptr, OFN_EXPLORER | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT,
 		L"All Files\0*.*\0", m_hWnd);
-	if (IDOK == dlg.DoModal()) {
+	ThemeHelper::Suspend();
+	auto ok = IDOK == dlg.DoModal();
+	ThemeHelper::Resume();
+	if(ok) {
 		HANDLE hFile = ::CreateFile(dlg.m_szFileName, GENERIC_WRITE, 0, nullptr, OPEN_ALWAYS, 0, nullptr);
 		if (hFile == INVALID_HANDLE_VALUE) {
 			AtlMessageBox(m_hWnd, L"Failed to create file", IDS_TITLE, MB_ICONERROR);

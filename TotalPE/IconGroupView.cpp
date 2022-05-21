@@ -3,6 +3,7 @@
 #include "IconGroupView.h"
 #include "ResourceHelper.h"
 #include "IconWriter.h"
+#include <ThemeHelper.h>
 
 void CIconGroupView::SetGroupIconData(std::vector<uint8_t> const& data) {
 #pragma pack(push, 1)
@@ -115,12 +116,14 @@ LRESULT CIconGroupView::OnExportIcon(WORD, WORD, HWND, BOOL&) {
 	ATLASSERT(m_SelectedIcon >= 0);
 	CSimpleFileDialog dlg(FALSE, L"ico", nullptr, OFN_EXPLORER | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT,
 		L"Icon Files (*.ico)\0*.ico\0All Files\0*.*\0", m_hWnd);
+	ThemeHelper::Suspend();
 	if (IDOK == dlg.DoModal()) {
 		auto const& icon = m_Icons[m_SelectedIcon];
 		if (!IconWriter::Save(dlg.m_szFileName, icon.Icon.m_hIcon, icon.Colors)) {
 			AtlMessageBox(m_hWnd, L"Failed to save icon", IDS_TITLE, MB_ICONERROR);
 		}
 	}
+	ThemeHelper::Resume();
 
 	return 0;
 }

@@ -703,6 +703,7 @@ HWND CHexControl::GetHwnd() const {
 
 void CHexControl::SetBufferManager(IBufferManager* mgr) {
 	m_Buffer = mgr;
+	m_Selection.Clear();
 	RecalcLayout();
 	Invalidate();
 }
