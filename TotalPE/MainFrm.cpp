@@ -104,7 +104,7 @@ bool CMainFrame::GotoTreeItemResource(PCWSTR path) {
 }
 
 TreeItemType CMainFrame::TreeItemWithIndex(TreeItemType type, int index) {
-	return static_cast<TreeItemType>((int)type + index);
+	return static_cast<TreeItemType>((DWORD64)type + index);
 }
 
 CString CMainFrame::DoFileOpen() const {
@@ -424,7 +424,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 	m_Tree.Create(m_Splitter, rcDefault, nullptr,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | 0*TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+		WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS);
 	m_Tree.SetExtendedStyle(TVS_EX_DOUBLEBUFFER | TVS_EX_RICHTOOLTIP, 0);
 
 	m_Splitter.SetSplitterPane(0, m_Tree);
@@ -559,12 +559,17 @@ LRESULT CMainFrame::OnViewPEItem(WORD, WORD id, HWND, BOOL&) {
 		TreeItemType::Sections,
 		TreeItemType::Directories,
 		TreeItemType::Resources,
-		TreeItemWithIndex(TreeItemType::Resource, 24),
-		TreeItemWithIndex(TreeItemType::Resource, 16),
+		TreeItemWithIndex(TreeItemType::ResourceTypeName, 24),
+		TreeItemWithIndex(TreeItemType::ResourceTypeName, 16),
 		TreeItemWithIndex(TreeItemType::Directories, IMAGE_DIRECTORY_ENTRY_DEBUG + 1),
 	};
 	auto hItem = FindItemByData(m_Tree, m_Tree.GetRootItem(), items[item]);
 	if (hItem) {
+		if ((items[item] & TreeItemType::ResourceTypeName) == TreeItemType::ResourceTypeName) {
+			auto hChild = m_Tree.GetChildItem(hItem);
+			if (hChild)
+				hItem = hChild;
+		}
 		m_Tree.SelectItem(hItem);
 		m_Tree.EnsureVisible(hItem);
 	}
