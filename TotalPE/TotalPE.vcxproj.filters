@@ -135,6 +135,9 @@
     <ClCompile Include="BitmapView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="MenuView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -246,6 +249,9 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="BitmapView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuView.h">
       <Filter>Views</Filter>
     </ClInclude>
   </ItemGroup>

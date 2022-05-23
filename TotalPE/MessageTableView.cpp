@@ -27,6 +27,7 @@ void CMessageTableView::SetMessageTableData(uint8_t const* data) {
 void CMessageTableView::SetStringTableData(std::vector<uint8_t> const& data, UINT id) {
 	UINT index = (UINT)m_Items.size();
 	auto st = (WORD const*)data.data();
+	ATLASSERT(id);
 	id = (id - 1) * 16;
 	int size = (int)data.size();
 	while (size > 0) {

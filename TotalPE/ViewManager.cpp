@@ -19,6 +19,7 @@
 #include "AcceleratorTableView.h"
 #include "IconGroupView.h"
 #include "BitmapView.h"
+#include "MenuView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -183,7 +184,9 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
             else if (typeName == L"String Table") {
                 auto view = new CMessageTableView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
-                auto sid = m_pFrame->GetTreeItemText(1);
+                auto sid = m_pFrame->GetTreeItemText(combined ? 0 : 1);
+                if (combined)
+                    sid = sid.Left(sid.Find(L'('));
                 view->SetStringTableData(data, _wtoi(sid.Mid(1)));
             }
             else if (typeName == L"Accelerators") {
@@ -191,6 +194,11 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 hView = view->DoCreate(hParent);
                 view->AddAccelTable(data);
             }
+            //else if (typeName == L"Menu") {
+            //    auto view = new CMenuView(m_pFrame, pe);
+            //    hView = view->DoCreate(hParent);
+            //    view->SetData(data);
+            //}
             else if (typeName == L"Bitmap" || typeName.CompareNoCase(L"image") == 0) {
                 auto view = new CBitmapView(m_pFrame, pe);
                 hView = view->DoCreate(hParent);
