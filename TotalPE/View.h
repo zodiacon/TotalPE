@@ -18,6 +18,10 @@ public:
 		return m_pFrame;
 	}
 
+	auto const& PE() const {
+		return *m_pe;
+	}
+
 	auto& PE() {
 		return *m_pe;
 	}

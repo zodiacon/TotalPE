@@ -2,6 +2,9 @@
 #include "PEImageView.h"
 #include "PEStrings.h"
 #include "SortHelper.h"
+#include "ClipboardHelper.h"
+#include "AssemblyView.h"
+#include "ViewManager.h"
 
 CString CPEImageView::GetColumnText(HWND, int row, int col) const {
 	auto& item = m_Items[row];
@@ -46,6 +49,10 @@ LRESULT CPEImageView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	return 0;
 }
 
+void CPEImageView::OnStateChanged(HWND, int from, int to, DWORD oldState, DWORD newState) {
+	Frame()->GetUI().UIEnable(ID_EDIT_COPY, m_List.GetSelectedCount() > 0);
+}
+
 void CPEImageView::BuildItems() {
 	auto& header = PE().get_image();
 	auto& path = Frame()->GetPEPath();
@@ -77,3 +84,34 @@ void CPEImageView::BuildItems() {
 	m_List.SetItemCount((int)m_Items.size());
 }
 
+bool CPEImageView::OnRightClickList(HWND lv, int row, int col, CPoint const& pt) {
+	if (row < 0)
+		return false;
+
+	CMenu menu;
+	menu.LoadMenu(IDR_CONTEXT);
+	return Frame()->TrackPopupMenu(menu.GetSubMenu(4), 0, pt.x, pt.y);
+}
+
+LRESULT CPEImageView::OnCopy(WORD, WORD, HWND, BOOL&) const {
+	auto text = ListViewHelper::GetSelectedRowsAsString(m_List);
+	if (!text.IsEmpty())
+		ClipboardHelper::CopyText(m_hWnd, text);
+	return 0;
+}
+
+LRESULT CPEImageView::OnEntryPointAssembly(WORD, WORD, HWND, BOOL&) const {
+	auto const& image = PE().get_image();
+	pe_image_io io(image);
+	io.set_image_offset(image.get_entry_point());
+	std::vector<uint8_t> code;
+	io.read(code, 0x1000);
+	ViewManager::CreateAssemblyView(PE(), Frame()->GetTreeItemText(0) + L": Entry Point", code, image.get_image_base() + image.get_entry_point());
+
+	return 0;
+}
+
+void CPEImageView::OnActivate(bool activate) {
+	if (activate)
+		Frame()->GetUI().UIEnable(ID_MAIN_ENTRYPOINTASSEMBLY, PE().get_image().get_entry_point() > 0);
+}

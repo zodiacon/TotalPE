@@ -612,3 +612,25 @@ LRESULT CMainFrame::OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 
 	return 0;
 }
+
+TreeItemType CMainFrame::RegisterContextMenu(TreeItemType type, UINT menuId, UINT submenuIndex) {
+	type |= TreeItemType::ContextMenu | (TreeItemType)((menuId << 8) | submenuIndex);
+	return type;
+}
+
+LRESULT CMainFrame::OnTreeRightClick(HWND tree, HTREEITEM hItem, CPoint const& pt) {
+	auto data = GetItemData<TreeItemType>(m_Tree, hItem);
+	if ((data & TreeItemType::ContextMenu) == TreeItemType::None)
+		return 0;
+
+	data &= ~TreeItemType::ContextMenu;
+	auto index = (int)data & 0xff;
+	auto id = (int)data >> 8;
+	CMenu menu;
+	ATLVERIFY(menu.LoadMenu(id));
+	ShowContextMenu(menu.GetSubMenu(index), 0, pt.x, pt.y);
+
+	return 1;
+}
+
+

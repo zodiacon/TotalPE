@@ -30,6 +30,7 @@ public:
 	bool OpenPE(PCWSTR path);
 
 	void OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew);
+	LRESULT OnTreeRightClick(HWND tree, HTREEITEM hItem, CPoint const& pt);
 
 	static int ResourceTypeIconIndex(WORD type);
 	static int DirectoryToIconIndex(int dir);
@@ -82,6 +83,7 @@ private:
 
 	static TreeItemType TreeItemWithIndex(TreeItemType type, int index);
 	CString DoFileOpen() const;
+	TreeItemType RegisterContextMenu(TreeItemType, UINT menuId, UINT submenuIndex);
 
 	void InitPETree();
 	void InitMenu();
@@ -128,3 +130,4 @@ private:
 	inline static RecentFilesManager s_recentFiles;
 	inline static AppSettings s_settings;
 };
+

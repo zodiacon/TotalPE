@@ -16,7 +16,7 @@ bool CAssemblyView::SetCode(uint64_t startAddress, std::vector<uint8_t> const& c
     for (int j = 0; j < count; j++) {
         const auto& inst = insn[j];
         text += PEStrings::FormatInstruction(inst) + L"\r\n";
-        if (_stricmp(inst.mnemonic, "ret") == 0 || inst.bytes[0] == 0xcc)
+        if (_stricmp(inst.mnemonic, "ret") == 0)
             break;
     }
     m_Edit.SetWindowText(text);

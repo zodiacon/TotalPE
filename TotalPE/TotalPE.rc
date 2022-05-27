@@ -138,6 +138,12 @@ BEGIN
     BEGIN
         MENUITEM "Export...",                   ID_ICON_EXPORT
     END
+    POPUP "main"
+    BEGIN
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM SEPARATOR
+        MENUITEM "Entry Point Assembly...",     ID_MAIN_ENTRYPOINTASSEMBLY
+    END
 END
 
 

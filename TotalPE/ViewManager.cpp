@@ -19,6 +19,8 @@
 #include "AcceleratorTableView.h"
 #include "IconGroupView.h"
 #include "BitmapView.h"
+#include "AssemblyView.h"
+#include "GenericWindow.h"
 #include "MenuView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
@@ -229,4 +231,21 @@ void ViewManager::Clear() {
     for (auto& [_, view] : m_views)
         ::DestroyWindow(view);
     m_views.clear();
+}
+
+HWND ViewManager::CreateAssemblyView(pe_image_full const& pe, PCWSTR title, std::vector<uint8_t> const& code, uint64_t address) {
+    auto frame = new CGenericFrame<CAssemblyView>;
+    frame->Create(nullptr, frame->rcDefault, title, WS_OVERLAPPEDWINDOW);
+    auto hSmall = AtlLoadIconImage(IDI_CODE, 0, 16, 16);
+    auto hBig = AtlLoadIconImage(IDI_CODE, 0, 32, 32);
+    frame->SetIcon(hSmall, FALSE);
+    frame->SetIcon(hBig, TRUE);
+    auto view = new CAssemblyView(pe);
+    view->Create(frame->m_hWnd, frame->rcDefault, L"", WS_CHILD | WS_VISIBLE);
+    pe_image_io io(pe.get_image());
+    view->SetCode(address, code);
+    frame->SetClient(view);
+    frame->ShowWindow(SW_SHOWDEFAULT);
+
+    return frame->m_hWnd;
 }

@@ -89,13 +89,14 @@
 #define ID_RESOURCES_GOTORESOURCE       32811
 #define ID_EXPORTS_VIEWASSEMBLY         32812
 #define ID_ICON_EXPORT                  32813
+#define ID_MAIN_ENTRYPOINTASSEMBLY      32814
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        244
-#define _APS_NEXT_COMMAND_VALUE         32814
+#define _APS_NEXT_COMMAND_VALUE         32815
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

@@ -7,6 +7,7 @@
 #include <ClipboardHelper.h>
 #include "GenericWindow.h"
 #include "AssemblyView.h"
+#include "ViewManager.h"
 #include <ThemeHelper.h>
 
 CString CExportsView::GetColumnText(HWND, int row, int col) const {
@@ -135,23 +136,11 @@ LRESULT CExportsView::OnCopy(WORD, WORD, HWND, BOOL&) {
 LRESULT CExportsView::OnViewAssembly(WORD, WORD, HWND, BOOL&) {
 	ATLASSERT(m_Selected >= 0);
 	auto& exp = m_Exports[m_Selected];
-
-	auto frame = new CGenericFrame<CAssemblyView>;
-	frame->Create(nullptr, rcDefault, CString(exp.get_func_name().c_str()) + L" (Assembly)",
-		WS_OVERLAPPEDWINDOW);
-	auto hSmall = AtlLoadIconImage(IDI_CODE, 0, 16, 16);
-	auto hBig = AtlLoadIconImage(IDI_CODE, 0, 32, 32);
-	frame->SetIcon(hSmall, FALSE);
-	frame->SetIcon(hBig, TRUE);
-	auto view = new CAssemblyView(PE());
-	view->Create(frame->m_hWnd, rcDefault, L"", WS_CHILD | WS_VISIBLE);
 	pe_image_io io(PE().get_image());
 	io.set_image_offset(exp.get_rva());
 	std::vector<uint8_t> code;
 	io.read(code, 0x400);		// hard-coded for now
-	view->SetCode(exp.get_rva() + PE().get_image().get_image_base(), code);
-	frame->SetClient(view);
-	frame->ShowWindow(SW_SHOWDEFAULT);
+	ViewManager::CreateAssemblyView(PE(), CString(exp.get_func_name().c_str()) + L" (Assembly)", code, exp.get_rva() + PE().get_image().get_image_base());
 
 	return 0;
 }
