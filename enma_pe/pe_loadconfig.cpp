@@ -2,46 +2,46 @@
 #include "pe_loadconfig.h"
 
 
-pe_load_config_directory::pe_load_config_directory() 
-    :size(0),
-        timestamp(0),
-        major_version(0),
-        minor_version(0),
-        global_flagsclear(0),
-        global_flagsset(0),
-        criticalsection_default_timeout(0),
-        decommit_freeblock_threshold(0),
-        decommit_totalfree_threshold(0),
-        lock_prefix_table(0),
-        maximum_allocation_size(0),
-        virtual_memory_threshold(0),
-        process_heap_flags(0),
-        process_affinity_mask(0),
-        csd_version(0),
-        dependent_load_flags(0),
-        editlist(0),
-        security_cookie(0),
-        se_handler_table(0),
-        se_handler_count(0),
-        guard_cf_check_function_pointer(0),
-        guard_cf_dispatch_function_pointer(0),
-        guard_cf_function_table(0),
-        guard_cf_function_count(0),
-        guard_flags(0),
-        code_integrity({ 0 }),
-        guard_address_taken_iat_entry_table(0),
-        guard_address_taken_iat_entry_count(0),
-        guard_long_jump_target_table(0),
-        guard_long_jump_target_count(0),
-        dynamic_value_reloc_table(0),
-        chpe_meta_data_pointer(0),
-        guard_rf_failure_routine(0),
-        guard_rf_failure_routine_function_pointer(0),
-        dynamic_value_reloc_table_offset(0),
-        dynamic_value_reloc_table_section(0),
-        guard_rf_verify_stack_pointer_function_pointer(0),
-        hot_patch_table_offset(0),
-        enclave_configuration_pointer(0){}
+pe_load_config_directory::pe_load_config_directory() :
+    size(0),
+    timestamp(0),
+    major_version(0),
+    minor_version(0),
+    global_flagsclear(0),
+    global_flagsset(0),
+    criticalsection_default_timeout(0),
+    decommit_freeblock_threshold(0),
+    decommit_totalfree_threshold(0),
+    lock_prefix_table(0),
+    maximum_allocation_size(0),
+    virtual_memory_threshold(0),
+    process_heap_flags(0),
+    process_affinity_mask(0),
+    csd_version(0),
+    dependent_load_flags(0),
+    editlist(0),
+    security_cookie(0),
+    se_handler_table(0),
+    se_handler_count(0),
+    guard_cf_check_function_pointer(0),
+    guard_cf_dispatch_function_pointer(0),
+    guard_cf_function_table(0),
+    guard_cf_function_count(0),
+    guard_flags(0),
+    code_integrity({ 0 }),
+    guard_address_taken_iat_entry_table(0),
+    guard_address_taken_iat_entry_count(0),
+    guard_long_jump_target_table(0),
+    guard_long_jump_target_count(0),
+    dynamic_value_reloc_table(0),
+    chpe_meta_data_pointer(0),
+    guard_rf_failure_routine(0),
+    guard_rf_failure_routine_function_pointer(0),
+    dynamic_value_reloc_table_offset(0),
+    dynamic_value_reloc_table_section(0),
+    guard_rf_verify_stack_pointer_function_pointer(0),
+    hot_patch_table_offset(0),
+    enclave_configuration_pointer(0){}
 
 void        pe_load_config_directory::set_size(uint32_t  size) {
     this->size = size;
@@ -466,6 +466,7 @@ pe_directory_code _get_load_config_directory(const pe_image &image, pe_load_conf
 
             pe_image_io loadcfg_guard_cf_function_io((pe_image &)image);
             loadcfg_guard_cf_function_io.set_image_offset(image.va_to_rva(load_config_desc.guard_cf_function_table));
+            uint32_t shift = load_config_desc.guard_flags >> IMAGE_GUARD_CF_FUNCTION_TABLE_SIZE_SHIFT;
             for (uint32_t i = 0; i < load_config_desc.guard_cf_function_count; i++) {
                 uint32_t cf_function_va;
 
@@ -474,6 +475,7 @@ pe_directory_code _get_load_config_directory(const pe_image &image, pe_load_conf
                 }
 
                 load_config.get_guard_cf_functions().push_back(cf_function_va);
+                loadcfg_guard_cf_function_io.set_image_offset(loadcfg_guard_cf_function_io.get_image_offset() + shift);
             }
         }
         load_config.set_guard_cf_function_count(uint32_t(load_config_desc.guard_cf_function_count));

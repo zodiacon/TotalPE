@@ -3,6 +3,7 @@
 #include "View.h"
 #include <VirtualListView.h>
 #include <SortedFilteredVector.h>
+#include "SymbolsHandler.h"
 
 class CLoadConfigView :
 	public CView<CLoadConfigView>,
@@ -13,6 +14,7 @@ public:
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);
 	bool IsSortable(HWND, int col) const;
+	int GetRowImage(HWND hList, int row, int col) const;
 
 	BEGIN_MSG_MAP(CLoadConfigView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -31,11 +33,13 @@ private:
 	struct CfgFunction {
 		std::string Name;
 		uint32_t Rva;
+		bool Export;
 	};
 	CListViewCtrl m_List;
 	CSplitterWindow m_Splitter;
 	CListViewCtrl m_CfgList;
 	std::vector<DataItem> m_Items;
 	std::vector<CfgFunction> m_CfgFunctions;
+	SymbolsHandler m_symbols;
 };
 

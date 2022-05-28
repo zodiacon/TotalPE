@@ -12,6 +12,7 @@ CString CDebugView::GetColumnText(HWND, int row, int col) const {
 		case 3: return std::format(L"0x{:X}", item.get_address_of_raw_data()).c_str();
 		case 4: return PEStrings::ToMemorySize(item.get_size_of_data()).c_str();
 		case 5: return std::format(L"0x{:X}", item.get_pointer_to_raw_data()).c_str();
+		case 6: return GetDetails(row).c_str();
 	}
 	return CString();
 }
@@ -49,6 +50,24 @@ void CDebugView::OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD 
 	}
 }
 
+std::wstring CDebugView::GetDetails(int row) const {
+	struct CodeView {
+		char format[4];
+		GUID guid;
+		ULONG count;
+		char pdb[64];
+	};
+	auto& item = m_Items[row];
+	switch (item.get_type()) {
+		case IMAGE_DEBUG_TYPE_CODEVIEW:	
+			auto data = (CodeView*)item.get_item_data().data();
+			return std::format(L"Format: {}{}{}{} GUID: {} Pdb: {}",
+				data->format[0], data->format[1], data->format[2], data->format[3],
+				PEStrings::GuidToString(data->guid), (PCWSTR)CString(data->pdb));
+	}
+	return std::wstring();
+}
+
 LRESULT CDebugView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 	m_List.Create(m_hWndClient, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
@@ -63,6 +82,7 @@ LRESULT CDebugView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Address", LVCFMT_RIGHT, 110);
 	cm->AddColumn(L"Size", LVCFMT_RIGHT, 130);
 	cm->AddColumn(L"Pointer to Raw Data", LVCFMT_RIGHT, 130);
+	cm->AddColumn(L"Details", LVCFMT_LEFT, 300);
 	cm->UpdateColumns();
 
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);

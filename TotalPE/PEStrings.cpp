@@ -683,6 +683,13 @@ std::wstring PEStrings::CFGFlagsToString(uint32_t flags) {
 	return result;
 }
 
+std::wstring PEStrings::GuidToString(GUID const& guid) {
+	WCHAR sguid[64];
+	if(::StringFromGUID2(guid, sguid, _countof(sguid)))
+		return sguid;
+	return std::wstring();
+}
+
 std::wstring PEStrings::FileFlagsToString(uint32_t flags) {
 	static const struct {
 		uint32_t value;

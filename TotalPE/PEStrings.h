@@ -50,5 +50,6 @@ struct PEStrings abstract final {
 	static PCWSTR CertificateTypeToString(uint32_t type);
 	static PCWSTR x64RelocationTypeToString(BYTE type);
 	static std::wstring CFGFlagsToString(uint32_t flags);
+	static std::wstring GuidToString(GUID const& guid);
 };
 

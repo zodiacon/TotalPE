@@ -13,6 +13,7 @@ public:
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);
 	void OnStateChanged(HWND h, int from, int to, DWORD oldState, DWORD newState);
+	std::wstring GetDetails(int row) const;
 
 	BEGIN_MSG_MAP(CDebugView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
