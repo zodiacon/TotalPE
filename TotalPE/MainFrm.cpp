@@ -422,9 +422,9 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	AddSimpleReBarBand(tb);
 	UIAddToolBar(tb);
 
-	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
 	m_Tree.Create(m_Splitter, rcDefault, nullptr,
-		WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS);
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS);
 	m_Tree.SetExtendedStyle(TVS_EX_DOUBLEBUFFER | TVS_EX_RICHTOOLTIP, 0);
 
 	m_Splitter.SetSplitterPane(0, m_Tree);

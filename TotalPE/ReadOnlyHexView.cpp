@@ -54,7 +54,7 @@ LRESULT CReadOnlyHexView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	Frame()->GetUI().UISetRadioMenuItem(ID_BYTESPERLINE_32, ID_BYTESPERLINE_8, ID_BYTESPERLINE_128);
 
 	m_hWndClient = m_Hex.Create(m_hWnd, rcDefault, nullptr,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_VSCROLL | WS_HSCROLL, WS_EX_CLIENTEDGE);
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_VSCROLL | WS_HSCROLL);
 	UpdateColors();
 
 	return 0;

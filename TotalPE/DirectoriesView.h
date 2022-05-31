@@ -2,6 +2,7 @@
 
 #include "View.h"
 #include <VirtualListView.h>
+#include <CustomSplitterWindow.h>
 #include "ReadOnlyHexView.h"
 
 class CDirectoriesView :
@@ -33,7 +34,7 @@ private:
 	};
 
 	CListViewCtrl m_List;
-	CHorSplitterWindow m_Splitter;
+	CCustomHorSplitterWindow m_Splitter;
 	CReadOnlyHexView m_HexView;
 	std::vector<Item> m_Directories;
 	Item m_Selected;

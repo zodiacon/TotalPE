@@ -3,6 +3,7 @@
 #include "View.h"
 #include <VirtualListView.h>
 #include "ReadOnlyHexView.h"
+#include <CustomSplitterWindow.h>
 
 class CSecurityView :
 	public CView<CSecurityView>,
@@ -26,7 +27,7 @@ public:
 private:
 	CReadOnlyHexView m_HexView;
 	CListViewCtrl m_List;
-	CHorSplitterWindow m_Splitter;
+	CCustomHorSplitterWindow m_Splitter;
 	std::vector<pe_security_entry> m_Items;
 };
 

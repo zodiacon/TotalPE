@@ -112,7 +112,12 @@ void CLoadConfigView::BuildItems() {
 		{ L"Dependent Load Flags", std::format(L"0x{:X}", lc.get_dependent_load_flags()) },
 		{ L"Security Cookie", std::format(L"0x{:X}", lc.get_security_cookie()) },
 		{ L"CSD Version", std::format(L"0x{:X}", lc.get_csd_version()) },
-		{ L"CFG Functions", std::format(L"{}", lc.get_guard_cf_function_count()) },
+		{ L"Enclave Config Ptr", std::format(L"0x{:X}", lc.get_enclave_configuration_pointer()) },
+		{ L"CFG Check Function", std::format(L"0x{:X}", lc.get_guard_cf_check_function_pointer()) },
+		{ L"Longjmp Target Count", std::format(L"{}", lc.get_guard_long_jump_target_count()) },
+		{ L"Longjmp Target Table", std::format(L"0x{:X}", lc.get_guard_long_jump_target_table()) },
+		{ L"Hot Patch Table Offset", std::format(L"0x{:X}", lc.get_hot_patch_table_offset()) },
+		{ L"CFG Functions", std::format(L"{}", lc.get_guard_cf_function_count()), lc.get_guard_cf_function_count() > 0 ? L"CFG functions on the right" : L"" },
 	};
 
 	m_CfgFunctions.reserve(lc.get_guard_cf_function_count());

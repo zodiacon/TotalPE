@@ -35,7 +35,7 @@ bool CVersionView::IsSortable(HWND, int col) const {
 
 LRESULT CVersionView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
+		LVS_REPORT | LVS_OWNERDATA);
 	auto cm = GetColumnManager(m_List);
 
 	cm->AddColumn(L"Name", LVCFMT_LEFT, 140);

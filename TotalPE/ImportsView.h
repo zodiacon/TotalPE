@@ -4,6 +4,7 @@
 #include <VirtualListView.h>
 #include <SortedFilteredVector.h>
 #include <QuickFindEdit.h>
+#include <CustomSplitterWindow.h>
 
 class CImportsView :
 	public CView<CImportsView>,
@@ -43,7 +44,7 @@ private:
 	CQuickFindEdit m_QuickFind;
 	CListViewCtrl m_LibList;
 	CListViewCtrl m_List;
-	CSplitterWindow m_Splitter;
+	CCustomSplitterWindow m_Splitter;
 	std::vector<pe_import_library> m_ImportLibs;
 	SortedFilteredVector<pe_import_function> m_Imports;
 };

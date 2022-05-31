@@ -73,7 +73,7 @@ void CMessageTableView::DoSort(SortInfo const* si) {
 
 LRESULT CMessageTableView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
+		LVS_REPORT | LVS_OWNERDATA);
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 
 	auto cm = GetColumnManager(m_List);

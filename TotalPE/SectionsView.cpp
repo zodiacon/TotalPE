@@ -43,7 +43,7 @@ int CSectionsView::GetRowImage(HWND, int row, int col) const {
 
 LRESULT CSectionsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
+		LVS_REPORT | LVS_OWNERDATA);
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 	CImageList images;
 	images.Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 1);

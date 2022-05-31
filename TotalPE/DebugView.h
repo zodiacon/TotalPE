@@ -3,6 +3,7 @@
 #include "View.h"
 #include <VirtualListView.h>
 #include "ReadOnlyHexView.h"
+#include <CustomSplitterWindow.h>
 
 class CDebugView :
 	public CView<CDebugView>,
@@ -28,7 +29,7 @@ private:
 	void BuildItems();
 
 	CListViewCtrl m_List;
-	CHorSplitterWindow m_Splitter;
+	CCustomHorSplitterWindow m_Splitter;
 	CReadOnlyHexView m_HexView;
 	std::unique_ptr<IBufferManager> m_Buffer;
 	int m_SelectedIndex{ -1 };

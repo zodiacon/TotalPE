@@ -688,7 +688,12 @@ CString CHexControl::FormatNumber(ULONGLONG number, int size) const {
 }
 
 LRESULT CHexControl::OnContextMenu(UINT, WPARAM, LPARAM, BOOL&) {
-	return LRESULT();
+	NMHDR hdr;
+	hdr.hwndFrom = m_hWnd;
+	hdr.code = NM_RCLICK;
+	hdr.idFrom = GetWindowLongPtr(GWLP_ID);
+	GetParent().SendMessage(WM_NOTIFY, hdr.idFrom, reinterpret_cast<LPARAM>(&hdr));
+	return 0;
 }
 
 LRESULT CHexControl::OnSize(UINT, WPARAM, LPARAM, BOOL&) {

@@ -71,8 +71,8 @@ std::wstring CDebugView::GetDetails(int row) const {
 LRESULT CDebugView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 	m_List.Create(m_hWndClient, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA | LVS_SINGLESEL | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
-	m_HexView.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0);
+		LVS_REPORT | LVS_OWNERDATA | LVS_SINGLESEL | LVS_SHOWSELALWAYS);
+	m_HexView.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 	m_HexView.SetDynamicAlloc(false);
 
 	auto cm = GetColumnManager(m_List);
@@ -82,7 +82,7 @@ LRESULT CDebugView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Address", LVCFMT_RIGHT, 110);
 	cm->AddColumn(L"Size", LVCFMT_RIGHT, 130);
 	cm->AddColumn(L"Pointer to Raw Data", LVCFMT_RIGHT, 130);
-	cm->AddColumn(L"Details", LVCFMT_LEFT, 300);
+	cm->AddColumn(L"Details", LVCFMT_LEFT, 400);
 	cm->UpdateColumns();
 
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);

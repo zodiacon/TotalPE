@@ -75,7 +75,7 @@ LRESULT CExportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	CReBarCtrl rb(m_hWndToolBar);
 
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA, WS_EX_CLIENTEDGE);
+		LVS_REPORT | LVS_OWNERDATA);
 	auto cm = GetColumnManager(m_List);
 
 	CImageList images;
@@ -140,7 +140,8 @@ LRESULT CExportsView::OnViewAssembly(WORD, WORD, HWND, BOOL&) {
 	io.set_image_offset(exp.get_rva());
 	std::vector<uint8_t> code;
 	io.read(code, 0x400);		// hard-coded for now
-	ViewManager::CreateAssemblyView(PE(), CString(exp.get_func_name().c_str()) + L" (Assembly)", code, exp.get_rva() + PE().get_image().get_image_base());
+	ViewManager::CreateAssemblyView(PE(), CString(exp.get_func_name().c_str()) + L" (Assembly)", 
+		code, exp.get_rva() + PE().get_image().get_image_base());
 
 	return 0;
 }

@@ -13,6 +13,7 @@
 #include "AppSettings.h"
 #include <Theme.h>
 #include <OwnerDrawnMenu.h>
+#include <CustomSplitterWindow.h>
 
 class CMainFrame :
 	public CFrameWindowImpl<CMainFrame>,
@@ -118,7 +119,7 @@ private:
 	LRESULT OnRecentFile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
-	CSplitterWindow m_Splitter;
+	CCustomSplitterWindow m_Splitter;
 	CTreeViewCtrl m_Tree;
 	CMultiPaneStatusBarCtrl m_StatusBar;
 	CString m_Path;

@@ -25,6 +25,9 @@ struct IHexControlClient {
 	virtual void OnSizeChanged(int64_t newSize) = 0;
 };
 
+struct NMHexControlNotify : NMHDR {
+};
+
 class CHexControl :
 	public CBufferedPaintWindowImpl<CHexControl> {
 public:

@@ -84,7 +84,7 @@ LRESULT CImportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
     m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE);
 
 	m_List.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+		LVS_REPORT | LVS_OWNERDATA | LVS_SHOWSELALWAYS);
 	auto cm = GetColumnManager(m_List);
 
 	CImageList images;
@@ -105,7 +105,7 @@ LRESULT CImportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_List.SetExtendedListViewStyle(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 
 	m_LibList.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
-		LVS_REPORT | LVS_OWNERDATA | LVS_SHOWSELALWAYS | LVS_SINGLESEL, WS_EX_CLIENTEDGE);
+		LVS_REPORT | LVS_OWNERDATA | LVS_SHOWSELALWAYS | LVS_SINGLESEL);
 	cm = GetColumnManager(m_LibList);
 
 	images.Detach();
