@@ -55,9 +55,18 @@ void CPEImageView::OnStateChanged(HWND, int from, int to, DWORD oldState, DWORD 
 void CPEImageView::BuildItems() {
 	auto& header = PE().get_image();
 	auto& path = Frame()->GetPEPath();
+	DWORD fileSize = 0;
+	HANDLE hFile = ::CreateFile(path, FILE_READ_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
+	if (hFile != INVALID_HANDLE_VALUE) {
+		fileSize = ::GetFileSize(hFile, nullptr);
+		::CloseHandle(hFile);
+	}
 
-	m_Items = std::vector<DataItem>{
+	m_Items = std::vector<DataItem> {
 		{ L"File Name", (PCWSTR)path.Mid(path.ReverseFind(L'\\') + 1), (PCWSTR)path },
+		{ L"File Size", PEStrings::ToMemorySize(fileSize) },
+		{ L"Alignment", std::format(L"0x{:X}", header.get_file_align()) },
+		{ L"Checksum", std::format(L"0x{:X}", header.get_checksum()) },
 		{ L"Time/Date Stamp", std::format(L"0x{:08X}", header.get_timestamp()) },
 		{ L"Machine", std::format(L"{} (0x{:X})", header.get_machine(), header.get_machine()), PEStrings::MachineTypeToString(header.get_machine()) },
 		{ L"Subsystem", std::to_wstring(header.get_sub_system()), PEStrings::SubsystemToString(header.get_sub_system()) },
