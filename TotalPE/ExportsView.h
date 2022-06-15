@@ -37,13 +37,17 @@ public:
 	LRESULT OnViewAssembly(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 private:
+	struct ExportItem : pe_export_entry {
+		CString UndecoratedName;
+	};
+
 	void ApplyFilter(PCWSTR text);
 	void BuildItems();
 	void UpdateStatusText();
 
 	CQuickFindEdit m_QuickFind;
 	CListViewCtrl m_List;
-	SortedFilteredVector<pe_export_entry> m_Exports;
+	SortedFilteredVector<ExportItem> m_Exports;
 	int m_Selected{ -1 };
 };
 

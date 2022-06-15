@@ -18,7 +18,7 @@ CString CImportsView::GetColumnText(HWND h, int row, int col) const {
 		switch (col) {
 			case 0: return fun.get_func_name().c_str();
 			case 1: return std::to_wstring(fun.get_hint()).c_str();
-			case 2: return fun.get_func_name().find_first_of("@?") == std::string::npos ? L"" : PEStrings::UndecorateName(CString(fun.get_func_name().c_str())).c_str();
+			case 2: return PEStrings::UndecorateName(CString(fun.get_func_name().c_str())).c_str();
 			case 3: return std::to_wstring(fun.get_ordinal()).c_str();
 		}
 	}

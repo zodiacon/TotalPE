@@ -537,8 +537,12 @@ std::wstring PEStrings::PrimaryLanguageToString(WORD l) {
 
 std::wstring PEStrings::UndecorateName(PCWSTR name) {
 	WCHAR result[512];
-	::UnDecorateSymbolNameW(name, result, _countof(result), 0);
-	return result;
+	return 0 == ::UnDecorateSymbolNameW(name, result, _countof(result), 0) ? L"" : result;
+}
+
+std::string PEStrings::UndecorateName(PCSTR name) {
+	char result[512];
+	return 0 == ::UnDecorateSymbolName(name, result, _countof(result), 0) ? "" : result;
 }
 
 std::wstring PEStrings::VersionFileOSToString(uint32_t type) {

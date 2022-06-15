@@ -9,14 +9,17 @@
 #include "AssemblyView.h"
 #include "ViewManager.h"
 #include <ThemeHelper.h>
+#include "PEStrings.h"
 
 CString CExportsView::GetColumnText(HWND, int row, int col) const {
-	auto& exp = m_Exports[row];
+	auto const& exp = m_Exports[row];
 	switch (col) {
 		case 0: return exp.has_name() ? (CString)exp.get_func_name().c_str() : (CString)std::format(L"@{}", exp.get_ordinal()).c_str();
 		case 1: return std::to_wstring(exp.get_ordinal()).c_str();
 		case 2: return std::format(L"0x{:08X}", exp.get_rva()).c_str();
 		case 3: return exp.is_forward() ? exp.get_forward_name().c_str() : "";
+		case 4: return exp.UndecoratedName;
+			
 	}
 
 	return CString();
@@ -44,6 +47,7 @@ void CExportsView::DoSort(SortInfo const* si) {
 			case 1: return SortHelper::Sort(exp1.get_ordinal(), exp2.get_ordinal(), asc);
 			case 2: return SortHelper::Sort(exp1.get_rva(), exp2.get_rva(), asc);
 			case 3: return SortHelper::Sort(exp1.get_forward_name(), exp2.get_forward_name(), asc);
+			case 4: return SortHelper::Sort(PEStrings::UndecorateName(exp1.get_func_name().c_str()), PEStrings::UndecorateName(exp2.get_func_name().c_str()), asc);
 		}
 		return false;
 	};
@@ -91,6 +95,7 @@ LRESULT CExportsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	cm->AddColumn(L"Ordinal", LVCFMT_RIGHT, 70);
 	cm->AddColumn(L"Address", LVCFMT_RIGHT, 110);
 	cm->AddColumn(L"Forwarded Name", LVCFMT_LEFT, 350);
+	cm->AddColumn(L"Undecorated Name", LVCFMT_LEFT, 400);
 
 	cm->UpdateColumns();
 
@@ -174,7 +179,13 @@ void CExportsView::ApplyFilter(PCWSTR text) {
 
 void CExportsView::BuildItems() {
 	auto& exports = PE().get_exports();
-	m_Exports = exports.get_functions();
+	auto& funcs = exports.get_functions();
+	m_Exports.reserve(funcs.size());
+	for (auto& f : funcs) {
+		ExportItem item(f);
+		item.UndecoratedName = PEStrings::UndecorateName(f.get_func_name().c_str()).c_str();
+		m_Exports.push_back(std::move(item));
+	}
 	m_List.SetItemCount((int)m_Exports.size());
 
 	UpdateStatusText();
