@@ -144,7 +144,7 @@ LRESULT CExportsView::OnViewAssembly(WORD, WORD, HWND, BOOL&) {
 	pe_image_io io(PE().get_image());
 	io.set_image_offset(exp.get_rva());
 	std::vector<uint8_t> code;
-	io.read(code, 0x400);		// hard-coded for now
+	io.read(code, 0x1000);		// hard-coded for now
 	ViewManager::CreateAssemblyView(PE(), CString(exp.get_func_name().c_str()) + L" (Assembly)", 
 		code, exp.get_rva() + PE().get_image().get_image_base());
 

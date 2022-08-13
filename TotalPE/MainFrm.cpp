@@ -373,6 +373,9 @@ void CMainFrame::InitDarkTheme() const {
 	s_DarkTheme.SysColors[COLOR_3DSHADOW] = s_DarkTheme.TextColor;
 	s_DarkTheme.SysColors[COLOR_SCROLLBAR] = s_DarkTheme.BackColor;
 	s_DarkTheme.SysColors[COLOR_APPWORKSPACE] = s_DarkTheme.BackColor;
+	s_DarkTheme.StatusBar.BackColor = RGB(16, 0, 16);
+	s_DarkTheme.StatusBar.TextColor = s_DarkTheme.TextColor;
+
 	s_DarkTheme.Name = L"Dark";
 	s_DarkTheme.Menu.BackColor = s_DarkTheme.BackColor;
 	s_DarkTheme.Menu.TextColor = s_DarkTheme.TextColor;

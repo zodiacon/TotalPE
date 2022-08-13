@@ -715,11 +715,12 @@ std::wstring PEStrings::FileFlagsToString(uint32_t flags) {
 }
 
 CString PEStrings::FormatInstruction(const cs_insn& inst) {
-	CStringA text;
-	CStringA sbytes;
+	std::string sbytes;
 	for (int i = 0; i < inst.size; i++)
-		sbytes += std::format("{:02X} ", inst.bytes[i]).c_str();
-	text.Format("%llX %-48s %-10s %s", inst.address, (PCSTR)sbytes, inst.mnemonic, inst.op_str);
+		sbytes += std::format("{:02X} ", inst.bytes[i]);
+	CStringA text;
+	text.Format("%llX %-48s %-10s %s", inst.address, sbytes.c_str(), inst.mnemonic, inst.op_str);
+	text.Replace((char)0xcd, ' ');
 	return CString(text);
 }
 

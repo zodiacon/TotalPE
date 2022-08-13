@@ -3,22 +3,26 @@
 #include "..\External\Capstone\capstone.h"
 #include "PEStrings.h"
 
+#ifdef _DEBUG
+#pragma comment(lib, "../External/Capstone/Capstoned.lib")
+#else
 #pragma comment(lib, "../External/Capstone/Capstone.lib")
+#endif
 
 bool CAssemblyView::SetCode(uint64_t startAddress, std::vector<uint8_t> const& code) {
     csh handle;
-    cs_insn* insn;
     if (cs_open(CS_ARCH_X86, PE().get_image().is_x32_image() ? CS_MODE_32 : CS_MODE_64, &handle) != CS_ERR_OK)
         return false;
-    auto count = cs_disasm(handle, code.data(), code.size(), startAddress, 0, &insn);
-
+    auto bytes = code.data();
+    auto size = code.size();
+    cs_insn inst{};
     CString text;
-    for (int j = 0; j < count; j++) {
-        const auto& inst = insn[j];
+    while (cs_disasm_iter(handle, &bytes, &size, &startAddress, &inst)) {
         text += PEStrings::FormatInstruction(inst) + L"\r\n";
-        if (_stricmp(inst.mnemonic, "ret") == 0)
+        if (_strcmpi(inst.mnemonic, "ret") == 0)
             break;
     }
+
     m_Edit.SetWindowText(text);
     cs_close(&handle);
     return true;
