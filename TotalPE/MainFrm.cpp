@@ -222,6 +222,7 @@ void CMainFrame::UpdateUI() {
 	pe_resource_directory_entry const* dummy;
 	UIEnable(ID_VIEW_MANIFEST, m_pe != nullptr && m_pe->get_resources().entry_by_id(dummy, 24));
 	UIEnable(ID_VIEW_VERSION, m_pe != nullptr && m_pe->get_resources().entry_by_id(dummy, 16));
+	UIEnable(ID_FILE_OPENINANEWWINDOW, m_pe != nullptr);
 }
 
 void CMainFrame::ParseResources(HTREEITEM hRoot) {
@@ -349,6 +350,8 @@ bool CMainFrame::OpenPE(PCWSTR path) {
 
 	CString ftitle;
 	ftitle.LoadString(IDR_MAINFRAME);
+	if (SecurityHelper::IsRunningElevated())
+		ftitle += L" (Administrator)";
 	CString title = m_Path.Mid(m_Path.ReverseFind(L'\\') + 1) + L" - " + ftitle;
 	SetWindowText(title);
 	s_recentFiles.AddFile(path);
@@ -453,6 +456,13 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	MakeAlwaysOnTop();
 	UISetCheck(ID_OPTIONS_DARKMODE, s_settings.DarkMode());
 
+	int argc;
+	auto args = ::CommandLineToArgvW(::GetCommandLine(), &argc);
+	if (args && argc > 1) {
+		OpenPE(args[1]);
+		::LocalFree(args);
+	}
+
 	// register object for message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != nullptr);
@@ -530,6 +540,12 @@ LRESULT CMainFrame::OnFileClose(WORD, WORD, HWND, BOOL&) {
 		m_ViewMgr.Clear();
 		m_Tree.DeleteAllItems();
 		m_Splitter.SetSplitterPane(1, nullptr);
+		m_Path.Empty();
+		CString title;
+		title.LoadString(IDR_MAINFRAME);
+		if (SecurityHelper::IsRunningElevated())
+			title += L" (Administrator)";
+		SetWindowText(title);
 		UpdateUI();
 	}
 	return 0;
@@ -580,7 +596,7 @@ LRESULT CMainFrame::OnViewPEItem(WORD, WORD id, HWND, BOOL&) {
 }
 
 LRESULT CMainFrame::OnRunAsAdmin(WORD, WORD, HWND, BOOL&) {
-	if (SecurityHelper::RunElevated(nullptr, true)) {
+	if (SecurityHelper::RunElevated(m_Path, true)) {
 		s_Frames = 1;
 		SendMessage(WM_CLOSE);
 	}
