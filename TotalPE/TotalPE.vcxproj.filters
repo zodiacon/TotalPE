@@ -25,9 +25,6 @@
     <Filter Include="Helpers">
       <UniqueIdentifier>{6daecbb8-f0d9-473b-ac07-cefc757e01a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Symbols">
-      <UniqueIdentifier>{2aa1f448-58c6-469e-ae38-e7b413f304a3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -141,8 +138,11 @@
     <ClCompile Include="MenuView.cpp">
       <Filter>Views</Filter>
     </ClCompile>
+    <ClCompile Include="SymbolsView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
     <ClCompile Include="SymbolsHandler.cpp">
-      <Filter>Symbols</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,8 +260,11 @@
     <ClInclude Include="MenuView.h">
       <Filter>Views</Filter>
     </ClInclude>
+    <ClInclude Include="SymbolsView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
     <ClInclude Include="SymbolsHandler.h">
-      <Filter>Symbols</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +406,15 @@
       <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\text.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\symbols.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\type.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\enum.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>

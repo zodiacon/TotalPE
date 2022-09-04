@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper;..\DiaHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper;..\DiaHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -154,7 +154,7 @@
       <DebugInformationFormat />
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper;..\DiaHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -189,7 +189,7 @@
       <DebugInformationFormat />
       <PreprocessorDefinitions>_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..;..\WTLHelper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\WTLHelper;..\DiaHelper</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -253,6 +253,7 @@
     <ClCompile Include="Selection.cpp" />
     <ClCompile Include="SimpleHexControl.cpp" />
     <ClCompile Include="SymbolsHandler.cpp" />
+    <ClCompile Include="SymbolsView.cpp" />
     <ClCompile Include="TotalPE.cpp" />
     <ClCompile Include="VersionView.cpp" />
     <ClCompile Include="View.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="Selection.h" />
     <ClInclude Include="SimpleHexControl.h" />
     <ClInclude Include="SymbolsHandler.h" />
+    <ClInclude Include="SymbolsView.h" />
     <ClInclude Include="VersionView.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="ViewManager.h" />
@@ -313,6 +315,7 @@
     <Image Include="res\database-export.ico" />
     <Image Include="res\database-import.ico" />
     <Image Include="res\debug.ico" />
+    <Image Include="res\enum.ico" />
     <Image Include="res\Exception.ico" />
     <Image Include="res\folder.ico" />
     <Image Include="res\folder_closed.ico" />
@@ -345,15 +348,20 @@
     <Image Include="res\section.ico" />
     <Image Include="res\sections.ico" />
     <Image Include="res\shield.ico" />
+    <Image Include="res\symbols.ico" />
     <Image Include="res\text.ico" />
     <Image Include="res\time-import.ico" />
     <Image Include="res\TotalPE.ico" />
+    <Image Include="res\type.ico" />
     <Image Include="res\version.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DiaHelper\DiaHelper.vcxproj">
+      <Project>{d1e93c91-d2d9-460b-a00e-1dcabaafcb9f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\enma_pe\enma_pe.vcxproj">
       <Project>{5b0e07a2-6928-44e0-af0a-445b067c71cc}</Project>
     </ProjectReference>

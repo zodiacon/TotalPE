@@ -14,6 +14,7 @@
 #include <Theme.h>
 #include <OwnerDrawnMenu.h>
 #include <CustomSplitterWindow.h>
+#include "DiaHelper.h"
 
 class CMainFrame :
 	public CFrameWindowImpl<CMainFrame>,
@@ -81,6 +82,7 @@ private:
 	HIMAGELIST GetTreeImageList() const override;
 	int GetResourceIconIndex(WORD type) const override;
 	bool GotoTreeItemResource(PCWSTR path) override;
+	DiaSession const& GetSymbols() const override;
 
 	static TreeItemType TreeItemWithIndex(TreeItemType type, int index);
 	CString DoFileOpen() const;
@@ -130,5 +132,6 @@ private:
 	inline static int s_Frames{ 0 };
 	inline static RecentFilesManager s_recentFiles;
 	inline static AppSettings s_settings;
+	DiaSession m_Symbols;
 };
 

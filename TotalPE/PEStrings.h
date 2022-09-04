@@ -1,6 +1,8 @@
 #pragma once
 
 struct cs_insn;
+enum class SymbolTag;
+enum class LocationKind;
 
 enum class DllCharacteristics : unsigned short {
 	None = 0,
@@ -52,5 +54,7 @@ struct PEStrings abstract final {
 	static PCWSTR x64RelocationTypeToString(BYTE type);
 	static std::wstring CFGFlagsToString(uint32_t flags);
 	static std::wstring GuidToString(GUID const& guid);
+	static PCWSTR SymbolTagToString(SymbolTag tag);
+	static PCWSTR SymbolLocationToString(LocationKind location);
 };
 

@@ -12,6 +12,7 @@ enum class TreeItemType : size_t {
 	ResourceLnaguage,
 	ContextMenu = 1 << 21,
 	CLR = 1 << 22,
+	Symbols = 1 << 23,
 	Language = 1LL << 62,
 	Resource = 1LL << 63,
 };
@@ -23,6 +24,8 @@ enum class TextFormat {
 	JScript,
 	Plain,
 };
+
+class DiaSession;
 
 struct IMainFrame abstract {
 	virtual HWND GetHwnd() const = 0;
@@ -36,4 +39,5 @@ struct IMainFrame abstract {
 	virtual HIMAGELIST GetTreeImageList() const = 0;
 	virtual int GetResourceIconIndex(WORD type) const = 0;
 	virtual bool GotoTreeItemResource(PCWSTR path) = 0;
+	virtual DiaSession const& GetSymbols() const = 0;
 };

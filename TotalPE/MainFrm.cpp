@@ -134,7 +134,8 @@ void CMainFrame::BuildTreeImageList() {
 		IDI_DELAY_IMPORT, IDI_EXCEPTION, IDI_SHIELD2, IDI_RELOC,
 
 		IDI_MANIFEST, IDI_VERSION, IDI_ICONS, IDI_CURSORS, IDI_DIALOGS,
-		IDI_BITMAP, IDI_FONT, IDI_HTML, IDI_TEXT,
+		IDI_BITMAP, IDI_FONT, IDI_HTML, IDI_TEXT, IDI_SYMBOLS,
+		IDI_FUNCTION, IDI_TYPE, IDI_ENUM,
 	};
 
 	for (auto icon : icons)
@@ -175,6 +176,20 @@ void CMainFrame::InitPETree() {
 		ParseResources(resources);
 		m_Tree.Expand(resources, TVE_EXPAND);
 	}
+	//
+	// add symbols nodes if these can be located
+	//
+	m_Symbols.Close();
+	if (m_Symbols.OpenImage(m_Path)) {
+		auto symbols = InsertTreeItem(m_Tree, L"Symbols", 24, TreeItemType::Symbols, root, TVI_LAST);
+		InsertTreeItem(m_Tree, L"Functions", 25, TreeItemWithIndex(TreeItemType::Symbols, (int)SymbolTag::Function), symbols);
+		InsertTreeItem(m_Tree, L"Public", 26, TreeItemWithIndex(TreeItemType::Symbols, (int)SymbolTag::PublicSymbol), symbols);
+		InsertTreeItem(m_Tree, L"User Defined Types", 26, TreeItemWithIndex(TreeItemType::Symbols, (int)SymbolTag::UDT), symbols);
+		InsertTreeItem(m_Tree, L"Enum", 27, TreeItemWithIndex(TreeItemType::Symbols, (int)SymbolTag::Enum), symbols);
+		InsertTreeItem(m_Tree, L"Data", 26, TreeItemWithIndex(TreeItemType::Symbols, (int)SymbolTag::Data), symbols);
+		m_Tree.Expand(symbols, TVE_EXPAND);
+	}
+
 	m_Tree.Expand(root, TVE_EXPAND);
 	m_Tree.SelectItem(root);
 	m_Tree.SetRedraw();
@@ -650,6 +665,10 @@ LRESULT CMainFrame::OnTreeRightClick(HWND tree, HTREEITEM hItem, CPoint const& p
 	ShowContextMenu(menu.GetSubMenu(index), 0, pt.x, pt.y);
 
 	return 1;
+}
+
+DiaSession const& CMainFrame::GetSymbols() const {
+	return m_Symbols;
 }
 
 

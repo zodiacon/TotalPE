@@ -480,7 +480,7 @@ std::wstring PEStrings::PrimaryLanguageToString(WORD l) {
 		//{ LANG_PASHTO
 		{ LANG_PERSIAN,				L"Persian" },
 		{ LANG_POLISH,				L"Polish" },
-		//{ LANG_PORTUGUESE
+		{ LANG_PORTUGUESE,			L"Portuguese" },
 		//{ LANG_PULAR
 		//{ LANG_PUNJABI
 		//{ LANG_QUECHUA
@@ -498,9 +498,9 @@ std::wstring PEStrings::PrimaryLanguageToString(WORD l) {
 		//{ LANG_SLOVAK
 		//{ LANG_SLOVENIAN
 		//{ LANG_SOTHO
-		//{ LANG_SPANISH
-		//{ LANG_SWAHILI
-		//{ LANG_SWEDISH
+		{ LANG_SPANISH,				L"Spanish" },
+		{ LANG_SWAHILI,				L"Swahili" },
+		{ LANG_SWEDISH,				L"Swedish" },
 		//{ LANG_SYRIAC
 		//{ LANG_TAJIK
 		//{ LANG_TAMAZIGHT
@@ -692,6 +692,75 @@ std::wstring PEStrings::GuidToString(GUID const& guid) {
 	if(::StringFromGUID2(guid, sguid, _countof(sguid)))
 		return sguid;
 	return std::wstring();
+}
+
+PCWSTR PEStrings::SymbolTagToString(SymbolTag tag) {
+	static PCWSTR names[] = {
+		L"Null",
+		L"Exe",
+		L"Compiland",
+		L"Compiland Details",
+		L"Compiland Env",
+		L"Function",
+		L"Block",
+		L"Data",
+		L"Annotation",
+		L"Label",
+		L"Public Symbol",
+		L"UDT",
+		L"Enum",
+		L"Function Type",
+		L"Pointer Type",
+		L"Array Type",
+		L"Base Type",
+		L"Typedef",
+		L"Base Class",
+		L"Friend",
+		L"Function Arg Type",
+		L"Func Debug Start",
+		L"Func Debug End",
+		L"Using Namespace",
+		L"VTable Shape",
+		L"VTable",
+		L"Custom",
+		L"Thunk",
+		L"Custom Type",
+		L"Managed Type",
+		L"Dimension",
+		L"Call Site",
+		L"Inline Site",
+		L"Base Interface",
+		L"Vector Type",
+		L"Matrix Type",
+		L"HLSL Type",
+		L"Caller",
+		L"Callee",
+		L"Export",
+		L"Heap Allocation Site",
+		L"Coff Group",
+		L"Inlinee",
+	};
+
+	return names[(int)tag];
+}
+
+PCWSTR PEStrings::SymbolLocationToString(LocationKind location) {
+	static PCWSTR names[] = {
+		L"Null",
+		L"Static",
+		L"TLS",
+		L"RegRel",
+		L"ThisRel",
+		L"Enregistered",
+		L"BitField",
+		L"Slot",
+		L"IlRel",
+		L"MetaData",
+		L"Constant",
+		L"RegRelAliasIndir",
+	};
+
+	return names[(int)location];
 }
 
 std::wstring PEStrings::FileFlagsToString(uint32_t flags) {

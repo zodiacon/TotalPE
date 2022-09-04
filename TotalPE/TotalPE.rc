@@ -238,6 +238,12 @@ IDI_RELOC               ICON                    "res\\relocation.ico"
 
 IDI_TEXT                ICON                    "res\\text.ico"
 
+IDI_SYMBOLS             ICON                    "res\\symbols.ico"
+
+IDI_TYPE                ICON                    "res\\type.ico"
+
+IDI_ENUM                ICON                    "res\\enum.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

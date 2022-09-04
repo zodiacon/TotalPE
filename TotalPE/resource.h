@@ -48,9 +48,12 @@
 #define IDI_SHIELD2                     241
 #define IDI_RELOC                       242
 #define IDI_TEXT                        243
+#define IDI_SYMBOLS                     244
+#define IDI_TYPE                        245
+#define IDI_ICON1                       246
+#define IDI_ENUM                        246
 #define IDC_EXTLINK                     1000
 #define IDC_LINK                        1001
-#define IDC_SCROLLBAR1                  1002
 #define ID_OPTIONS_ALWAYSONTOP          32775
 #define ID_OPTIONS_FONT                 32776
 #define ID_OPTIONS_DARKMODE             32777
@@ -96,7 +99,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        244
+#define _APS_NEXT_RESOURCE_VALUE        247
 #define _APS_NEXT_COMMAND_VALUE         32815
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           102

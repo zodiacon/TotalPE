@@ -22,6 +22,7 @@
 #include "AssemblyView.h"
 #include "GenericWindow.h"
 #include "MenuView.h"
+#include "SymbolsView.h"
 
 ViewManager::ViewManager(IMainFrame* frame) : m_pFrame(frame) {
     m_views.reserve(16);
@@ -133,6 +134,11 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
                 view->SetAddress(address);
                 break;
         }
+    }
+    if (!hView && type >= TreeItemType::Symbols && vtype < (DWORD_PTR)TreeItemType::Symbols + 256) {
+        auto view = new CSymbolsView(m_pFrame);
+        hView = view->DoCreate(hParent);
+        view->BuildItems(m_pFrame->GetSymbols(), SymbolTag(vtype & 0xff));
     }
 
     if (!hView && type > TreeItemType::Sections && DWORD_PTR(type) < (DWORD_PTR)TreeItemType::Sections + 999) {
