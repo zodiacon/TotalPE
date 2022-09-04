@@ -489,6 +489,9 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
 	if (--s_Frames == 0) {
+		WINDOWPLACEMENT wp{ sizeof(wp) };
+		GetWindowPlacement(&wp);
+		s_settings.MainWindowPlacement(wp);
 		s_settings.Save();
 		// unregister message filtering and idle updates
 		CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -671,4 +674,18 @@ DiaSession const& CMainFrame::GetSymbols() const {
 	return m_Symbols;
 }
 
+LRESULT CMainFrame::OnShowWindow(UINT, WPARAM show, LPARAM, BOOL&) {
+	static bool shown = false;
+	if (show && !shown) {
+		shown = true;
+		auto wp = s_settings.MainWindowPlacement();
+		if (wp.showCmd != SW_HIDE) {
+			SetWindowPlacement(&wp);
+			UpdateLayout();
+		}
+		if (AppSettings::Get().AlwaysOnTop())
+			SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	}
+	return 0;
+}
 

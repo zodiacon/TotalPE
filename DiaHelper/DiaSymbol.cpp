@@ -13,6 +13,12 @@ std::wstring DiaSymbol::Name() const {
 	return S_OK == m_spSym->get_name(&name) ? name.m_str : L"";
 }
 
+std::wstring DiaSymbol::UndecoratedName() const {
+	CComBSTR name;
+	m_spSym->get_undecoratedName(&name);
+	return name.Length() == 0 ? L"" : name.m_str;
+}
+
 uint32_t DiaSymbol::Id() const {
 	uint32_t id = 0;
 	m_spSym->get_symIndexId((DWORD*)&id);
@@ -23,6 +29,12 @@ int32_t DiaSymbol::Offset() const {
 	int32_t offset;
 	m_spSym->get_offset((LONG*)&offset);
 	return offset;
+}
+
+DiaSymbol DiaSymbol::Type() const {
+	CComPtr<IDiaSymbol> sym;
+	m_spSym->get_type(&sym);
+	return DiaSymbol(sym);
 }
 
 LocationKind DiaSymbol::Location() const {

@@ -24,17 +24,19 @@ LRESULT CSymbolsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	auto cm = GetColumnManager(m_List);
 
 	cm->AddColumn(L"Name", LVCFMT_LEFT, 350, ColumnType::Name);
-	cm->AddColumn(L"Type", LVCFMT_LEFT, 100, ColumnType::Type);
-	cm->AddColumn(L"Undecorated Name", LVCFMT_LEFT, 300, ColumnType::UndecoratedName);
+	cm->AddColumn(L"Tag", LVCFMT_LEFT, 100, ColumnType::Tag);
 	cm->AddColumn(L"Id", LVCFMT_RIGHT, 70, ColumnType::Id);
+	if (m_SymbolTag == SymbolTag::Function || m_SymbolTag == SymbolTag::Null || m_SymbolTag == SymbolTag::PublicSymbol) {
+		cm->AddColumn(L"Undecorated Name", LVCFMT_LEFT, 300, ColumnType::UndecoratedName);
+	}
 //	cm->AddColumn(L"Location", LVCFMT_LEFT, 90, ColumnType::Location);
 	cm->UpdateColumns();
 
 	return 0;
 }
 
-void CSymbolsView::BuildItems(DiaSession const& session, SymbolTag tag) {
-	m_Symbols = session.FindChildren(session.GlobalScope(), tag);
+void CSymbolsView::BuildItems(DiaSession const& session) {
+	m_Symbols = session.FindChildren(session.GlobalScope(), m_SymbolTag);
 	m_List.SetItemCount((int)m_Symbols.size());
 }
 
@@ -42,8 +44,8 @@ CString CSymbolsView::GetColumnText(HWND h, int row, int col) const {
 	auto const& sym = m_Symbols[row];
 	switch (GetColumnManager(h)->GetColumnTag<ColumnType>(col)) {
 		case ColumnType::Name: return sym.Name().c_str();
-		case ColumnType::Type: return PEStrings::SymbolTagToString(sym.Tag());
-		case ColumnType::UndecoratedName: return PEStrings::UndecorateName(sym.Name().c_str()).c_str();
+		case ColumnType::Tag: return PEStrings::SymbolTagToString(sym.Tag());
+		case ColumnType::UndecoratedName: return sym.UndecoratedName().c_str();
 		case ColumnType::Id: return std::to_wstring(sym.Id()).c_str();
 		case ColumnType::Offset: return std::format(L"0x{:X}", sym.Offset()).c_str();
 		case ColumnType::Location: return PEStrings::SymbolLocationToString(sym.Location());
@@ -58,8 +60,8 @@ void CSymbolsView::DoSort(SortInfo const* si) {
 	auto compare = [&](auto const& s1, auto const& s2) -> bool {
 		switch (col) {
 			case ColumnType::Name: return SortHelper::Sort(s1.Name(), s2.Name(), asc);
-			case ColumnType::UndecoratedName: return SortHelper::Sort(PEStrings::UndecorateName(s1.Name().c_str()), PEStrings::UndecorateName(s2.Name().c_str()), asc);
-			case ColumnType::Type: return SortHelper::Sort(s1.Tag(), s2.Tag(), asc);
+			case ColumnType::UndecoratedName: return SortHelper::Sort(s1.UndecoratedName(), s2.UndecoratedName(), asc);
+			case ColumnType::Tag: return SortHelper::Sort(s1.Tag(), s2.Tag(), asc);
 			case ColumnType::Location: return SortHelper::Sort(s1.Location(), s2.Location(), asc);
 			case ColumnType::Id: return SortHelper::Sort(s1.Id(), s2.Id(), asc);
 		};

@@ -136,9 +136,9 @@ HWND ViewManager::CreateOrGetView(TreeItemType type, HWND hParent, pe_image_full
         }
     }
     if (!hView && type >= TreeItemType::Symbols && vtype < (DWORD_PTR)TreeItemType::Symbols + 256) {
-        auto view = new CSymbolsView(m_pFrame);
+        auto view = new CSymbolsView(m_pFrame, SymbolTag(vtype & 0xff));
         hView = view->DoCreate(hParent);
-        view->BuildItems(m_pFrame->GetSymbols(), SymbolTag(vtype & 0xff));
+        view->BuildItems(m_pFrame->GetSymbols());
     }
 
     if (!hView && type > TreeItemType::Sections && DWORD_PTR(type) < (DWORD_PTR)TreeItemType::Sections + 999) {

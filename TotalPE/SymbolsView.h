@@ -11,7 +11,9 @@ class CSymbolsView :
 public:
 	using CView::CView;
 
-	void BuildItems(DiaSession const& session, SymbolTag type);
+	CSymbolsView(IMainFrame* frame, SymbolTag tag) : CView(frame), m_SymbolTag(tag) {}
+
+	void BuildItems(DiaSession const& session);
 
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);
@@ -28,11 +30,12 @@ public:
 
 private:
 	enum class ColumnType {
-		Name, Id, UndecoratedName, Offset, Address, VA, Location, Type,
+		Name, Id, UndecoratedName, Offset, Address, VA, Location, Type, Tag,
 	};
 
 	CListViewCtrl m_List;
 	SortedFilteredVector<DiaSymbol> m_Symbols;
+	SymbolTag m_SymbolTag;
 };
 
 #pragma once

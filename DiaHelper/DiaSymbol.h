@@ -1,6 +1,5 @@
 #pragma once
 
-#include <optional>
 #include <string>
 
 struct IDiaSymbol;
@@ -93,13 +92,14 @@ public:
     operator bool() const;
 
     std::wstring Name() const;
+    std::wstring UndecoratedName() const;
     uint32_t Id() const;
     uint32_t Age() const;
     int32_t Offset() const;
     AccessMode Access() const;
-    std::optional<DiaSymbol> ClassParent() const;
-    std::optional<DiaSymbol> LexicalParent() const;
-    std::optional<DiaSymbol> Type() const;
+    DiaSymbol ClassParent() const;
+    DiaSymbol LexicalParent() const;
+    DiaSymbol Type() const;
     LocationKind Location() const;
     SymbolTag Tag() const;
     DataItemKind Kind() const;
