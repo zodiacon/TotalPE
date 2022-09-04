@@ -675,9 +675,8 @@ DiaSession const& CMainFrame::GetSymbols() const {
 }
 
 LRESULT CMainFrame::OnShowWindow(UINT, WPARAM show, LPARAM, BOOL&) {
-	static bool shown = false;
-	if (show && !shown) {
-		shown = true;
+	if (show && !m_Shown) {
+		m_Shown = true;
 		auto wp = s_settings.MainWindowPlacement();
 		if (wp.showCmd != SW_HIDE) {
 			SetWindowPlacement(&wp);

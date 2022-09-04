@@ -12,6 +12,6 @@
 #include <atlcomcli.h>
 #include "Dia2.h"
 #include <string>
-#include <optional>
+#include <vector>
 
 #endif //PCH_H

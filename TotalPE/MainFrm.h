@@ -135,5 +135,6 @@ private:
 	inline static RecentFilesManager s_recentFiles;
 	inline static AppSettings s_settings;
 	DiaSession m_Symbols;
+	bool m_Shown{ false };
 };
 
