@@ -18,7 +18,8 @@ public:
 	CString GetColumnText(HWND, int row, int col) const;
 	void DoSort(SortInfo const* si);
 	int GetRowImage(HWND, int row, int col) const;
-	int GetSaveColumnRange(int& start) const;
+	int GetSaveColumnRange(HWND, int& start) const;
+	CString GetName(DiaSymbol const& sym) const;
 
 	BEGIN_MSG_MAP(CSymbolsView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)

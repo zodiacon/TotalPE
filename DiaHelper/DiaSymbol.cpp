@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "DiaHelper.h"
+#include "DiaSymbol.h"
 
 DiaSymbol::DiaSymbol(IDiaSymbol* sym) : m_spSym(sym) {
 }
@@ -71,6 +72,12 @@ SymbolTag DiaSymbol::Tag() const {
 	DWORD tag = 0;
 	m_spSym->get_symTag(&tag);
 	return SymbolTag(tag);
+}
+
+uint64_t DiaSymbol::Length() const {
+	ULONGLONG len;
+	m_spSym->get_length(&len);
+	return uint64_t(len);
 }
 
 DataItemKind DiaSymbol::Kind() const {

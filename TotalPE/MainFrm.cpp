@@ -109,7 +109,7 @@ TreeItemType CMainFrame::TreeItemWithIndex(TreeItemType type, int index) {
 
 CString CMainFrame::DoFileOpen() const {
 	CSimpleFileDialog dlg(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_ENABLESIZING,
-		L"PE Files\0*.exe;*.dll;*.efi;*.ocx;*.cpl;*.sys;*.mui;*.mun\0All Files\0*.*\0");
+		L"PE Files\0*.exe;*.dll;*.efi;*.ocx;*.cpl;*.sys;*.mui;*.mun;*.scr\0All Files\0*.*\0");
 	ThemeHelper::Suspend();
 	auto path = IDOK == dlg.DoModal() ? dlg.m_szFileName : L"";
 	ThemeHelper::Resume();
@@ -685,6 +685,10 @@ LRESULT CMainFrame::OnShowWindow(UINT, WPARAM show, LPARAM, BOOL&) {
 		if (AppSettings::Get().AlwaysOnTop())
 			SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnMenuSelect(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	return 0;
 }
 

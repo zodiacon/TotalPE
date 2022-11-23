@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <atlcomcli.h>
 
 struct IDiaSymbol;
 
@@ -21,11 +22,12 @@ public:
     DiaSymbol Type() const;
     LocationKind Location() const;
     SymbolTag Tag() const;
+    uint64_t Length() const;
     DataItemKind Kind() const;
     std::vector<DiaSymbol> FindChildren(SymbolTag tag = SymbolTag::Null, PCWSTR name = nullptr,
         CompareOptions options = CompareOptions::None) const;
 
-private:
+protected:
 	DiaSymbol(IDiaSymbol* sym);
 
 	CComPtr<IDiaSymbol> m_spSym;

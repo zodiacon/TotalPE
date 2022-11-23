@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DiaSymbol.h"
-
+#include <atlcomcli.h>
 #include <vector>
 #include <string>
 

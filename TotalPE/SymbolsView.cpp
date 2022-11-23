@@ -8,8 +8,12 @@ int CSymbolsView::GetRowImage(HWND, int row, int col) const {
 	return 0;
 }
 
-int CSymbolsView::GetSaveColumnRange(int& start) const {
+int CSymbolsView::GetSaveColumnRange(HWND, int& start) const {
 	return -1;
+}
+
+CString CSymbolsView::GetName(DiaSymbol const& sym) const {
+	return CString();
 }
 
 LRESULT CSymbolsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
