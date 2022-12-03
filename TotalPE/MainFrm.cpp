@@ -443,9 +443,9 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	AddSimpleReBarBand(tb);
 	UIAddToolBar(tb);
 
-	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+	m_hWndClient = m_Splitter.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0);
 	m_Tree.Create(m_Splitter, rcDefault, nullptr,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS);
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS, 0);
 	m_Tree.SetExtendedStyle(TVS_EX_DOUBLEBUFFER | TVS_EX_RICHTOOLTIP, 0);
 
 	m_Splitter.SetSplitterPane(0, m_Tree);
@@ -638,6 +638,15 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 
 LRESULT CMainFrame::OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
 	s_settings.DarkMode(!s_settings.DarkMode());
+	::EnumThreadWindows(::GetCurrentThreadId(), [](auto hWnd, auto) {
+		::PostMessage(hWnd, WM_UPDATE_DARKMODE, 0, 0);
+		return TRUE;
+		}, 0);
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnUpdateDarkMode(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	if (s_settings.DarkMode())
 		ThemeHelper::SetCurrentTheme(s_DarkTheme, m_hWnd);
 	else
@@ -646,7 +655,6 @@ LRESULT CMainFrame::OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 	UpdateMenuBase(GetMenu(), true);
 	DrawMenuBar();
 	UISetCheck(ID_OPTIONS_DARKMODE, s_settings.DarkMode());
-
 	return 0;
 }
 
