@@ -18,6 +18,10 @@ void DiaSession::Close() {
 	m_spSession.Release();
 }
 
+DiaSession::operator bool() const {
+	return m_spSession != nullptr;
+}
+
 std::wstring DiaSession::LastError() const {
 	CComBSTR text;
 	return m_spSource && S_OK == m_spSource->get_lastError(&text) ? text.m_str : L"";
@@ -32,7 +36,7 @@ DiaSymbol DiaSession::GlobalScope() const {
 	return DiaSymbol(spSym);
 }
 
-std::vector<DiaSymbol> DiaSession::FindChildren(DiaSymbol const& parent, SymbolTag tag, PCWSTR name, CompareOptions options) const {
+std::vector<DiaSymbol> DiaSession::FindChildren(DiaSymbol const& parent, PCWSTR name, SymbolTag tag, CompareOptions options) const {
 	std::vector<DiaSymbol> symbols;
 	CComPtr<IDiaEnumSymbols> spEnum;
 	if (SUCCEEDED(m_spSession->findChildren(parent.m_spSym, (enum SymTagEnum)tag, name, (DWORD)options, &spEnum))) {
@@ -51,9 +55,19 @@ std::vector<DiaSymbol> DiaSession::FindChildren(DiaSymbol const& parent, SymbolT
 	return symbols;
 }
 
+std::vector<DiaSymbol> DiaSession::FindChildren(PCWSTR name, SymbolTag tag, CompareOptions options) const {
+	return FindChildren(GlobalScope(), name, tag, options);
+}
+
 bool DiaSession::OpenCommon(PCWSTR path, bool image) {
 	if (g_hDiaDll == nullptr) {
-		g_hDiaDll = ::LoadLibrary(L"msdia140.dll");
+		WCHAR path[MAX_PATH];
+		if (::GetModuleFileName(nullptr, path, _countof(path))) {
+			auto bs = wcsrchr(path, L'\\');
+			*bs = 0;
+			wcscat_s(path, L"\\msdia140.dll");
+			g_hDiaDll = ::LoadLibrary(path);
+		}
 	}
 	CComPtr<IDiaDataSource> spSource;
 	HRESULT hr;

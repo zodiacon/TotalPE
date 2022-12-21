@@ -40,7 +40,7 @@ LRESULT CSymbolsView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 }
 
 void CSymbolsView::BuildItems(DiaSession const& session) {
-	m_Symbols = session.FindChildren(session.GlobalScope(), m_SymbolTag);
+	m_Symbols = session.FindChildren(session.GlobalScope(), nullptr, m_SymbolTag);
 	m_List.SetItemCount((int)m_Symbols.size());
 }
 
