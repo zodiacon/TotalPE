@@ -559,6 +559,7 @@ LRESULT CMainFrame::OnFileClose(WORD, WORD, HWND, BOOL&) {
 		m_Tree.DeleteAllItems();
 		m_Splitter.SetSplitterPane(1, nullptr);
 		m_Path.Empty();
+		m_Symbols.Close();
 		CString title;
 		title.LoadString(IDR_MAINFRAME);
 		if (SecurityHelper::IsRunningElevated())
