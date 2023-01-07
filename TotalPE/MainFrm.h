@@ -29,6 +29,8 @@ public:
 
 	CMainFrame();
 
+	void OnFinalMessage(HWND) override;
+
 	bool OpenPE(PCWSTR path);
 
 	void OnTreeSelChanged(HWND tree, HTREEITEM hOld, HTREEITEM hNew);

@@ -256,11 +256,11 @@ CAPTION "About Total PE"
 FONT 9, "Segoe UI", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,76,50,14
-    CTEXT           "Total PE v0.2\n©2022 Pavel Yosifovich",IDC_STATIC,49,11,86,23
+    CTEXT           "Total PE v0.3\n©2022 Pavel Yosifovich",IDC_STATIC,49,11,86,20
     ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
     CONTROL         "Using <a>tinyxml2</a>, <a>enma_pe</a> and <a>capstone</a>",IDC_EXTLINK,
                     "SysLink",WS_TABSTOP,25,50,151,14
-    CONTROL         "<a>https://zodiacon/TotalPE</a>",IDC_LINK,"SysLink",WS_TABSTOP,54,32,105,10
+    CONTROL         "<a>https://zodiacon/TotalPE</a>",IDC_LINK,"SysLink",WS_TABSTOP,54,37,105,10
 END
 
 

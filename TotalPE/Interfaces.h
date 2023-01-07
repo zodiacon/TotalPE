@@ -1,6 +1,6 @@
 #pragma once
 
-enum class TreeItemType : size_t {
+enum class TreeItemType : uint64_t {
 	None = 0,
 	Image = 1 << 15,
 	Directories = 1 << 16,

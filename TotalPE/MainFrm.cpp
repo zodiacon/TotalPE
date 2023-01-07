@@ -488,18 +488,20 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 }
 
 LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
+	// unregister message filtering and idle updates
+	CMessageLoop* pLoop = _Module.GetMessageLoop();
+	ATLASSERT(pLoop != nullptr);
+	pLoop->RemoveMessageFilter(this);
+	pLoop->RemoveIdleHandler(this);
+
 	if (--s_Frames == 0) {
 		WINDOWPLACEMENT wp{ sizeof(wp) };
 		GetWindowPlacement(&wp);
 		s_settings.MainWindowPlacement(wp);
 		s_settings.Save();
-		// unregister message filtering and idle updates
-		CMessageLoop* pLoop = _Module.GetMessageLoop();
-		ATLASSERT(pLoop != nullptr);
-		pLoop->RemoveMessageFilter(this);
-		pLoop->RemoveIdleHandler(this);
 		bHandled = FALSE;
 	}
+
 	return 1;
 }
 
@@ -641,7 +643,7 @@ LRESULT CMainFrame::OnToggleDarkMode(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 	s_settings.DarkMode(!s_settings.DarkMode());
 	::EnumThreadWindows(::GetCurrentThreadId(), [](auto hWnd, auto) {
 		::PostMessage(hWnd, WM_UPDATE_DARKMODE, 0, 0);
-		return TRUE;
+	return TRUE;
 		}, 0);
 
 	return 0;
@@ -701,3 +703,6 @@ LRESULT CMainFrame::OnMenuSelect(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPar
 	return 0;
 }
 
+void CMainFrame::OnFinalMessage(HWND) {
+	delete this;
+}

@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "View.h"
 
 class CBitmapView :
